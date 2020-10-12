@@ -17,6 +17,17 @@ import { Customer } from "./Customer";
 import { Trainer } from "./Trainer";
 import { Moderator } from "./Moderator";
 
+enum Gender {
+  Male = "M",
+  Female = "F",
+  Other = "O",
+}
+
+enum DocumentType {
+  Passport = "Passport",
+  IdCard = "IdCard",
+}
+
 @Entity()
 export class Person {
   @PrimaryGeneratedColumn()
@@ -28,17 +39,23 @@ export class Person {
   @Column()
   Name: string;
 
+  @Column("enum", { enum: Gender })
+  Gender: Gender;
+
   @Column()
   BirthDate: Date;
+
+  @Column("enum", { enum: DocumentType })
+  DocType: DocumentType;
 
   @Column()
   DocNumber: string;
 
   @Column()
-  ContactPref: number;
+  PhoneNum: string;
 
   @Column()
-  PhoneNum: string;
+  PESEL: string;
 
   @Column()
   Address: string;

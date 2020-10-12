@@ -20,6 +20,9 @@ export class Location {
   @Column()
   City: string;
 
+  @Column()
+  PostalCode: string;
+
   @OneToMany(
     (type) => Gym,
     (gym) => gym.GymId

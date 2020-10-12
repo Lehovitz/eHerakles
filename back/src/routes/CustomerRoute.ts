@@ -10,5 +10,5 @@ router.get("/:id", customerController.readOne);
 router.put("/:id", customerController.update);
 router.delete("/:id", customerController.delete);
 router.post("/login", customerController.logIn);
-router.post("/register", customerController.create);
+router.post("/register", customerController.union);
 export default router;

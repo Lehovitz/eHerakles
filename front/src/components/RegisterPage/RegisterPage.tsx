@@ -11,7 +11,10 @@ import {
 import { Alert } from "@material-ui/lab";
 import { render } from "@testing-library/react";
 import React, { Component, useEffect, useState } from "react";
+import { Redirect } from "react-router-dom";
 import styles from "./RegisterPage.module.scss";
+
+const today = new Date();
 
 const RegisterPage = () => {
   const [email, setEmail] = useState(""),
@@ -19,10 +22,71 @@ const RegisterPage = () => {
     [redirect, setRedirect] = useState(false),
     [isEmailValid, setIsEmailValid] = useState(true),
     [isPasswordValid, setIsPasswordValid] = useState(true),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [name, setName] = useState(""),
+    [surname, setSurname] = useState(""),
+    [gender, setGender] = useState(""),
+    [docType, setDocType] = useState(""),
+    [docNumber, setDocNumber] = useState(""),
+    [PESEL, setPESEL] = useState(""),
+    [dateOfBirth, setDateOfBirth] = useState("2020-01-01"),
+    [country, setCountry] = useState(""),
+    [postalCode, setPostalCode] = useState(""),
+    [city, setCity] = useState(""),
+    [address, setAddress] = useState(""),
+    [phoneNum, setPhoneNum] = useState("");
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
+  };
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+  const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSurname(event.target.value);
+  };
+  const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGender(event.target.value);
+  };
+  const handleDocTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDocType(event.target.value);
+  };
+  const handleDocNumberChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDocNumber(event.target.value);
+  };
+  const handlePESELChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPESEL(event.target.value);
+  };
+  const handleDateOfBirthChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDateOfBirth(event.target.value);
+  };
+  const handleCountryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCountry(event.target.value);
+  };
+  const handlePostalCodeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPostalCode(event.target.value);
+  };
+  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress(event.target.value);
+  };
+  const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCity(event.target.value);
+  };
+  const handlePhoneNumberChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPhoneNum(event.target.value);
+  };
+
+  const validateMail = () => {
+    var re = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
+    return re.test(email);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,13 +96,29 @@ const RegisterPage = () => {
   const handleRegisterClick = async () => {
     const response = await fetch("http://localhost:5000/customers/register/", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        email,
+        password,
+        country,
+        city,
+        postalCode,
+        name,
+        surname,
+        gender,
+        docType,
+        dateOfBirth,
+        phoneNum,
+        PESEL,
+        docNumber,
+        address,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
     });
     const responseText = await response.text();
     if (response.ok) {
+      setRedirect(true);
     } else {
       setError(responseText);
       console.log(responseText);
@@ -47,6 +127,7 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.mainContainer}>
+      {redirect && <Redirect to="/"></Redirect>}
       <Grid container spacing={2} className={styles.container}>
         <Grid item xs={12} className={styles.alertBox}></Grid>
         <Grid item xs={12}>
@@ -61,6 +142,7 @@ const RegisterPage = () => {
             label="e-mail"
             variant="filled"
             onChange={handleEmailChange}
+            error={email !== "" && !validateMail()}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -82,6 +164,7 @@ const RegisterPage = () => {
             type="name"
             label="Name"
             variant="filled"
+            onChange={handleNameChange}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -92,6 +175,7 @@ const RegisterPage = () => {
             type="name"
             label="Surname"
             variant="filled"
+            onChange={handleSurnameChange}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -100,43 +184,34 @@ const RegisterPage = () => {
             <RadioGroup
               aria-label="gender"
               name="gender1"
+              onChange={handleGenderChange}
               // value={value}
               // onChange={handleChange}
             >
-              <FormControlLabel
-                value="female"
-                control={<Radio />}
-                label="Female"
-              />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel
-                value="other"
-                control={<Radio />}
-                label="Other"
-              />
+              <FormControlLabel value="F" control={<Radio />} label="Female" />
+              <FormControlLabel value="M" control={<Radio />} label="Male" />
+              <FormControlLabel value="O" control={<Radio />} label="Other" />
             </RadioGroup>
           </FormControl>
         </Grid>
         <Grid item xs={12}>
           <FormControl component="fieldset" className={styles.textField}>
-            <FormLabel component="legend">Gender</FormLabel>
+            <FormLabel component="legend">Document type</FormLabel>
             <RadioGroup
-              aria-label="gender"
-              name="gender1"
-              // value={value}
-              // onChange={handleChange}
+              aria-label="Document type"
+              name="docType"
+              onChange={handleDocTypeChange}
             >
               <FormControlLabel
-                value="passport"
+                value="Passport"
                 control={<Radio />}
                 label="Passport"
               />
               <FormControlLabel
-                value="IDcard"
+                value="IdCard"
                 control={<Radio />}
                 label="Id Card"
               />
-              <FormControlLabel value="None" control={<Radio />} label="None" />
             </RadioGroup>
           </FormControl>
         </Grid>
@@ -145,10 +220,21 @@ const RegisterPage = () => {
           <TextField
             className={styles.textField}
             required
+            id="DocNumber"
+            label="DocNumber"
+            variant="filled"
+            onChange={handleDocNumberChange}
+          ></TextField>
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            className={styles.textField}
+            required
             id="PESELReg"
-            type="number"
             label="PESEL"
             variant="filled"
+            onChange={handlePESELChange}
           ></TextField>
         </Grid>
 
@@ -160,6 +246,8 @@ const RegisterPage = () => {
             type="date"
             label="Date of birth"
             variant="filled"
+            defaultValue={dateOfBirth}
+            onChange={handleDateOfBirthChange}
           ></TextField>
         </Grid>
 
@@ -171,6 +259,7 @@ const RegisterPage = () => {
             type="text"
             label="Country"
             variant="filled"
+            onChange={handleCountryChange}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -181,6 +270,7 @@ const RegisterPage = () => {
             type="postalCode"
             label="Postal code"
             variant="filled"
+            onChange={handlePostalCodeChange}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -191,6 +281,7 @@ const RegisterPage = () => {
             type="text"
             label="City"
             variant="filled"
+            onChange={handleCityChange}
           ></TextField>
         </Grid>
 
@@ -202,6 +293,7 @@ const RegisterPage = () => {
             type="text"
             label="Address"
             variant="filled"
+            onChange={handleAddressChange}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -212,6 +304,7 @@ const RegisterPage = () => {
             type="phone"
             label="Phone number"
             variant="filled"
+            onChange={handlePhoneNumberChange}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
