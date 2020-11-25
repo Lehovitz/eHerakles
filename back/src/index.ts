@@ -6,11 +6,15 @@ import { Customer } from "./entities/Customer";
 import { Location } from "./entities/Location";
 import { Room } from "./entities/Room";
 import { Gym } from "./entities/Gym";
-import { Class } from "./entities/Class";
+import { Event } from "./entities/Event";
 import { Card } from "./entities/Card";
 import { Person } from "./entities/Person";
 import express from "express";
 import custRouter from "./routes/CustomerRoute";
+import eventRouter from "./routes/EventRoute";
+import trainerRouter from "./routes/TrainerRoute";
+import roomRouter from "./routes/RoomRoute";
+
 import dotenv from "dotenv";
 import cors from "cors";
 createConnection({
@@ -24,7 +28,7 @@ createConnection({
     Customer,
     Moderator,
     Card,
-    Class,
+    Event,
     Gym,
     Location,
     Room,
@@ -45,6 +49,10 @@ createConnection({
     app.use(cors());
     app.use(express.json());
     app.use("/customers", custRouter);
+    app.use("/events", eventRouter);
+    app.use("/rooms", roomRouter);
+    app.use("/trainers", trainerRouter);
+  
     app.listen(5000);
   })
   .catch((error) => console.log(error));

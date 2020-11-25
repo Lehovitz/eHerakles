@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { Gym } from "./Gym";
 import { type } from "os";
-import { Class } from "./Class";
+import { Event } from "./Event";
 
 @Entity()
 export class Room {
@@ -21,15 +21,15 @@ export class Room {
   @Column()
   RoomNumber: number;
 
-  @ManyToOne(
-    (type) => Gym,
-    (gym) => gym.GymId
-  )
-  Gym: Gym;
+  // @ManyToOne(
+  //   (type) => Gym,
+  //   (gym) => gym.GymId
+  // )
+  // Gym: Gym;
 
   @OneToMany(
-    (type) => Class,
-    (cl) => cl.ClassId
+    (type) => Event,
+    (ev) => ev.EventId
   )
-  classes: Class[];
+  events: Event[];
 }

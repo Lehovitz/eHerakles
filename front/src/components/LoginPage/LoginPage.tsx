@@ -57,8 +57,18 @@ const LoginPage = () => {
     }
   };
 
+  const loggedInRedirect = () => {
+    if(loggedIn)
+    {
+      return <Redirect to="/scheduler"></Redirect>
+    }
+  }
+
   return (
     <div className={styles.mainContainer}>
+    {loggedInRedirect()}
+    {renderRedirect()}
+
       <Grid container spacing={2} className={styles.container}>
         <Grid item xs={12} className={styles.alertBox}>
           {isError && <Alert severity="error">{bearerToken.error}</Alert>}
@@ -100,7 +110,6 @@ const LoginPage = () => {
                 Login
               </Button>
 
-              {renderRedirect()}
               <Button
                 variant="contained"
                 id="RegisterButtons"

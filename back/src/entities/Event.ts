@@ -12,21 +12,27 @@ import { Trainer } from "./Trainer";
 import { Customer } from "./Customer";
 
 @Entity()
-export class Class {
+export class Event {
   @PrimaryGeneratedColumn()
-  ClassId: number;
+  EventId: number;
+
+  @Column({nullable: true})
+  Capacity?: number;
+
+  @Column({nullable: true})
+  ExDate?: string;
+
+  @Column({nullable: true})
+  Rule?: string;
 
   @Column()
-  Capacity: number;
+  Identifier: number;
 
   @Column()
-  PlacesTaken: number;
+  Title: string;
 
-  @Column()
-  Name: string;
-
-  @Column()
-  Description: string;
+  @Column({nullable: true})
+  Description?: string;
 
   @Column()
   DateStart: Date;
@@ -34,11 +40,14 @@ export class Class {
   @Column()
   DateEnd: Date;
 
+  @Column({nullable: true})
+  IsAllDay?: Boolean;
+
   @ManyToOne(
     (type) => Trainer,
     (trainer) => trainer.TrainerId
   )
-  Trainer: number;
+  Trainer: Trainer;
 
   @ManyToOne(
     (type) => Room,

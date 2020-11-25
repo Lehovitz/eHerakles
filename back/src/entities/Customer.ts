@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import { Person } from "./Person";
 import { Card } from "./Card";
-import { Class } from "./Class";
+import { Event } from "./Event";
 
 @Entity()
 export class Customer {
@@ -32,10 +32,10 @@ export class Customer {
   Person: Person;
 
   @ManyToMany(
-    (type) => Class,
-    (cl) => cl.ClassId
+    (type) => Event,
+    (cl) => cl.EventId
   )
-  classes: Class[];
+  classes: Event[];
 
   @OneToMany(
     (type) => Card,

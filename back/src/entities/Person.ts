@@ -11,7 +11,6 @@ import {
 } from "typeorm";
 import { Location } from "./Location";
 import { Card } from "./Card";
-import { Class } from "./Class";
 import { type } from "os";
 import { Customer } from "./Customer";
 import { Trainer } from "./Trainer";

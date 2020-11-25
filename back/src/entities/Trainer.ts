@@ -22,9 +22,6 @@ export class Trainer {
   @Column()
   TrainerPass: string;
 
-  @Column()
-  CardId: number;
-
   @OneToOne(
     (type) => Person,
     (pers) => pers.PersonId
