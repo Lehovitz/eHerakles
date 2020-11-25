@@ -15,64 +15,35 @@ import {
 import { Paper } from "material-ui";
 import { MuiThemeProvider } from "material-ui/styles";
 import { EditingState } from "@devexpress/dx-react-scheduler";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const currentDate = "2018-11-01";
-const schedulerData = [
-  {
-    id: 0,
-    startDate: new Date("2018-11-01T09:45"),
-    endDate: new Date("2018-11-01T11:00"),
-    title: "Meeting",
-    trainerId: 1,
-    capacity: 16,
-    roomId: 1,
-  },
-  {
-    id: 1,
-    startDate: new Date("2018-11-01T12:00"),
-    endDate: new Date("2018-11-01T13:30"),
-    title: "Go to a gym",
-    trainerId: 1,
-    capacity: 16,
-    roomId: 1,
-  },
-  {
-    id: 2,
-    startDate: new Date("2018-11-03T13:00"),
-    endDate: new Date("2018-11-03T16:20"),
-    title: "Kaja Godek to kurwa",
-    trainerId: 1,
-    capacity: 16,
-    roomId: 1,
-  },
-];
 const trainers = [{ text: "Paris", id: 1, color: "blue" }];
 const room = [{ text: "Cała sala", id: 1, color: "#212121" }];
 const resources = [
   { fieldName: "roomId", title: "Room", instances: room },
   { fieldName: "trainerId", title: "Trainer", instances: trainers },
 ];
-const addedAppointment = (arg: any) => {
-  console.log(arg);
+
+type LastIndex = {
+  lastIndex: number;
 };
-const changeAddedAppointment = (arg: any) => {
-  console.log(arg);
-};
-const appointmentChanges = (arg: any) => {
-  console.log(arg);
-};
-const changeAppointmentChanges = (arg: any) => {
-  console.log(arg);
-};
-const editingAppointment = (arg: any) => {
-  console.log(arg);
-};
-const changeEditingAppointment = (arg: any) => {
-  console.log(arg);
+type EventBack = {
+  Title: string;
+  id: number;
+  DateStart: string;
+  DateEnd: string;
+  TrainerId: number;
+  AllDay?: boolean;
+  Notes?: string;
+  RoomId: number;
+  Rule?: string;
+  ExDate?: string;
+  Capacity: number;
+  EventId: number;
 };
 
-type Event = {
+type EventFront = {
   title: string;
   id: number;
   startDate: Date;
@@ -84,25 +55,58 @@ type Event = {
   rRule?: string;
   exDate?: string;
   capacity: number;
+  eventId: number;
 };
 
 const SchedulerComponent = () => {
-  const [data, setData] = useState<Event[]>(schedulerData);
+  const [data, setData] = useState<EventFront[]>([]);
+  useEffect(() => {
+    (async () => {
+      const res: EventBack[] = await fetch(
+        `http://localhost:5000/events/`
+      ).then((res) => res.json());
+      const events: EventFront[] = [];
+      for (let event of res) {
+        console.log(event);
+        const eventFront: EventFront = {
+          title: event.Title,
+          id: event.id,
+          startDate: new Date(Date.parse(event.DateStart)),
+          endDate: new Date(Date.parse(event.DateEnd)),
+          trainerId: event.TrainerId,
+          allDay: event.AllDay,
+          notes: event.Notes,
+          roomId: event.RoomId,
+          rRule: event.Rule,
+          exDate: event.ExDate,
+          capacity: event.Capacity,
+          eventId: event.EventId,
+        };
+        console.log(event.DateStart);
+
+        events.push(eventFront);
+      }
+
+      setData(events);
+      console.log(events);
+    })();
+  }, []);
 
   const commitChanges = async ({ added, changed, deleted }: any) => {
     let newData = [...data];
 
     if (added) {
-      const startingAddedId =
-        data.length > 0 ? data[data.length - 1].id + 1 : 0;
-      newData = [...data, { id: startingAddedId, ...added }];
-      console.log({ id: startingAddedId, ...added });
+      console.log(added);
+      const startingAddedId: LastIndex = await fetch(
+        `http://localhost:5000/events/getNextId`
+      ).then((res) => res.json());
 
       await fetch(`http://localhost:5000/events/`, {
         method: "POST",
-        body: JSON.stringify({ id: startingAddedId, ...added }),
+        body: JSON.stringify({ ...added, id: startingAddedId.lastIndex }),
         headers: { "Content-Type": "application/json" },
       });
+      newData.push({ ...added, id: startingAddedId.lastIndex });
     }
     if (changed) {
       newData = data.map((appointment) =>
@@ -113,14 +117,16 @@ const SchedulerComponent = () => {
       const changedObj = newData.find(
         (appointment) => appointment.id === +Object.keys(changed)[0]
       );
-      await fetch(`http://localhost:5000/events/${changedObj!.id}`, {
+      console.log(changedObj);
+      await fetch(`http://localhost:5000/events/${changedObj!.eventId}`, {
         method: "PUT",
-        body: JSON.stringify(changed),
+        body: JSON.stringify(changedObj),
+        headers: { "Content-Type": "application/json" },
       });
     }
     if (deleted !== undefined) {
       const deletedId = data.find((appointment) => appointment.id === deleted);
-      await fetch(`http://localhost:5000/events/${deletedId!.id}`, {
+      await fetch(`http://localhost:5000/events/${deletedId!.eventId}`, {
         method: "DELETE",
       });
       newData = data.filter((appointment) => appointment.id !== deleted);

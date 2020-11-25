@@ -36,13 +36,29 @@ export default class EventController {
   
   async readAll(req: Request, res: Response) {
     const repo = getManager().getRepository(Event);
-    let event = await repo.find();
+    let event = (await repo.find()).map(ev => {
+      return {id:ev.Identifier, ...ev}
+    });
     res.send(event);
   }
+
+  async getNextIndex(req: Request, res: Response)
+    {
+      const repo = getManager().getRepository(Event);
+      let lastRec = await repo.find({
+      order: {
+        Identifier: "DESC"
+      },
+      take: 1
+    });
+    let lastIndex = lastRec.length === 0 ? 0 : lastRec[0].Identifier+1;
+    res.send({lastIndex})
+  }
+
   async update(req: Request, res: Response) {
     const { title, id, startDate, endDate, trainerId, allDay, notes, roomId, rRule, exDate, capacity } = req.body;
     const repo = getManager().getRepository(Event);
-    let event = await repo.findOne({ where: {Identifier: req.params.eventId} });
+    let event = await repo.findOne({ where: {EventId: req.params.eventId} });
 
     if(event)
     {
@@ -62,7 +78,7 @@ export default class EventController {
       event.Capacity = capacity;
       event.Room = await room.findOne(roomId);
 
-      console.log("utworzono nowe zajecia");
+      console.log("updated LMAO   " + req.params.eventId);
       await repo.save(event);
       res.send();
     }
