@@ -8,6 +8,8 @@ import { RootState } from "../../redux";
 import { updateLoginError } from "../../redux/bearerToken/actions";
 import { updateTokenThunk } from "../../redux/bearerToken/thunks";
 import styles from "./LoginPage.module.scss";
+import jwt_decode from "jwt-decode";
+import DecodedToken from "../../models/DecodedToken";
 
 const LoginPage = () => {
   const [email, setEmail] = useState(""),
@@ -48,9 +50,11 @@ const LoginPage = () => {
   const handleLoginClick = () => {
     dispatch(updateTokenThunk(email, password));
   };
+
   const handleRegisterClick = () => {
     setRedirect(true);
   };
+
   const renderRedirect = () => {
     if (redirect) {
       return <Redirect to="/register"></Redirect>;
@@ -58,9 +62,10 @@ const LoginPage = () => {
   };
 
   const loggedInRedirect = () => {
-    if(loggedIn)
-    {
-      return <Redirect to="/scheduler"></Redirect>
+    if(loggedIn) {
+      const decodedToken: DecodedToken = jwt_decode(bearerToken.token);
+
+      return <Redirect to={`${decodedToken.role}/scheduler`}></Redirect>
     }
   }
 
