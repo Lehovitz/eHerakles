@@ -59,27 +59,15 @@ export class Person {
   @Column()
   Address: string;
 
-  @ManyToOne(
-    (type) => Location,
-    (location) => location.LocationId
-  )
+  @ManyToOne((type) => Location, (location) => location.LocationId)
   Location: Location;
 
-  @OneToOne(
-    (type) => Customer,
-    (cust) => cust.CustId
-  )
+  @OneToOne((type) => Customer, (cust) => cust.CustId)
   Customer: Customer;
 
-  @OneToOne(
-    (type) => Trainer,
-    (train) => train.TrainerId
-  )
+  @OneToOne((type) => Trainer, (train) => train.TrainerId)
   Trainer: Trainer;
 
-  @OneToOne(
-    (type) => Moderator,
-    (mod) => mod.ModId
-  )
+  @OneToOne((type) => Moderator, (mod) => mod.ModId)
   Moderator: Moderator;
 }

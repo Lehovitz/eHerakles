@@ -14,6 +14,7 @@ import custRouter from "./routes/CustomerRoute";
 import eventRouter from "./routes/EventRoute";
 import trainerRouter from "./routes/TrainerRoute";
 import roomRouter from "./routes/RoomRoute";
+import loginRouter from "./routes/LoginRoute";
 
 import dotenv from "dotenv";
 import cors from "cors";
@@ -38,12 +39,8 @@ createConnection({
   synchronize: true,
   logging: false,
 })
-  .then(async (connection) => {
+  .then(async () => {
     dotenv.config();
-    console.log("Inserting a new user into the database...");
-    const customer = new Customer();
-
-    const users = await connection.manager.find(Customer);
 
     const app = express();
     app.use(cors());
@@ -52,7 +49,9 @@ createConnection({
     app.use("/events", eventRouter);
     app.use("/rooms", roomRouter);
     app.use("/trainers", trainerRouter);
-  
+    app.use("/login", loginRouter);
+
     app.listen(5000);
+    console.log("Listening on port 5000...");
   })
   .catch((error) => console.log(error));

@@ -9,6 +9,5 @@ router.get("/", authenticateToken, customerController.readAll);
 router.get("/:id", customerController.readOne);
 router.put("/:id", customerController.update);
 router.delete("/:id", customerController.delete);
-router.post("/login", customerController.logIn);
-router.post("/register", customerController.union);
+router.post("/register", customerController.create);
 export default router;

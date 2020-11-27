@@ -22,16 +22,10 @@ export class Trainer {
   @Column()
   TrainerPass: string;
 
-  @OneToOne(
-    (type) => Person,
-    (pers) => pers.PersonId
-  )
+  @OneToOne((type) => Person, (pers) => pers.PersonId)
   @JoinColumn()
   Person: Person;
 
-  @OneToMany(
-    (type) => Card,
-    (card) => card.CardId
-  )
+  @OneToMany((type) => Card, (card) => card.CardId)
   Cards: Card[];
 }

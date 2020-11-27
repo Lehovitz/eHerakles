@@ -21,21 +21,12 @@ export class Card {
   @Column()
   IsActive: boolean;
 
-  @ManyToOne(
-    (type) => Gym,
-    (gym) => gym.GymId
-  )
+  @ManyToOne((type) => Gym, (gym) => gym.GymId)
   Gym: Gym;
 
-  @ManyToOne(
-    (type) => Customer,
-    (cust) => cust.CustId
-  )
+  @ManyToOne((type) => Customer, (cust) => cust.CustId)
   Customer: Customer;
 
-  @ManyToOne(
-    (type) => Trainer,
-    (train) => train.TrainerId
-  )
+  @ManyToOne((type) => Trainer, (train) => train.TrainerId)
   Trainer: Trainer;
 }

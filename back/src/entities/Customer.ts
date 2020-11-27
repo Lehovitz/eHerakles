@@ -24,22 +24,13 @@ export class Customer {
   @Column()
   CustPass: string;
 
-  @OneToOne(
-    (type) => Person,
-    (pers) => pers.PersonId
-  )
+  @OneToOne((type) => Person, (pers) => pers.PersonId)
   @JoinColumn()
   Person: Person;
 
-  @ManyToMany(
-    (type) => Event,
-    (cl) => cl.EventId
-  )
+  @ManyToMany((type) => Event, (cl) => cl.EventId)
   classes: Event[];
 
-  @OneToMany(
-    (type) => Card,
-    (card) => card.CardId
-  )
+  @OneToMany((type) => Card, (card) => card.CardId)
   Cards: Card[];
 }
