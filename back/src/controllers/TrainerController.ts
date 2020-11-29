@@ -86,7 +86,18 @@ export default class TrainerController {
 
   async readAll(_req: Request, res: Response) {
     const repo = getManager().getRepository(Trainer);
-    let trainer = await repo.find();
-    res.send(trainer);
+    const personRepo = getManager().getRepository(Person);
+    let trainers = await repo.find();
+    const result = [];
+    for (let t of trainers)
+    {
+      let person = await personRepo.findOne(t.Person);
+      result.push({
+        TrainerId: t.TrainerId,
+        TrainerName: person.Name,
+        TrainerSurname: person.Surname
+      })
+    }
+    res.send(result);
   }
 }

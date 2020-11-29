@@ -17,13 +17,7 @@ import { MuiThemeProvider } from "material-ui/styles";
 import { EditingState } from "@devexpress/dx-react-scheduler";
 import { useEffect, useState } from "react";
 
-const currentDate = "2018-11-01";
-const trainers = [{ text: "Paris", id: 1, color: "blue" }];
-const room = [{ text: "Cała sala", id: 1, color: "#212121" }];
-const resources = [
-  { fieldName: "roomId", title: "Room", instances: room },
-  { fieldName: "trainerId", title: "Trainer", instances: trainers },
-];
+const currentDate = new Date();
 
 type LastIndex = {
   lastIndex: number;
@@ -58,8 +52,66 @@ type EventFront = {
   eventId: number;
 };
 
+type Trainer = {
+  TrainerId: number;
+  TrainerName: string;
+  TrainerSurname: string;
+};
+
+type Room = {
+  RoomId: number;
+  RoomName: string;
+  RoomNumber: number;
+};
+
 const SchedulerComponent = () => {
+  const [trainers, setTrainers] = useState<Trainer[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [data, setData] = useState<EventFront[]>([]);
+
+  const resources = [
+    {
+      fieldName: "roomId",
+      title: "Room",
+      instances: rooms.map((room) => {
+        return {
+          id: room.RoomId,
+          text: `${room.RoomNumber} - ${room.RoomName}`,
+          color: "blue",
+        };
+      }),
+    },
+    {
+      fieldName: "trainerId",
+      title: "Trainer",
+      instances: trainers.map((trainer) => {
+        return {
+          id: trainer.TrainerId,
+          text: `${trainer.TrainerName} ${trainer.TrainerSurname}`,
+          color: "grey",
+        };
+      }),
+    },
+  ];
+
+  useEffect(() => {
+    (async () => {
+      const res: Trainer[] = await fetch(
+        `http://localhost:5000/trainers/`
+      ).then((res) => res.json());
+      setTrainers(res);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const res: Room[] = await fetch(
+        `http://localhost:5000/rooms/`
+      ).then((res) => res.json());
+      setRooms(res);
+    })();
+  }, []);
+
   useEffect(() => {
     (async () => {
       const res: EventBack[] = await fetch(
