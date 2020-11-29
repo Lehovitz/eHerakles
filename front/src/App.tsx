@@ -23,8 +23,8 @@ export default class App extends Component {
                 </MuiThemeProvider>
                 <Route exact path="/" component={LoginPage} />
                 <Route exact path="/register" component={RegisterPage} />
-                <Route exact path="/scheduler" component={SchedulerComponent} />
-                {/* <ProtectedRoute
+                {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
+                <ProtectedRoute
                     path="/scheduler"
                     role="customer"
                     component={SchedulerComponent}
@@ -33,7 +33,7 @@ export default class App extends Component {
                     path="/scheduler"
                     role="trainer"
                     component={SchedulerComponent}
-                /> */}
+                />
             </BrowserRouter>
         );
     }
@@ -66,7 +66,7 @@ const ProtectedRoute = ({
             path={`${pathPrefix}${path}`}
             render={(props) =>
                 decodedToken && decodedToken.role === role ? (
-                    <div>To be fixed :( component should be here</div>
+                    React.createElement(React.memo(component!), props)
                 ) : (
                     <Redirect to="/" />
                 )
