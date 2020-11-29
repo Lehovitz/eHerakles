@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route, RouteProps } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, RouteProps } from "react-router-dom";
 import LoginPage from "./components/LoginPage/LoginPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
 import SchedulerComponent from "./components/Scheduler/Scheduler";
@@ -13,66 +13,75 @@ import jwtDecode from "jwt-decode";
 import DecodedToken from "./models/DecodedToken";
 
 export default class App extends Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <MuiThemeProvider>
-          <ThemeProvider theme={darkTheme}>
-            <AppBarComponent></AppBarComponent>
-          </ThemeProvider>
-        </MuiThemeProvider>
-        <Route exact path="/" component={LoginPage} />
-        <Route exact path="/register" component={RegisterPage} />
-        <ProtectedRoute
-          path="/scheduler"
-          role="customer"
-          component={SchedulerComponent}
-        />
-        <ProtectedRoute
-          path="/scheduler"
-          role="trainer"
-          component={SchedulerComponent}
-        />
-      </BrowserRouter>
-    );
-  }
+    render() {
+        return (
+            <BrowserRouter>
+                <MuiThemeProvider>
+                    <ThemeProvider theme={darkTheme}>
+                        <AppBarComponent></AppBarComponent>
+                    </ThemeProvider>
+                </MuiThemeProvider>
+                <Route exact path="/" component={LoginPage} />
+                <Route exact path="/register" component={RegisterPage} />
+                <Route exact path="/scheduler" component={SchedulerComponent} />
+                {/* <ProtectedRoute
+                    path="/scheduler"
+                    role="customer"
+                    component={SchedulerComponent}
+                />
+                <ProtectedRoute
+                    path="/scheduler"
+                    role="trainer"
+                    component={SchedulerComponent}
+                /> */}
+            </BrowserRouter>
+        );
+    }
 }
 
 interface ProtectedRouteProps extends RouteProps {
-  role: "customer" | "trainer";
+    role: "customer" | "trainer";
 }
 
 const ProtectedRoute = ({
-  component,
-  role,
-  path,
-  ...rest
+    component,
+    role,
+    path,
+    ...rest
 }: ProtectedRouteProps) => {
-  const bearerToken = useSelector((state: RootState) => state.token),
-    decodedToken: DecodedToken | undefined =
-      bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
+    const bearerToken = useSelector((state: RootState) => state.token),
+        decodedToken: DecodedToken | undefined =
+            bearerToken.token.length > 0
+                ? jwtDecode(bearerToken.token)
+                : undefined,
+        pathPrefix =
+            decodedToken && decodedToken && decodedToken.role === role
+                ? `/${decodedToken.role}`
+                : "";
 
-  console.log(`/${decodedToken?.role}${path}`);
-
-  if (decodedToken && decodedToken.role === role)
     return (
-      <Route
-        {...rest}
-        exact
-        component={component}
-        path={`/${decodedToken.role}${path}`}
-      />
+        <Route
+            {...rest}
+            exact
+            path={`${pathPrefix}${path}`}
+            render={(props) =>
+                decodedToken && decodedToken.role === role ? (
+                    <div>To be fixed :( component should be here</div>
+                ) : (
+                    <Redirect to="/" />
+                )
+            }
+        />
     );
-  else return <h3>Forbidden or unauthorized</h3>;
 };
 
 const darkTheme = createMuiTheme({
-  palette: {
-    primary: blue,
-    background: {
-      paper: "#212121",
-      default: "#212121",
+    palette: {
+        primary: blue,
+        background: {
+            paper: "#212121",
+            default: "#212121",
+        },
+        type: "dark",
     },
-    type: "dark",
-  },
 });
