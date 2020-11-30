@@ -17,7 +17,7 @@ declare global {
 
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem('state');
+    const serializedState = localStorage.getItem("state");
     if (serializedState === null) {
       return undefined;
     }
@@ -25,13 +25,13 @@ export const loadState = () => {
   } catch (err) {
     return undefined;
   }
-}; 
+};
 
 export const saveState = (state: RootState) => {
   try {
     const serializedState = JSON.stringify(state);
-    localStorage.setItem('state', serializedState);
-  } catch {  }
+    localStorage.setItem("state", serializedState);
+  } catch {}
 };
 
 const persistedStore = loadState();
@@ -40,11 +40,13 @@ const composedEnhancers = composeWithDevTools(applyMiddleware(...middlewares));
 
 const store = createStore(rootReducer, persistedStore, composedEnhancers);
 
-store.subscribe(_.throttle(() => {
-  saveState({
-    token: store.getState().token
-  })
-}, 1000));
+store.subscribe(
+  _.throttle(() => {
+    saveState({
+      token: store.getState().token,
+    });
+  }, 1000)
+);
 
 ReactDOM.render(
   <Provider store={store}>

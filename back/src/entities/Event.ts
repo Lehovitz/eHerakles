@@ -14,51 +14,42 @@ import { Customer } from "./Customer";
 @Entity()
 export class Event {
   @PrimaryGeneratedColumn()
-  EventId: number;
+  id: number;
 
-  @Column({nullable: true})
-  Capacity?: number;
+  @Column({ nullable: true })
+  capacity?: number;
 
-  @Column({nullable: true})
-  ExDate?: string;
+  @Column({ nullable: true })
+  exDate?: string;
 
-  @Column({nullable: true})
-  Rule?: string;
-
-  @Column()
-  Identifier: number;
+  @Column({ nullable: true })
+  rule?: string;
 
   @Column()
-  Title: string;
-
-  @Column({nullable: true})
-  Description?: string;
+  identifier: number;
 
   @Column()
-  DateStart: Date;
+  title: string;
+
+  @Column({ nullable: true })
+  description?: string;
 
   @Column()
-  DateEnd: Date;
+  dateStart: Date;
 
-  @Column({nullable: true})
-  IsAllDay?: Boolean;
+  @Column()
+  dateEnd: Date;
 
-  @ManyToOne(
-    (type) => Trainer,
-    (trainer) => trainer.TrainerId
-  )
-  Trainer: Trainer;
+  @Column({ nullable: true })
+  isAllDay?: Boolean;
 
-  @ManyToOne(
-    (type) => Room,
-    (room) => room.RoomId
-  )
-  Room: Room;
+  @ManyToOne((type) => Trainer, (trainer) => trainer.TrainerId)
+  trainer: Trainer;
 
-  @ManyToMany(
-    (type) => Customer,
-    (customer) => customer.CustId
-  )
+  @ManyToOne((type) => Room, (room) => room.RoomId)
+  room: Room;
+
+  @ManyToMany((type) => Customer, (customer) => customer.CustId)
   @JoinTable()
-  Customers: Customer[];
+  customers: Customer[];
 }

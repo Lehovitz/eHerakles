@@ -28,7 +28,7 @@ export class Customer {
   @JoinColumn()
   Person: Person;
 
-  @ManyToMany((type) => Event, (cl) => cl.EventId)
+  @ManyToMany((type) => Event, (cl) => cl.id)
   classes: Event[];
 
   @OneToMany((type) => Card, (card) => card.CardId)

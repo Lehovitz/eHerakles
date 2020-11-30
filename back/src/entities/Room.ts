@@ -29,7 +29,7 @@ export class Room {
 
   @OneToMany(
     (type) => Event,
-    (ev) => ev.EventId
+    (ev) => ev.id
   )
   events: Event[];
 }

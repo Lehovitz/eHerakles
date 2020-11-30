@@ -22,19 +22,23 @@ const currentDate = new Date();
 type LastIndex = {
   lastIndex: number;
 };
+
 type EventBack = {
-  Title: string;
+  title: string;
+  dateStart: string;
+  dateEnd: string;
+  trainerId: number;
+  isAllDay?: boolean;
+  description?: string;
+  roomId: number;
+  rule?: string;
+  exDate?: string;
+  capacity: number;
   id: number;
-  DateStart: string;
-  DateEnd: string;
-  TrainerId: number;
-  AllDay?: boolean;
-  Notes?: string;
-  RoomId: number;
-  Rule?: string;
-  ExDate?: string;
-  Capacity: number;
-  EventId: number;
+};
+
+type FetchedEvents = {
+  data: EventBack[];
 };
 
 type EventFront = {
@@ -49,7 +53,6 @@ type EventFront = {
   rRule?: string;
   exDate?: string;
   capacity: number;
-  eventId: number;
 };
 
 type Trainer = {
@@ -114,27 +117,27 @@ const SchedulerComponent = () => {
 
   useEffect(() => {
     (async () => {
-      const res: EventBack[] = await fetch(
-        `http://localhost:5000/events/`
+      const res: FetchedEvents = await fetch(
+        `http://localhost:5000/events/?sort=["id","ASC"]&filter={}&range=[0,100000]`
       ).then((res) => res.json());
+
       const events: EventFront[] = [];
-      for (let event of res) {
+      for (let event of res.data) {
         console.log(event);
         const eventFront: EventFront = {
-          title: event.Title,
+          title: event.title,
           id: event.id,
-          startDate: new Date(Date.parse(event.DateStart)),
-          endDate: new Date(Date.parse(event.DateEnd)),
-          trainerId: event.TrainerId,
-          allDay: event.AllDay,
-          notes: event.Notes,
-          roomId: event.RoomId,
-          rRule: event.Rule,
-          exDate: event.ExDate,
-          capacity: event.Capacity,
-          eventId: event.EventId,
+          startDate: new Date(Date.parse(event.dateStart)),
+          endDate: new Date(Date.parse(event.dateEnd)),
+          trainerId: event.trainerId,
+          allDay: event.isAllDay,
+          notes: event.description,
+          roomId: event.roomId,
+          rRule: event.rule,
+          exDate: event.exDate,
+          capacity: event.capacity,
         };
-        console.log(event.DateStart);
+        console.log(event.dateStart);
 
         events.push(eventFront);
       }
@@ -170,7 +173,7 @@ const SchedulerComponent = () => {
         (appointment) => appointment.id === +Object.keys(changed)[0]
       );
       console.log(changedObj);
-      await fetch(`http://localhost:5000/events/${changedObj!.eventId}`, {
+      await fetch(`http://localhost:5000/events/${changedObj!.id}`, {
         method: "PUT",
         body: JSON.stringify(changedObj),
         headers: { "Content-Type": "application/json" },
@@ -178,7 +181,7 @@ const SchedulerComponent = () => {
     }
     if (deleted !== undefined) {
       const deletedId = data.find((appointment) => appointment.id === deleted);
-      await fetch(`http://localhost:5000/events/${deletedId!.eventId}`, {
+      await fetch(`http://localhost:5000/events/${deletedId!.id}`, {
         method: "DELETE",
       });
       newData = data.filter((appointment) => appointment.id !== deleted);
