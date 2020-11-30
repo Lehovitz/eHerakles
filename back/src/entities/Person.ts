@@ -16,13 +16,13 @@ import { Customer } from "./Customer";
 import { Trainer } from "./Trainer";
 import { Moderator } from "./Moderator";
 
-enum Gender {
+export enum Gender {
   Male = "M",
   Female = "F",
   Other = "O",
 }
 
-enum DocumentType {
+export enum DocumentType {
   Passport = "Passport",
   IdCard = "IdCard",
 }
@@ -59,7 +59,9 @@ export class Person {
   @Column()
   Address: string;
 
-  @ManyToOne((type) => Location, (location) => location.LocationId)
+  @ManyToOne((type) => Location, (location) => location.LocationId, {
+    cascade: true,
+  })
   Location: Location;
 
   @OneToOne((type) => Customer, (cust) => cust.CustId)
@@ -68,6 +70,6 @@ export class Person {
   @OneToOne((type) => Trainer, (train) => train.TrainerId)
   Trainer: Trainer;
 
-  @OneToOne((type) => Moderator, (mod) => mod.ModId)
+  @OneToOne((type) => Moderator, (mod) => mod.ModId, { cascade: true })
   Moderator: Moderator;
 }

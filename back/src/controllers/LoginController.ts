@@ -4,6 +4,7 @@ import { Customer } from "../entities/Customer";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Trainer } from "../entities/Trainer";
+import { Moderator } from "../entities/Moderator";
 
 export default class LoginController {
   async login(req: Request, res: Response) {
@@ -17,6 +18,11 @@ export default class LoginController {
     const trainerRepository = getManager().getRepository(Trainer);
     let trainer = await trainerRepository.findOne({
       where: { TrainerMail: email },
+    });
+
+    const moderatorRepository = getManager().getRepository(Moderator);
+    let moderator = await moderatorRepository.findOne({
+      where: { ModMail: email },
     });
 
     if (customer) {
@@ -35,6 +41,17 @@ export default class LoginController {
       if (passCorrect) {
         const token = jwt.sign(
           { email, role: "trainer" },
+          process.env.TOKEN_SECRET
+        );
+        res.send(token);
+      } else {
+        res.status(400).send("Nieprawidlowe dane logowania");
+      }
+    } else if (moderator) {
+      const passCorrect = await bcrypt.compare(password, moderator.ModPass);
+      if (passCorrect) {
+        const token = jwt.sign(
+          { email, role: moderator.IsAdmin ? "admin" : "moderator" },
           process.env.TOKEN_SECRET
         );
         res.send(token);

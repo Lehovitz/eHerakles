@@ -1,7 +1,7 @@
 import { Moderator } from "./entities/Moderator";
 import { Trainer } from "./entities/Trainer";
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { createConnection, getManager } from "typeorm";
 import { Customer } from "./entities/Customer";
 import { Location } from "./entities/Location";
 import { Room } from "./entities/Room";
@@ -15,6 +15,8 @@ import eventRouter from "./routes/EventRoute";
 import trainerRouter from "./routes/TrainerRoute";
 import roomRouter from "./routes/RoomRoute";
 import loginRouter from "./routes/LoginRoute";
+import bcrypt from "bcryptjs";
+import { DocumentType, Gender } from "./entities/Person";
 
 import dotenv from "dotenv";
 import cors from "cors";
@@ -41,6 +43,36 @@ createConnection({
 })
   .then(async () => {
     dotenv.config();
+
+    // const moderatorRepository = getManager().getRepository(Moderator);
+    // const moderator = new Moderator();
+    // moderator.IsAdmin = true;
+    // moderator.ModMail = "mod@xd.pl";
+    // moderator.ModPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
+    // const location = new Location();
+    // location.City = "aa";
+    // location.Country = "aa";
+    // location.PostalCode = "aaa";
+
+    // const person = new Person();
+    // person.Address = "aaaa";
+    // person.BirthDate = new Date();
+    // person.Gender = Gender.Male;
+    // person.DocNumber = "98239483";
+    // person.DocType = DocumentType.Passport;
+    // person.Name = "imie";
+    // person.PESEL = "2938329823";
+    // person.PhoneNum = "2394823834";
+    // person.Surname = "surname";
+
+    // location.Person = person;
+    // person.Location = location;
+    // person.Moderator = moderator;
+    // moderator.Person = person;
+
+    // await moderatorRepository.save(moderator);
+
+    // console.log("dodano moda");
 
     const app = express();
     app.use(cors());

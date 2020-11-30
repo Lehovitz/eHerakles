@@ -23,15 +23,9 @@ export class Location {
   @Column()
   PostalCode: string;
 
-  @OneToMany(
-    (type) => Gym,
-    (gym) => gym.GymId
-  )
+  @OneToMany((type) => Gym, (gym) => gym.GymId)
   gyms: Gym[];
 
-  @OneToOne(
-    (type) => Person,
-    (pers) => pers.PersonId
-  )
+  @OneToOne((type) => Person, (pers) => pers.PersonId, { cascade: true })
   Person: Person;
 }

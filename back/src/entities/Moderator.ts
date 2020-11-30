@@ -24,10 +24,7 @@ export class Moderator {
   @Column()
   IsAdmin: boolean;
 
-  @OneToOne(
-    (type) => Person,
-    (pers) => pers.PersonId
-  )
+  @OneToOne((type) => Person, (pers) => pers.PersonId, { cascade: true })
   @JoinColumn()
   Person: Person;
 }

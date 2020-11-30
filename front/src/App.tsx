@@ -12,6 +12,7 @@ import { RootState } from "./redux";
 import jwtDecode from "jwt-decode";
 import DecodedToken from "./models/DecodedToken";
 import BMICalculator from "./components/BMICalculator/BMICalculator";
+import AdminPage from "./components/AdminPage/AdminPage";
 
 export default class App extends Component {
   render() {
@@ -26,12 +27,12 @@ export default class App extends Component {
         <Route exact path="/register" component={RegisterPage} />
         {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
         <ProtectedRoute
-          path="/scheduler"
+          path="/"
           role="customer"
           component={SchedulerComponent}
         />
         <ProtectedRoute
-          path="/scheduler"
+          path="/"
           role="trainer"
           component={SchedulerComponent}
         />
@@ -47,13 +48,19 @@ export default class App extends Component {
             component={BMICalculator}
           />
         </MuiThemeProvider>
+        <ProtectedRoute
+          path="/"
+          role="moderator"
+          component={SchedulerComponent}
+        />
+        <ProtectedRoute path="/" role="admin" component={AdminPage} />
       </BrowserRouter>
     );
   }
 }
 
 interface ProtectedRouteProps extends RouteProps {
-  role: "customer" | "trainer";
+  role: "customer" | "trainer" | "moderator" | "admin";
 }
 
 const ProtectedRoute = ({
