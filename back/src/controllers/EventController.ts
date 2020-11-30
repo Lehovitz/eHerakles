@@ -72,9 +72,7 @@ export default class EventController {
     });
 
     // Wynik musi być zwracany jako obiekt { data: wynikQuery, total: liczba }
-    // const result = { data: filteredEvents, total: filteredEvents.length };
-    const result = { data: [], total: 0 };
-    console.log(result);
+    const result = { data: filteredEvents, total: filteredEvents.length };
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
     res
