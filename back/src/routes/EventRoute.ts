@@ -4,9 +4,9 @@ import authenticateToken from "../middlewares/authentication";
 const router = express.Router();
 
 const eventController = new EventController();
-router.get("/", /*authenticateToken, */eventController.readAll);
+router.get("/", eventController.readAll);
 router.put("/:eventId", eventController.update);
 router.delete("/:eventId", eventController.delete);
 router.post("/", eventController.create);
-router.get("/getNextId", eventController.getNextIndex)
+router.get("/getNextId", eventController.getNextIndex);
 export default router;

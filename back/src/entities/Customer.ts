@@ -3,9 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   JoinColumn,
-  ManyToOne,
   OneToMany,
-  JoinTable,
   ManyToMany,
   OneToOne,
 } from "typeorm";
@@ -16,21 +14,21 @@ import { Event } from "./Event";
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn()
-  CustId: number;
+  id: number;
 
   @Column()
-  CustMail: string;
+  custMail: string;
 
   @Column()
-  CustPass: string;
+  custPass: string;
 
-  @OneToOne((type) => Person, (pers) => pers.PersonId)
+  @OneToOne(() => Person, (pers) => pers.id)
   @JoinColumn()
-  Person: Person;
+  person: Person;
 
-  @ManyToMany((type) => Event, (cl) => cl.id)
+  @ManyToMany(() => Event, (cl) => cl.id)
   classes: Event[];
 
-  @OneToMany((type) => Card, (card) => card.CardId)
-  Cards: Card[];
+  @OneToMany(() => Card, (card) => card.id)
+  cards: Card[];
 }

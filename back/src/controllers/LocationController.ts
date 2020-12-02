@@ -7,14 +7,14 @@ export default class LocationController {
 
     const repo = getManager().getRepository(Location);
     let location = await repo.findOne({
-      where: { Country: country, City: city, PostalCode: postalCode },
+      where: { country: country, city: city, postalCode: postalCode },
     });
 
     if (!location) {
       location = new Location();
-      location.Country = country;
-      location.City = city;
-      location.PostalCode = postalCode;
+      location.country = country;
+      location.city = city;
+      location.postalCode = postalCode;
 
       console.log("utworzono nowa lokalizacje");
       await repo.save(location);

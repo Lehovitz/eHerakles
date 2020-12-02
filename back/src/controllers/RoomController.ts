@@ -14,8 +14,8 @@ export default class RoomController {
 
     if (!room) {
       const room = new Room();
-      room.RoomNumber = number;
-      room.RoomName = name;
+      room.roomNumber = number;
+      room.roomName = name;
       console.log("utworzono nowy pokoj ");
       await roomRepo.save(room);
       res.send();

@@ -2,16 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  JoinColumn,
   ManyToOne,
-  OneToMany,
-  JoinTable,
-  ManyToMany,
   OneToOne,
 } from "typeorm";
 import { Location } from "./Location";
-import { Card } from "./Card";
-import { type } from "os";
 import { Customer } from "./Customer";
 import { Trainer } from "./Trainer";
 import { Moderator } from "./Moderator";
@@ -30,46 +24,46 @@ export enum DocumentType {
 @Entity()
 export class Person {
   @PrimaryGeneratedColumn()
-  PersonId: number;
+  id: number;
 
   @Column()
-  Surname: string;
+  surname: string;
 
   @Column()
-  Name: string;
+  name: string;
 
   @Column("enum", { enum: Gender })
-  Gender: Gender;
+  gender: Gender;
 
   @Column()
-  BirthDate: Date;
+  birthDate: Date;
 
   @Column("enum", { enum: DocumentType })
-  DocType: DocumentType;
+  docType: DocumentType;
 
   @Column()
-  DocNumber: string;
+  docNumber: string;
 
   @Column()
-  PhoneNum: string;
+  phoneNum: string;
 
   @Column()
-  PESEL: string;
+  pesel: string;
 
   @Column()
-  Address: string;
+  address: string;
 
-  @ManyToOne((type) => Location, (location) => location.LocationId, {
+  @ManyToOne(() => Location, (location) => location.id, {
     cascade: true,
   })
-  Location: Location;
+  location: Location;
 
-  @OneToOne((type) => Customer, (cust) => cust.CustId)
-  Customer: Customer;
+  @OneToOne(() => Customer, (cust) => cust.id)
+  customer: Customer;
 
-  @OneToOne((type) => Trainer, (train) => train.TrainerId)
-  Trainer: Trainer;
+  @OneToOne(() => Trainer, (train) => train.id)
+  trainer: Trainer;
 
-  @OneToOne((type) => Moderator, (mod) => mod.ModId, { cascade: true })
-  Moderator: Moderator;
+  @OneToOne(() => Moderator, (mod) => mod.id, { cascade: true })
+  moderator: Moderator;
 }

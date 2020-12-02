@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
-import { Customer } from "../entities/Customer";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { Person } from "../entities/Person";
 export default class PersonController {
   async create(req: Request, res: Response) {
@@ -24,15 +21,15 @@ export default class PersonController {
 
     if (!person) {
       person = new Person();
-      person.Name = name;
-      person.Surname = surname;
-      person.DocType = docType;
-      person.DocNumber = docNumber;
-      person.Gender = gender;
-      person.BirthDate = dateOfBirth;
-      person.PhoneNum = phoneNum;
-      person.PESEL = PESEL;
-      person.Address = address;
+      person.name = name;
+      person.surname = surname;
+      person.docType = docType;
+      person.docNumber = docNumber;
+      person.gender = gender;
+      person.birthDate = dateOfBirth;
+      person.phoneNum = phoneNum;
+      person.pesel = PESEL;
+      person.address = address;
 
       console.log("utworzono nowa osobe");
       await repo.save(person);

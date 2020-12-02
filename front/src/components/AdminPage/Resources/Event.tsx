@@ -16,7 +16,7 @@ export const EventList = (props: ListProps) => (
   <List {...props}>
     <Datagrid>
       <TextField source="id" />
-      {/* <NumberField source="identifier" />
+      <NumberField source="identifier" />
       <TextField source="title" />
       <NumberField source="capacity" />
       <DateField source="dateStart" />
@@ -24,7 +24,7 @@ export const EventList = (props: ListProps) => (
       <BooleanField source="isAllDay" />
       <TextField source="exDate" />
       <TextField source="rule" />
-      <TextField source="description" /> */}
+      <TextField source="description" />
     </Datagrid>
   </List>
 );

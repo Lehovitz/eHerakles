@@ -4,6 +4,8 @@ import { Event } from "../entities/Event";
 import { Location } from "../entities/Location";
 import { Room } from "../entities/Room";
 import { Trainer } from "../entities/Trainer";
+import clean from "../utils/clean";
+
 export default class EventController {
   async create(req: Request, res: Response) {
     const {
@@ -71,8 +73,12 @@ export default class EventController {
       return true;
     });
 
+    // Usuwanie pól będących nullami / undefined
+    filteredEvents.forEach((event) => clean(event));
+
     // Wynik musi być zwracany jako obiekt { data: wynikQuery, total: liczba }
-    const result = { data: filteredEvents, total: filteredEvents.length };
+    // const result = { data: filteredEvents, total: filteredEvents.length };
+    const result = { data: filteredEvents };
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
     res
@@ -80,7 +86,7 @@ export default class EventController {
         "Content-Range": `events ${range[0]}-${range[1]}/${filteredEvents.length}`,
         "Access-Control-Expose-Headers": "Content-Range",
       })
-      .send(result);
+      .send(filteredEvents);
   }
 
   async getNextIndex(req: Request, res: Response) {

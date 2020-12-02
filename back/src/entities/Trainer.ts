@@ -1,11 +1,9 @@
-import { Location } from "./Location";
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   JoinColumn,
   OneToMany,
-  ManyToOne,
   OneToOne,
 } from "typeorm";
 import { Card } from "./Card";
@@ -14,18 +12,18 @@ import { Person } from "./Person";
 @Entity()
 export class Trainer {
   @PrimaryGeneratedColumn()
-  TrainerId: number;
+  id: number;
 
   @Column()
-  TrainerMail: string;
+  trainerMail: string;
 
   @Column()
-  TrainerPass: string;
+  trainerPass: string;
 
-  @OneToOne((type) => Person, (pers) => pers.PersonId)
+  @OneToOne(() => Person, (pers) => pers.id)
   @JoinColumn()
-  Person: Person;
+  person: Person;
 
-  @OneToMany((type) => Card, (card) => card.CardId)
-  Cards: Card[];
+  @OneToMany(() => Card, (card) => card.id)
+  cards: Card[];
 }

@@ -5,7 +5,6 @@ import { createConnection, getManager } from "typeorm";
 import { Customer } from "./entities/Customer";
 import { Location } from "./entities/Location";
 import { Room } from "./entities/Room";
-import { Gym } from "./entities/Gym";
 import { Event } from "./entities/Event";
 import { Card } from "./entities/Card";
 import { Person } from "./entities/Person";
@@ -32,7 +31,6 @@ createConnection({
     Moderator,
     Card,
     Event,
-    Gym,
     Location,
     Room,
     Trainer,

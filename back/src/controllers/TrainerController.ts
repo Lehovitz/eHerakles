@@ -36,13 +36,13 @@ export default class TrainerController {
       where: { PESEL: PESEL, PhoneNum: phoneNum },
     });
 
-    let trainer = person && person.Trainer;
+    let trainer = person && person.trainer;
 
     if (!location) {
       location = new Location();
-      location.Country = country;
-      location.City = city;
-      location.PostalCode = postalCode;
+      location.country = country;
+      location.city = city;
+      location.postalCode = postalCode;
 
       console.log("utworzono nowa lokalizacje");
       await locRepo.save(location);
@@ -52,16 +52,16 @@ export default class TrainerController {
 
     if (!person) {
       person = new Person();
-      person.Name = name;
-      person.Surname = surname;
-      person.DocType = docType;
-      person.DocNumber = docNumber;
-      person.Gender = gender;
-      person.BirthDate = dateOfBirth;
-      person.PhoneNum = phoneNum;
-      person.PESEL = PESEL;
-      person.Address = address;
-      person.Location = location;
+      person.name = name;
+      person.surname = surname;
+      person.docType = docType;
+      person.docNumber = docNumber;
+      person.gender = gender;
+      person.birthDate = dateOfBirth;
+      person.phoneNum = phoneNum;
+      person.pesel = PESEL;
+      person.address = address;
+      person.location = location;
       console.log("utworzono nowa osobe");
 
       await personRepo.save(person);
@@ -71,12 +71,12 @@ export default class TrainerController {
 
     if (!trainer) {
       trainer = new Trainer();
-      trainer.TrainerMail = email;
+      trainer.trainerMail = email;
       const salt = bcrypt.genSaltSync(10);
       const hash = await bcrypt.hash(password, salt);
-      trainer.TrainerPass = hash;
+      trainer.trainerPass = hash;
       console.log("utworzono nowego customera");
-      trainer.Person = person;
+      trainer.person = person;
       await trainerRepo.save(trainer);
     } else {
       console.log("Taki Customer juz istnieje :3");
@@ -91,11 +91,11 @@ export default class TrainerController {
     const result = [];
     for (let t of trainers)
     {
-      let person = await personRepo.findOne(t.Person);
+      let person = await personRepo.findOne(t.person);
       result.push({
-        TrainerId: t.TrainerId,
-        TrainerName: person.Name,
-        TrainerSurname: person.Surname
+        TrainerId: t.id,
+        TrainerName: person.name,
+        TrainerSurname: person.surname
       })
     }
     res.send(result);

@@ -30,20 +30,20 @@ export default class CustomerController {
     const personRepo = getManager().getRepository(Person);
 
     let location = await locRepo.findOne({
-      where: { Country: country, City: city },
+      where: { country: country, city: city },
     });
 
     let person = await personRepo.findOne({
-      where: { PESEL: PESEL, PhoneNum: phoneNum },
+      where: { pesel: PESEL, phoneNum: phoneNum },
     });
 
-    let customer = person && person.Customer;
+    let customer = person && person.customer;
 
     if (!location) {
       location = new Location();
-      location.Country = country;
-      location.City = city;
-      location.PostalCode = postalCode;
+      location.country = country;
+      location.city = city;
+      location.postalCode = postalCode;
 
       console.log("utworzono nowa lokalizacje");
       await locRepo.save(location);
@@ -53,16 +53,16 @@ export default class CustomerController {
 
     if (!person) {
       person = new Person();
-      person.Name = name;
-      person.Surname = surname;
-      person.DocType = docType;
-      person.DocNumber = docNumber;
-      person.Gender = gender;
-      person.BirthDate = dateOfBirth;
-      person.PhoneNum = phoneNum;
-      person.PESEL = PESEL;
-      person.Address = address;
-      person.Location = location;
+      person.name = name;
+      person.surname = surname;
+      person.docType = docType;
+      person.docNumber = docNumber;
+      person.gender = gender;
+      person.birthDate = dateOfBirth;
+      person.phoneNum = phoneNum;
+      person.pesel = PESEL;
+      person.address = address;
+      person.location = location;
       console.log("utworzono nowa osobe");
 
       await personRepo.save(person);
@@ -72,12 +72,12 @@ export default class CustomerController {
 
     if (!customer) {
       customer = new Customer();
-      customer.CustMail = email;
+      customer.custMail = email;
       const salt = bcrypt.genSaltSync(10);
       const hash = await bcrypt.hash(password, salt);
-      customer.CustPass = hash;
+      customer.custPass = hash;
       console.log("utworzono nowego customera");
-      customer.Person = person;
+      customer.person = person;
       await custRepo.save(customer);
     } else {
       console.log("Taki Customer juz istnieje :3");

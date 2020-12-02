@@ -4,7 +4,6 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  JoinColumn,
   ManyToMany,
   JoinTable,
 } from "typeorm";
@@ -43,13 +42,13 @@ export class Event {
   @Column({ nullable: true })
   isAllDay?: Boolean;
 
-  @ManyToOne((type) => Trainer, (trainer) => trainer.TrainerId)
+  @ManyToOne(() => Trainer, (trainer) => trainer.id)
   trainer: Trainer;
 
-  @ManyToOne((type) => Room, (room) => room.RoomId)
+  @ManyToOne(() => Room, (room) => room.id)
   room: Room;
 
-  @ManyToMany((type) => Customer, (customer) => customer.CustId)
+  @ManyToMany(() => Customer, (customer) => customer.id)
   @JoinTable()
   customers: Customer[];
 }

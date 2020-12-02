@@ -2,29 +2,26 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany,
   JoinColumn,
-  ManyToOne,
   OneToOne,
 } from "typeorm";
-import { Location } from "./Location";
 import { Person } from "./Person";
 
 @Entity()
 export class Moderator {
   @PrimaryGeneratedColumn()
-  ModId: number;
+  id: number;
 
   @Column()
-  ModMail: string;
+  modMail: string;
 
   @Column()
-  ModPass: string;
+  modPass: string;
 
   @Column()
-  IsAdmin: boolean;
+  isAdmin: boolean;
 
-  @OneToOne((type) => Person, (pers) => pers.PersonId, { cascade: true })
+  @OneToOne(() => Person, (pers) => pers.id, { cascade: true })
   @JoinColumn()
-  Person: Person;
+  person: Person;
 }

@@ -1,32 +1,21 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  JoinColumn,
-  ManyToOne,
-} from "typeorm";
-import { Gym } from "./Gym";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { Customer } from "./Customer";
 import { Trainer } from "./Trainer";
 
 @Entity()
 export class Card {
   @PrimaryGeneratedColumn()
-  CardId: number;
+  id: number;
 
   @Column()
-  Role: number;
+  role: number;
 
   @Column()
-  IsActive: boolean;
+  isActive: boolean;
 
-  @ManyToOne((type) => Gym, (gym) => gym.GymId)
-  Gym: Gym;
+  @ManyToOne(() => Customer, (cust) => cust.id)
+  customer: Customer;
 
-  @ManyToOne((type) => Customer, (cust) => cust.CustId)
-  Customer: Customer;
-
-  @ManyToOne((type) => Trainer, (train) => train.TrainerId)
-  Trainer: Trainer;
+  @ManyToOne(() => Trainer, (train) => train.id)
+  trainer: Trainer;
 }
