@@ -34,11 +34,7 @@ type EventBack = {
   rule?: string;
   exDate?: string;
   capacity: number;
-  id: number;
-};
-
-type FetchedEvents = {
-  data: EventBack[];
+  identifier: number;
 };
 
 type EventFront = {
@@ -56,15 +52,15 @@ type EventFront = {
 };
 
 type Trainer = {
-  TrainerId: number;
-  TrainerName: string;
-  TrainerSurname: string;
+  id: number;
+  trainerName: string;
+  trainerSurname: string;
 };
 
 type Room = {
-  RoomId: number;
-  RoomName: string;
-  RoomNumber: number;
+  id: number;
+  roomName: string;
+  roomNumber: number;
 };
 
 const SchedulerComponent = () => {
@@ -78,8 +74,8 @@ const SchedulerComponent = () => {
       title: "Room",
       instances: rooms.map((room) => {
         return {
-          id: room.RoomId,
-          text: `${room.RoomNumber} - ${room.RoomName}`,
+          id: room.id,
+          text: `${room.roomNumber} - ${room.roomName}`,
           color: "blue",
         };
       }),
@@ -89,8 +85,8 @@ const SchedulerComponent = () => {
       title: "Trainer",
       instances: trainers.map((trainer) => {
         return {
-          id: trainer.TrainerId,
-          text: `${trainer.TrainerName} ${trainer.TrainerSurname}`,
+          id: trainer.id,
+          text: `${trainer.trainerName} ${trainer.trainerSurname}`,
           color: "grey",
         };
       }),
@@ -117,16 +113,15 @@ const SchedulerComponent = () => {
 
   useEffect(() => {
     (async () => {
-      const res: FetchedEvents = await fetch(
+      const res: EventBack[] = await fetch(
         `http://localhost:5000/events/?sort=["id","ASC"]&filter={}&range=[0,100000]`
       ).then((res) => res.json());
 
       const events: EventFront[] = [];
-      for (let event of res.data) {
-        console.log(event);
+      for (let event of res) {
         const eventFront: EventFront = {
+          id: event.identifier,
           title: event.title,
-          id: event.id,
           startDate: new Date(Date.parse(event.dateStart)),
           endDate: new Date(Date.parse(event.dateEnd)),
           trainerId: event.trainerId,
@@ -137,13 +132,10 @@ const SchedulerComponent = () => {
           exDate: event.exDate,
           capacity: event.capacity,
         };
-        console.log(event.dateStart);
-
         events.push(eventFront);
       }
 
       setData(events);
-      console.log(events);
     })();
   }, []);
 
@@ -158,12 +150,17 @@ const SchedulerComponent = () => {
 
       await fetch(`http://localhost:5000/events/`, {
         method: "POST",
-        body: JSON.stringify({ ...added, id: startingAddedId.lastIndex }),
+        body: JSON.stringify({
+          ...added,
+          identifier: startingAddedId.lastIndex,
+        }),
         headers: { "Content-Type": "application/json" },
       });
       newData.push({ ...added, id: startingAddedId.lastIndex });
     }
     if (changed) {
+      console.log(changed);
+
       newData = data.map((appointment) =>
         changed[appointment.id]
           ? { ...appointment, ...changed[appointment.id] }
@@ -175,7 +172,7 @@ const SchedulerComponent = () => {
       console.log(changedObj);
       await fetch(`http://localhost:5000/events/${changedObj!.id}`, {
         method: "PUT",
-        body: JSON.stringify(changedObj),
+        body: JSON.stringify({ ...changedObj }),
         headers: { "Content-Type": "application/json" },
       });
     }

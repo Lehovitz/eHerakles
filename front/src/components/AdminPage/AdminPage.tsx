@@ -2,7 +2,7 @@ import React from "react";
 import { Admin, Resource } from "react-admin";
 import { Provider, useDispatch } from "react-redux";
 import restProvider from "ra-data-simple-rest";
-import { EventIcon, EventList } from "./Resources/Event";
+import { EventIcon, EventList, EventCreate, EventEdit } from "./Resources/Event";
 import { createHashHistory } from "history";
 import { createAdminStore } from "react-admin";
 import defaultMessages from "ra-language-english";
@@ -20,24 +20,21 @@ const store = createAdminStore({
 });
 
 const AdminPage = () => {
-  const dispatch = useDispatch(),
-    history = useHistory();
-
-  const handleLogout = () => {
-    dispatch(updateToken(""));
-    history.push("/");
-  };
-
   return (
     <Provider store={store}>
       <Admin
         dataProvider={restProvider("http://localhost:5000")}
         history={history}
         i18nProvider={i18nProvider}
-        logoutButton={() => <Button onClick={handleLogout}>Logout</Button>}
         title="eHerakles Admin"
       >
-        <Resource name="events" list={EventList} icon={EventIcon} />
+        <Resource
+          name="events"
+          list={EventList}
+          edit={EventEdit}
+          create={EventCreate}
+          icon={EventIcon}
+        />
         {/* <Resource name="location" list={} edit={} create={} icon={LocationIcon} /> */}
       </Admin>
     </Provider>

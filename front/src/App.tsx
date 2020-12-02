@@ -27,28 +27,33 @@ export default class App extends Component {
         <Route exact path="/register" component={RegisterPage} />
         {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
         <ProtectedRoute
+          exact
           path="/"
           role="customer"
           component={SchedulerComponent}
         />
         <ProtectedRoute
+          exact
           path="/"
           role="trainer"
           component={SchedulerComponent}
         />
         <MuiThemeProvider>
           <ProtectedRoute
+            exact
             path="/bmi"
             role="customer"
             component={BMICalculator}
           />
           <ProtectedRoute
+            exact
             path="/bmi"
             role="trainer"
             component={BMICalculator}
           />
         </MuiThemeProvider>
         <ProtectedRoute
+          exact
           path="/"
           role="moderator"
           component={SchedulerComponent}
@@ -80,7 +85,6 @@ const ProtectedRoute = ({
   return (
     <Route
       {...rest}
-      exact
       path={`${pathPrefix}${path}`}
       render={(props) =>
         decodedToken && decodedToken.role === role ? (

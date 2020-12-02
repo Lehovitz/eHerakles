@@ -26,16 +26,7 @@ createConnection({
   username: "postgres",
   password: "pass",
   database: "eHerakles",
-  entities: [
-    Customer,
-    Moderator,
-    Card,
-    Event,
-    Location,
-    Room,
-    Trainer,
-    Person,
-  ],
+  entities: [Customer, Moderator, Card, Event, Location, Room, Trainer, Person],
   synchronize: true,
   logging: false,
 })
@@ -44,29 +35,29 @@ createConnection({
 
     // const moderatorRepository = getManager().getRepository(Moderator);
     // const moderator = new Moderator();
-    // moderator.IsAdmin = true;
-    // moderator.ModMail = "mod@xd.pl";
-    // moderator.ModPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
+    // moderator.isAdmin = true;
+    // moderator.modMail = "mod@xd.pl";
+    // moderator.modPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
     // const location = new Location();
-    // location.City = "aa";
-    // location.Country = "aa";
-    // location.PostalCode = "aaa";
+    // location.city = "aa";
+    // location.country = "aa";
+    // location.postalCode = "aaa";
 
     // const person = new Person();
-    // person.Address = "aaaa";
-    // person.BirthDate = new Date();
-    // person.Gender = Gender.Male;
-    // person.DocNumber = "98239483";
-    // person.DocType = DocumentType.Passport;
-    // person.Name = "imie";
-    // person.PESEL = "2938329823";
-    // person.PhoneNum = "2394823834";
-    // person.Surname = "surname";
+    // person.address = "aaaa";
+    // person.birthDate = new Date();
+    // person.gender = Gender.Male;
+    // person.docNumber = "98239483";
+    // person.docType = DocumentType.Passport;
+    // person.name = "imie";
+    // person.pesel = "2938329823";
+    // person.phoneNum = "2394823834";
+    // person.surname = "surname";
 
-    // location.Person = person;
-    // person.Location = location;
-    // person.Moderator = moderator;
-    // moderator.Person = person;
+    // location.person = person;
+    // person.location = location;
+    // person.moderator = moderator;
+    // moderator.person = person;
 
     // await moderatorRepository.save(moderator);
 
