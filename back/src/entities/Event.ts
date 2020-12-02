@@ -6,10 +6,12 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  Unique,
 } from "typeorm";
 import { Trainer } from "./Trainer";
 import { Customer } from "./Customer";
 
+@Unique(["identifier"])
 @Entity()
 export class Event {
   @PrimaryGeneratedColumn()

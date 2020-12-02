@@ -143,7 +143,6 @@ const SchedulerComponent = () => {
     let newData = [...data];
 
     if (added) {
-      console.log(added);
       const startingAddedId: LastIndex = await fetch(
         `http://localhost:5000/events/getNextId`
       ).then((res) => res.json());
@@ -159,8 +158,6 @@ const SchedulerComponent = () => {
       newData.push({ ...added, id: startingAddedId.lastIndex });
     }
     if (changed) {
-      console.log(changed);
-
       newData = data.map((appointment) =>
         changed[appointment.id]
           ? { ...appointment, ...changed[appointment.id] }
@@ -169,7 +166,6 @@ const SchedulerComponent = () => {
       const changedObj = newData.find(
         (appointment) => appointment.id === +Object.keys(changed)[0]
       );
-      console.log(changedObj);
       await fetch(`http://localhost:5000/events/${changedObj!.id}`, {
         method: "PUT",
         body: JSON.stringify({ ...changedObj }),
@@ -178,9 +174,12 @@ const SchedulerComponent = () => {
     }
     if (deleted !== undefined) {
       const deletedId = data.find((appointment) => appointment.id === deleted);
-      await fetch(`http://localhost:5000/events/${deletedId!.id}`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `http://localhost:5000/events/byIdentifier/${deletedId!.id}`,
+        {
+          method: "DELETE",
+        }
+      );
       newData = data.filter((appointment) => appointment.id !== deleted);
     }
     setData(newData);

@@ -15,7 +15,10 @@ import {
   ListProps,
   NumberField,
   NumberInput,
+  Show,
+  ShowProps,
   SimpleForm,
+  SimpleShowLayout,
   TextField,
   TextInput,
   TitleProps,
@@ -23,24 +26,47 @@ import {
 
 export const EventIcon = Event;
 
-export const EventList = (props: ListProps) => (
-  <List {...props}>
-    <Datagrid>
-      <TextField source="id" />
-      <NumberField source="identifier" />
-      <TextField source="title" />
-      <NumberField source="capacity" />
-      <DateField source="dateStart" />
-      <DateField source="dateEnd" />
-      <BooleanField source="isAllDay" />
-      <TextField source="exDate" />
-      <TextField source="rule" />
-      <TextField source="description" />
-      <NumberField source="trainerId" />
-      <NumberField source="roomId" />
-    </Datagrid>
-  </List>
-);
+export const EventList = (props: ListProps) => {
+  return (
+    <List {...props}>
+      <Datagrid>
+        <TextField source="id" />
+        <NumberField source="identifier" />
+        <TextField source="title" />
+        <NumberField source="capacity" />
+        <DateField source="dateStart" />
+        <DateField source="dateEnd" />
+        <BooleanField source="isAllDay" />
+        <TextField source="exDate" />
+        <TextField source="rule" />
+        <TextField source="description" />
+        <NumberField source="trainerId" />
+        <NumberField source="roomId" />
+      </Datagrid>
+    </List>
+  );
+};
+
+export const EventShow = (props: ShowProps) => {
+  return (
+    <Show {...props}>
+      <SimpleShowLayout>
+        <TextField source="id" />
+        <NumberField source="identifier" />
+        <TextField source="title" />
+        <NumberField source="capacity" />
+        <DateField source="dateStart" />
+        <DateField source="dateEnd" />
+        <BooleanField source="isAllDay" />
+        <TextField source="exDate" />
+        <TextField source="rule" />
+        <TextField source="description" />
+        <NumberField source="trainerId" />
+        <NumberField source="roomId" />
+      </SimpleShowLayout>
+    </Show>
+  );
+};
 
 const EventTitle = ({ record }: TitleProps) => {
   return (

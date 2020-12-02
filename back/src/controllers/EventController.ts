@@ -59,10 +59,10 @@ export default class EventController {
     const take = +range[1] - +range[0];
 
     // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
-    let events = await repo.find({ order, skip, take });
+    let data = await repo.find({ order, skip, take });
 
     // Filtrowanie encji
-    const filteredEvents = events.filter((event) => {
+    const filteredData = data.filter((event) => {
       for (let filter of Object.keys(filters)) {
         console.log(filter);
         if (event[filter] != filters[filter]) return false;
@@ -72,19 +72,21 @@ export default class EventController {
     });
 
     // Usuwanie pól będących nullami / undefined
-    filteredEvents.forEach((event) => clean(event));
-
-    // Wynik musi być zwracany jako obiekt { data: wynikQuery, total: liczba }
-    // const result = { data: filteredEvents, total: filteredEvents.length };
-    const result = { data: filteredEvents };
+    filteredData.forEach((elem) => clean(elem));
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
     res
       .set({
-        "Content-Range": `events ${range[0]}-${range[1]}/${filteredEvents.length}`,
+        "Content-Range": `events ${range[0]}-${range[1]}/${filteredData.length}`,
         "Access-Control-Expose-Headers": "Content-Range",
       })
-      .send(filteredEvents);
+      .send(filteredData);
+  }
+
+  async readOne(req: Request, res: Response) {
+    const repo = getManager().getRepository(Event);
+    const data = await repo.findOne(req.params.eventId);
+    res.send(200).send(data);
   }
 
   async getNextIndex(req: Request, res: Response) {
@@ -114,7 +116,7 @@ export default class EventController {
       capacity,
     } = req.body;
     const repo = getManager().getRepository(Event);
-    
+
     let event = await repo.findOne({
       where: { identifier: req.params.eventId },
     });
@@ -142,13 +144,21 @@ export default class EventController {
     } else res.send(new Error("Event nie znaleziony!!!!"));
   }
 
-  async delete(req: Request, res: Response) {
+  async deleteByIdentifier(req: Request, res: Response) {
     const repo = getManager().getRepository(Event);
     const event = await repo.findOne({
-      where: { identifier: req.params.eventId },
+      where: { identifier: req.params.identifier },
     });
 
     await repo.delete(event.id);
+
+    res.send();
+  }
+
+  async delete(req: Request, res: Response) {
+    console.log(req.params.eventId);
+    const repo = getManager().getRepository(Event);
+    await repo.delete(req.params.eventId);
 
     res.send();
   }
