@@ -1,34 +1,13 @@
-import { Request, Response } from "express";
 import { getManager } from "typeorm";
-import { Room } from "../entities/Room";
+import { Moderator } from "../entities/Moderator";
+import { Request, Response } from "express";
 import clean from "../utils/clean";
 
-export default class RoomController {
-  async create(req: Request, res: Response) {
-    const { name, number } = req.body;
-
-    const roomRepo = getManager().getRepository(Room);
-
-    let room = await roomRepo.findOne({
-      where: { RoomName: name, RoomNumber: number },
-    });
-
-    if (!room) {
-      const room = new Room();
-      console.log("utworzono nowy pokoj ");
-
-      room.roomNumber = number;
-      room.roomName = name;
-
-      await roomRepo.save(room);
-      res.send();
-    }
-
-    res.status(400).send();
-  }
+export default class ModeratorController {
+  async create(req: Request, res: Response) {}
 
   async readAll(req: Request, res: Response) {
-    const repo = getManager().getRepository(Room);
+    const repo = getManager().getRepository(Moderator);
     const sort = JSON.parse(req.query.sort.toString());
     const filters = JSON.parse(req.query.filter.toString());
     const range = JSON.parse(req.query.range.toString());
@@ -55,39 +34,25 @@ export default class RoomController {
     // Usuwanie pól będących nullami / undefined
     filteredData.forEach((elem) => clean(elem));
 
-    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami, w pierwszym trzeba zmienić nazwę encji
+    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
     res
       .set({
-        "Content-Range": `rooms ${range[0]}-${range[1]}/${filteredData.length}`,
+        "Content-Range": `moderators ${range[0]}-${range[1]}/${filteredData.length}`,
         "Access-Control-Expose-Headers": "Content-Range",
       })
       .send(filteredData);
   }
 
   async readOne(req: Request, res: Response) {
-    const repo = getManager().getRepository(Room);
+    const repo = getManager().getRepository(Moderator);
     const data = await repo.findOne(req.params.id);
     return res.status(200).send(data);
   }
 
-  async update(req: Request, res: Response) {
-    const { name, number } = req.body;
-    const repo = getManager().getRepository(Room);
-
-    let room = await repo.findOne(req.params.id);
-
-    if (room) {
-      room.roomName = name;
-      room.roomNumber = number;
-      await repo.save(room);
-      res.status(200).send(room);
-    } else {
-      res.status(400).send();
-    }
-  }
+  async update(req: Request, res: Response) {}
 
   async delete(req: Request, res: Response) {
-    const repo = getManager().getRepository(Room);
+    const repo = getManager().getRepository(Moderator);
     const object = await repo.findOne(req.params.id);
 
     await repo.delete(req.params.id);

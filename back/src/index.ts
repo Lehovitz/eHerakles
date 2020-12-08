@@ -14,6 +14,8 @@ import eventRouter from "./routes/EventRoute";
 import trainerRouter from "./routes/TrainerRoute";
 import roomRouter from "./routes/RoomRoute";
 import loginRouter from "./routes/LoginRoute";
+import moderatorRouter from "./routes/ModeratorRoute";
+import locationRouter from "./routes/LocationRoute";
 import bcrypt from "bcryptjs";
 import { DocumentType, Gender } from "./entities/Person";
 
@@ -70,6 +72,8 @@ createConnection({
     app.use("/events", eventRouter);
     app.use("/rooms", roomRouter);
     app.use("/trainers", trainerRouter);
+    app.use("/locations", locationRouter);
+    app.use("/moderators", moderatorRouter);
     app.use("/login", loginRouter);
 
     app.listen(5000);

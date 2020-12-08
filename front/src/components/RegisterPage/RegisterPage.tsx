@@ -94,7 +94,7 @@ const RegisterPage = () => {
   };
 
   const handleRegisterClick = async () => {
-    const response = await fetch("http://localhost:5000/customers/register/", {
+    const response = await fetch("http://localhost:5000/customers/", {
       method: "POST",
       body: JSON.stringify({
         email,

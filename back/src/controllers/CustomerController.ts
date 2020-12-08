@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { Customer } from "../entities/Customer";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { Person } from "../entities/Person";
 import { Location } from "../entities/Location";
+import clean from "../utils/clean";
 
 export default class CustomerController {
   async create(req: Request, res: Response) {
@@ -82,19 +82,80 @@ export default class CustomerController {
     } else {
       console.log("Taki Customer juz istnieje :3");
     }
-    res.send();
+    res.send(customer);
   }
+
   async readOne(req: Request, res: Response) {
     const { id } = req.params;
     const repo = getManager().getRepository(Customer);
     let cust = await repo.findOneOrFail(id);
     res.send(cust);
   }
+
   async readAll(req: Request, res: Response) {
     const repo = getManager().getRepository(Customer);
-    let cust = await repo.find();
-    res.send(cust);
+
+    const sort = JSON.parse(req.query.sort.toString());
+    const filters = JSON.parse(req.query.filter.toString());
+    const range = JSON.parse(req.query.range.toString());
+
+    // Parametry metody find używanej poniżej
+    const order = {};
+    order[sort[0]] = sort[1];
+
+    const skip = +range[0];
+    const take = +range[1] - +range[0];
+
+    // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
+    let data = await repo.find({ order, skip, take });
+
+    // Filtrowanie encji
+    const filteredData = data.filter((elem) => {
+      for (let filter of Object.keys(filters)) {
+        console.log(filter);
+        if (elem[filter] != filters[filter]) return false;
+      }
+
+      return true;
+    });
+
+    // Usuwanie pól będących nullami / undefined
+    filteredData.forEach((elem) => clean(elem));
+
+    // Wyciąganie tylko istotnych pól
+    const result = filteredData.map(async (elem) => {
+      const { id, custMail } = elem;
+      const personRepo = getManager().getRepository(Person);
+      const person = await personRepo.findOne(elem.person);
+      
+      const { name, surname, birthDate, docNumber, docType } = person;
+
+      return { id, custMail, name, surname, birthDate, docType, docNumber };
+    });
+
+    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
+    res
+      .set({
+        "Content-Range": `customers ${range[0]}-${range[1]}/${filteredData.length}`,
+        "Access-Control-Expose-Headers": "Content-Range",
+      })
+      .send(result);
   }
-  async update(req: Request, res: Response) {}
-  async delete(req: Request, res: Response) {}
+
+  async update(req: Request, res: Response) {
+    const { id, mail, name, surname, birthDate, docType, docNumber } = req.body;
+  }
+
+  async delete(req: Request, res: Response) {
+    const repo = getManager().getRepository(Customer);
+    const object = await repo.findOne(req.params.id);
+
+    await repo.delete(req.params.id);
+
+    return res
+      .set({
+        "Content-Type": "application/json",
+      })
+      .send({ id: object.id, custMail: object.custMail });
+  }
 }

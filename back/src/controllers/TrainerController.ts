@@ -4,6 +4,7 @@ import { Person } from "../entities/Person";
 import { Trainer } from "../entities/Trainer";
 import { Location } from "../entities/Location";
 import bcrypt from "bcryptjs";
+import clean from "../utils/clean";
 
 export default class TrainerController {
   async create(req: Request, res: Response) {
@@ -84,20 +85,79 @@ export default class TrainerController {
     res.send();
   }
 
-  async readAll(_req: Request, res: Response) {
+  async readAll(req: Request, res: Response) {
     const repo = getManager().getRepository(Trainer);
-    const personRepo = getManager().getRepository(Person);
-    let trainers = await repo.find();
-    const result = [];
-    for (let t of trainers)
-    {
-      let person = await personRepo.findOne(t.person);
-      result.push({
-        TrainerId: t.id,
-        TrainerName: person.name,
-        TrainerSurname: person.surname
+
+    const sort = JSON.parse(req.query.sort.toString());
+    const filters = JSON.parse(req.query.filter.toString());
+    const range = JSON.parse(req.query.range.toString());
+
+    // Parametry metody find używanej poniżej
+    const order = {};
+    order[sort[0]] = sort[1];
+
+    const skip = +range[0];
+    const take = +range[1] - +range[0];
+
+    // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
+    let data = await repo.find({ order, skip, take });
+
+    // Filtrowanie encji
+    const filteredData = data.filter((elem) => {
+      for (let filter of Object.keys(filters)) {
+        if (elem[filter] != filters[filter]) return false;
+      }
+
+      return true;
+    });
+
+    // Usuwanie pól będących nullami / undefined
+    filteredData.forEach((elem) => clean(elem));
+
+    // Wyciąganie tylko istotnych pól
+    const result = filteredData.map((elem) => {
+      const { id, trainerMail } = elem;
+      const { name, surname, birthDate, docType, docNumber } = elem.person;
+
+      return { id, trainerMail, name, surname, birthDate, docType, docNumber };
+    });
+
+    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami, w pierwszym trzeba zmienić nazwę encji
+    res
+      .set({
+        "Content-Range": `trainers ${range[0]}-${range[1]}/${result.length}`,
+        "Access-Control-Expose-Headers": "Content-Range",
       })
-    }
-    res.send(result);
+      .send(result);
+  }
+
+  async readOne(req: Request, res: Response) {
+    const repo = getManager().getRepository(Trainer);
+    const data = await repo.findOne(req.params.id);
+    const { id, trainerMail } = data;
+    const { name, surname, birthDate, docType, docNumber } = data.person;
+
+    res
+      .status(200)
+      .send({ id, trainerMail, name, surname, birthDate, docType, docNumber });
+  }
+
+  async update(req: Request, res: Response) {
+    const { id, mail, name, surname, birthDate, docType, docNumber } = req.body;
+
+    // ważne żeby update miał tylko te pola które zwraca read
+  }
+
+  async delete(req: Request, res: Response) {
+    const repo = getManager().getRepository(Trainer);
+    const object = await repo.findOne(req.params.id);
+
+    await repo.delete(req.params.id);
+
+    return res
+      .set({
+        "Content-Type": "application/json",
+      })
+      .send({ id: object.id, trainerMail: object.trainerMail });
   }
 }

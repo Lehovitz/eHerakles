@@ -7,7 +7,6 @@ import {
   CreateProps,
   Datagrid,
   DateField,
-  DateInput,
   DateTimeInput,
   Edit,
   EditButton,

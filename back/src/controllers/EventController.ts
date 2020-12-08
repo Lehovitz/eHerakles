@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { Event } from "../entities/Event";
-import { Location } from "../entities/Location";
 import { Room } from "../entities/Room";
 import { Trainer } from "../entities/Trainer";
 import clean from "../utils/clean";
@@ -64,7 +63,6 @@ export default class EventController {
     // Filtrowanie encji
     const filteredData = data.filter((event) => {
       for (let filter of Object.keys(filters)) {
-        console.log(filter);
         if (event[filter] != filters[filter]) return false;
       }
 

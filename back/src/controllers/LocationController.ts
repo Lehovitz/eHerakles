@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { Location } from "../entities/Location";
+
 export default class LocationController {
   async create(req: Request, res: Response) {
     const { country, city, postalCode } = req.body;
