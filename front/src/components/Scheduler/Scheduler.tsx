@@ -169,7 +169,10 @@ const SchedulerComponent = () => {
       await fetch(`http://localhost:5000/events/${changedObj!.id}`, {
         method: "PUT",
         body: JSON.stringify({ ...changedObj }),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Identifier-Type": "Identifier",
+        },
       });
     }
     if (deleted !== undefined) {

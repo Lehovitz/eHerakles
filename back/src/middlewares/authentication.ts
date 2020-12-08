@@ -19,7 +19,7 @@ export default function authenticateToken(
     process.env.TOKEN_SECRET as string,
     (err: any, tokenBody: TokenBody) => {
       //console.log(err);
-      if (err) return res.sendStatus(403);
+      if (err) return res.status(403).send();
       req.email = tokenBody.email;
       req.role = tokenBody.role;
       //TODO:: wylaczyc bledy, bo ja ich nie popelniam

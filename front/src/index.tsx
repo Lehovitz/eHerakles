@@ -38,7 +38,11 @@ const persistedStore = loadState();
 const middlewares = [thunk];
 const composedEnhancers = composeWithDevTools(applyMiddleware(...middlewares));
 
-const store = createStore(rootReducer, persistedStore, composedEnhancers);
+export const store = createStore(
+  rootReducer,
+  persistedStore,
+  composedEnhancers
+);
 
 store.subscribe(
   _.throttle(() => {

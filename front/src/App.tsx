@@ -1,5 +1,11 @@
-import React, { Component } from "react";
-import { BrowserRouter, Redirect, Route, RouteProps } from "react-router-dom";
+import React, { Component, useEffect } from "react";
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  RouteProps,
+  useHistory,
+} from "react-router-dom";
 import LoginPage from "./components/LoginPage/LoginPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
 import SchedulerComponent from "./components/Scheduler/Scheduler";
@@ -13,56 +19,53 @@ import jwtDecode from "jwt-decode";
 import DecodedToken from "./models/DecodedToken";
 import BMICalculator from "./components/BMICalculator/BMICalculator";
 import AdminPage from "./components/AdminPage/AdminPage";
+import { createBrowserHistory } from "history";
 
-export default class App extends Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <MuiThemeProvider>
-          <ThemeProvider theme={darkTheme}>
-            <AppBarComponent></AppBarComponent>
-          </ThemeProvider>
-        </MuiThemeProvider>
-        <Route exact path="/" component={LoginPage} />
-        <Route exact path="/register" component={RegisterPage} />
-        {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
-        <ProtectedRoute
-          exact
-          path="/"
-          role="customer"
-          component={SchedulerComponent}
-        />
-        <ProtectedRoute
-          exact
-          path="/"
-          role="trainer"
-          component={SchedulerComponent}
-        />
-        <MuiThemeProvider>
-          <ProtectedRoute
-            exact
-            path="/bmi"
-            role="customer"
-            component={BMICalculator}
-          />
-          <ProtectedRoute
-            exact
-            path="/bmi"
-            role="trainer"
-            component={BMICalculator}
-          />
-        </MuiThemeProvider>
-        <ProtectedRoute
-          exact
-          path="/"
-          role="moderator"
-          component={SchedulerComponent}
-        />
-        <ProtectedRoute path="/" role="admin" component={AdminPage} />
-      </BrowserRouter>
-    );
-  }
-}
+export default () => (
+  <BrowserRouter>
+    <MuiThemeProvider>
+      <ThemeProvider theme={darkTheme}>
+        <AppBarComponent></AppBarComponent>
+      </ThemeProvider>
+    </MuiThemeProvider>
+    <Route exact path="/" component={LoginPage} />
+    <Route exact path="/register" component={RegisterPage} />
+    {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
+    <ProtectedRoute
+      exact
+      path="/"
+      role="customer"
+      component={SchedulerComponent}
+    />
+    <ProtectedRoute
+      exact
+      path="/"
+      role="trainer"
+      component={SchedulerComponent}
+    />
+    <MuiThemeProvider>
+      <ProtectedRoute
+        exact
+        path="/bmi"
+        role="customer"
+        component={BMICalculator}
+      />
+      <ProtectedRoute
+        exact
+        path="/bmi"
+        role="trainer"
+        component={BMICalculator}
+      />
+    </MuiThemeProvider>
+    <ProtectedRoute
+      exact
+      path="/"
+      role="moderator"
+      component={SchedulerComponent}
+    />
+    <ProtectedRoute path="/" role="admin" component={AdminPage} />
+  </BrowserRouter>
+);
 
 interface ProtectedRouteProps extends RouteProps {
   role: "customer" | "trainer" | "moderator" | "admin";

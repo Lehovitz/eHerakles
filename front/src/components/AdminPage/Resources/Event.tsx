@@ -10,12 +10,14 @@ import {
   DateInput,
   DateTimeInput,
   Edit,
+  EditButton,
   EditProps,
   List,
   ListProps,
   NumberField,
   NumberInput,
   Show,
+  ShowButton,
   ShowProps,
   SimpleForm,
   SimpleShowLayout,
@@ -42,6 +44,8 @@ export const EventList = (props: ListProps) => {
         <TextField source="description" />
         <NumberField source="trainerId" />
         <NumberField source="roomId" />
+        <EditButton />
+        <ShowButton />
       </Datagrid>
     </List>
   );

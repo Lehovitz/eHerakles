@@ -42,7 +42,7 @@ export default class EventController {
 
     console.log("utworzono nowe zajecia");
     await repo.save(event);
-    res.send();
+    return res.send(event);
   }
 
   async readAll(req: Request, res: Response) {
@@ -86,10 +86,10 @@ export default class EventController {
   async readOne(req: Request, res: Response) {
     const repo = getManager().getRepository(Event);
     const data = await repo.findOne(req.params.eventId);
-    res.send(200).send(data);
+    return res.status(200).send(data);
   }
 
-  async getNextIndex(req: Request, res: Response) {
+  async getNextIndex(_req: Request, res: Response) {
     const repo = getManager().getRepository(Event);
     let lastRec = await repo.find({
       order: {
@@ -98,7 +98,7 @@ export default class EventController {
       take: 1,
     });
     let lastIndex = lastRec.length === 0 ? 0 : lastRec[0].identifier + 1;
-    res.send({ lastIndex });
+    return res.send({ lastIndex });
   }
 
   async update(req: Request, res: Response) {
@@ -117,9 +117,16 @@ export default class EventController {
     } = req.body;
     const repo = getManager().getRepository(Event);
 
+    const idType = req.header("X-Identifier-Type");
+
     let event = await repo.findOne({
-      where: { identifier: req.params.eventId },
+      where:
+        idType === "Identifier"
+          ? { identifier: req.params.eventId }
+          : { id: req.params.eventId },
     });
+
+    console.log(event);
 
     if (event) {
       const repo = getManager().getRepository(Event);
@@ -140,8 +147,8 @@ export default class EventController {
 
       console.log("updated LMAO   " + req.params.eventId);
       await repo.save(event);
-      res.send();
-    } else res.send(new Error("Event nie znaleziony!!!!"));
+      return res.send(event);
+    } else res.status(400).send("Event nie znaleziony!!!!");
   }
 
   async deleteByIdentifier(req: Request, res: Response) {
@@ -152,14 +159,19 @@ export default class EventController {
 
     await repo.delete(event.id);
 
-    res.send();
+    return res.send(event);
   }
 
   async delete(req: Request, res: Response) {
-    console.log(req.params.eventId);
     const repo = getManager().getRepository(Event);
+    const object = await repo.findOne(req.params.eventId);
+
     await repo.delete(req.params.eventId);
 
-    res.send();
+    return res
+      .set({
+        "Content-Type": "application/json",
+      })
+      .send(object);
   }
 }
