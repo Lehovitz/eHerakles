@@ -107,7 +107,15 @@ export default class CustomerController {
     const take = +range[1] - +range[0];
 
     // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
-    let data = await repo.find({ order, skip, take });
+    let data = await repo
+      .createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.person", "person")
+      .orderBy(`customer.${sort[0]}`, sort[1])
+      .skip(skip)
+      .take(take)
+      .getMany();
+
+    console.log(data);
 
     // Filtrowanie encji
     const filteredData = data.filter((elem) => {
@@ -123,20 +131,30 @@ export default class CustomerController {
     filteredData.forEach((elem) => clean(elem));
 
     // Wyciąganie tylko istotnych pól
-    const result = filteredData.map(async (elem) => {
+    const result = [];
+
+    for (let elem of filteredData) {
       const { id, custMail } = elem;
       const personRepo = getManager().getRepository(Person);
       const person = await personRepo.findOne(elem.person);
-      
+
       const { name, surname, birthDate, docNumber, docType } = person;
 
-      return { id, custMail, name, surname, birthDate, docType, docNumber };
-    });
+      result.push({
+        id,
+        custMail,
+        name,
+        surname,
+        birthDate,
+        docType,
+        docNumber,
+      });
+    }
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
     res
       .set({
-        "Content-Range": `customers ${range[0]}-${range[1]}/${filteredData.length}`,
+        "Content-Range": `customers ${range[0]}-${range[1]}/${result.length}`,
         "Access-Control-Expose-Headers": "Content-Range",
       })
       .send(result);

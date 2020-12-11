@@ -80,7 +80,7 @@ export default class TrainerController {
       trainer.person = person;
       await trainerRepo.save(trainer);
     } else {
-      console.log("Taki Customer juz istnieje :3");
+      console.log("Taki Trainer juz istnieje :3");
     }
     res.send();
   }
@@ -100,7 +100,15 @@ export default class TrainerController {
     const take = +range[1] - +range[0];
 
     // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
-    let data = await repo.find({ order, skip, take });
+    let data = await repo
+      .createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.person", "person")
+      .orderBy(`trainer.${sort[0]}`, sort[1])
+      .skip(skip)
+      .take(take)
+      .getMany();
+
+    console.log(data);
 
     // Filtrowanie encji
     const filteredData = data.filter((elem) => {
@@ -115,14 +123,27 @@ export default class TrainerController {
     filteredData.forEach((elem) => clean(elem));
 
     // Wyciąganie tylko istotnych pól
-    const result = filteredData.map((elem) => {
+    const result = [];
+
+    for (let elem of filteredData) {
       const { id, trainerMail } = elem;
-      const { name, surname, birthDate, docType, docNumber } = elem.person;
+      const personRepo = getManager().getRepository(Person);
+      const person = await personRepo.findOne(elem.person);
 
-      return { id, trainerMail, name, surname, birthDate, docType, docNumber };
-    });
+      const { name, surname, birthDate, docNumber, docType } = person;
 
-    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami, w pierwszym trzeba zmienić nazwę encji
+      result.push({
+        id,
+        trainerMail,
+        name,
+        surname,
+        birthDate,
+        docType,
+        docNumber,
+      });
+    }
+
+    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
     res
       .set({
         "Content-Range": `trainers ${range[0]}-${range[1]}/${result.length}`,
