@@ -8,21 +8,15 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import { render } from "@testing-library/react";
-import React, { Component, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styles from "./RegisterPage.module.scss";
-
-const today = new Date();
 
 const RegisterPage = () => {
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [redirect, setRedirect] = useState(false),
-    [isEmailValid, setIsEmailValid] = useState(true),
-    [isPasswordValid, setIsPasswordValid] = useState(true),
-    [error, setError] = useState(""),
+    [, setError] = useState(""),
     [name, setName] = useState(""),
     [surname, setSurname] = useState(""),
     [gender, setGender] = useState(""),

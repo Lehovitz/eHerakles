@@ -1,8 +1,6 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import { Resources, ViewState } from "@devexpress/dx-react-scheduler";
 import {
-  DayView,
   Appointments,
   Scheduler,
   WeekView,

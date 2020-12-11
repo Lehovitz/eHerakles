@@ -6,8 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { Menu } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux";
+import { useDispatch } from "react-redux";
 import { updateToken } from "../../redux/bearerToken/actions";
 
 const AppBarComponent = () => {
@@ -17,7 +16,7 @@ const AppBarComponent = () => {
   const handleLogout = () => {
     dispatch(updateToken(""));
     history.push("/");
-  }
+  };
 
   return (
     <AppBar position="static" color="default">
@@ -26,7 +25,9 @@ const AppBarComponent = () => {
           <Menu />
         </IconButton>
         <Typography variant="h6">News</Typography>
-        <Button onClick={handleLogout} color="inherit">Logout</Button>
+        <Button onClick={handleLogout} color="inherit">
+          Logout
+        </Button>
         <Button color="inherit">Login</Button>
       </Toolbar>
     </AppBar>

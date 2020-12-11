@@ -1,7 +1,6 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { render } from "@testing-library/react";
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { RootState } from "../../redux";
@@ -16,7 +15,6 @@ const LoginPage = () => {
     [password, setPassword] = useState(""),
     [redirect, setRedirect] = useState(false),
     [loggedIn, setLoggedIn] = useState(false),
-    [isEmailValid, setIsEmailValid] = useState(true),
     [isError, setIsError] = useState(false),
     bearerToken = useSelector((state: RootState) => state.token),
     dispatch = useDispatch();
@@ -37,7 +35,7 @@ const LoginPage = () => {
         dispatch(updateLoginError(""));
       }, 3000);
     }
-  }, [bearerToken.error]);
+  }, [bearerToken.error, dispatch]);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
