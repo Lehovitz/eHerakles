@@ -20,14 +20,14 @@ export default class LocationController {
 
       console.log("utworzono nowa lokalizacje");
       await repo.save(location);
-      res.send();
+      res.send(location);
     } else {
       res.status(400).send("Taka Lokacja juz istnieje :3");
     }
     // TODO:: poprawic tresci komunikatow, sprawdzic odpowiedni kod bledu,
     // pozniej wymienic wszystkie hardcode string na labelki
   }
-  
+
   async readOne(req: Request, res: Response) {
     const { id } = req.params;
     const repo = getManager().getRepository(Location);
@@ -72,6 +72,36 @@ export default class LocationController {
       .send(filteredData);
   }
 
-  async update(req: Request, res: Response) {}
-  async delete(req: Request, res: Response) {}
+  async update(req: Request, res: Response) {
+    const { country, city, postalCode } = req.body;
+
+    const repo = getManager().getRepository(Location);
+
+    let location = await repo.findOne(req.params.id);
+
+    if (location) {
+      location.country = country;
+      location.city = city;
+      location.postalCode = postalCode;
+
+      console.log("zaktualizowano lokacje");
+      await repo.save(location);
+      res.send();
+    } else {
+      res.status(400).send("Taka Lokacja nie istnieje :(");
+    }
+  }
+
+  async delete(req: Request, res: Response) {
+    const repo = getManager().getRepository(Location);
+    const object = await repo.findOne(req.params.id);
+
+    await repo.delete(req.params.id);
+
+    return res
+      .set({
+        "Content-Type": "application/json",
+      })
+      .send(object);
+  }
 }

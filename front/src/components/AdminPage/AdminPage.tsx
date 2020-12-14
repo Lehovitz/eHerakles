@@ -15,6 +15,13 @@ import defaultMessages from "ra-language-english";
 import polyglotI18nProvider from "ra-i18n-polyglot";
 import { updateToken } from "../../redux/bearerToken/actions";
 import { store } from "../../index";
+import {
+  LocationCreate,
+  LocationEdit,
+  LocationIcon,
+  LocationList,
+  LocationShow,
+} from "./Resources/Location";
 
 export const history = createBrowserHistory();
 const dataProvider = restProvider("http://localhost:5000");
@@ -68,7 +75,14 @@ const AdminPage = () => {
           show={EventShow}
           icon={EventIcon}
         />
-        {/* <Resource name="location" list={} edit={} create={} icon={LocationIcon} /> */}
+        <Resource
+          name="locations"
+          list={LocationList}
+          edit={LocationEdit}
+          create={LocationCreate}
+          show={LocationShow}
+          icon={LocationIcon}
+        />
       </Admin>
     </Provider>
   );
