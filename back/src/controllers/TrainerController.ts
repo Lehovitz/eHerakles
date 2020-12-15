@@ -108,8 +108,6 @@ export default class TrainerController {
       .take(take)
       .getMany();
 
-    console.log(data);
-
     // Filtrowanie encji
     const filteredData = data.filter((elem) => {
       for (let filter of Object.keys(filters)) {

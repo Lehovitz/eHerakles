@@ -5,26 +5,24 @@ import clean from "../utils/clean";
 
 export default class RoomController {
   async create(req: Request, res: Response) {
-    const { name, number } = req.body;
+    const { roomName, roomNumber } = req.body;
 
     const roomRepo = getManager().getRepository(Room);
 
     let room = await roomRepo.findOne({
-      where: { RoomName: name, RoomNumber: number },
+      where: { roomName: roomName, roomNumber: roomNumber },
     });
 
     if (!room) {
       const room = new Room();
       console.log("utworzono nowy pokoj ");
 
-      room.roomNumber = number;
-      room.roomName = name;
+      room.roomNumber = roomNumber;
+      room.roomName = roomName;
 
       await roomRepo.save(room);
-      res.send();
-    }
-
-    res.status(400).send();
+      res.send(room);
+    } else res.status(400).send();
   }
 
   async readAll(req: Request, res: Response) {

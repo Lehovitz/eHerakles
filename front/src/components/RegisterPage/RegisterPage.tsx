@@ -115,7 +115,6 @@ const RegisterPage = () => {
       setRedirect(true);
     } else {
       setError(responseText);
-      console.log(responseText);
     }
   };
 

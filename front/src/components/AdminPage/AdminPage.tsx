@@ -23,6 +23,13 @@ import {
   LocationShow,
 } from "./Resources/Location";
 import { Helmet } from "react-helmet";
+import {
+  RoomList,
+  RoomEdit,
+  RoomCreate,
+  RoomShow,
+  RoomIcon,
+} from "./Resources/Room";
 
 export const history = createBrowserHistory();
 const dataProvider = restProvider("http://localhost:5000");
@@ -93,6 +100,14 @@ const AdminPage = () => {
             create={LocationCreate}
             show={LocationShow}
             icon={LocationIcon}
+          />
+          <Resource
+            name="rooms"
+            list={RoomList}
+            edit={RoomEdit}
+            create={RoomCreate}
+            show={RoomShow}
+            icon={RoomIcon}
           />
         </Admin>
       </Provider>

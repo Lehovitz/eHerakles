@@ -14,7 +14,6 @@ export default class PersonController {
       docNumber,
       address,
     } = req.body;
-    console.log(req.body);
 
     const repo = getManager().getRepository(Person);
     let person = await repo.findOne({ where: { PESEL: PESEL } });

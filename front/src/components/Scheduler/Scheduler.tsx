@@ -94,7 +94,7 @@ const SchedulerComponent = () => {
   useEffect(() => {
     (async () => {
       const res: Trainer[] = await fetch(
-        `http://localhost:5000/trainers/`
+        `http://localhost:5000/trainers/?sort=["id","ASC"]&filter={}&range=[0,100000]`
       ).then((res) => res.json());
       setTrainers(res);
     })();
@@ -103,7 +103,7 @@ const SchedulerComponent = () => {
   useEffect(() => {
     (async () => {
       const res: Room[] = await fetch(
-        `http://localhost:5000/rooms/`
+        `http://localhost:5000/rooms/?sort=["id","ASC"]&filter={}&range=[0,100000]`
       ).then((res) => res.json());
       setRooms(res);
     })();

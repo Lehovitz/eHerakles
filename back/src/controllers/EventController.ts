@@ -33,7 +33,6 @@ export default class EventController {
     event.isAllDay = Boolean(allDay);
     event.description = notes;
     event.rule = rRule;
-    console.log(exDate);
     event.exDate = exDate;
     event.trainer = await trainer.findOne(trainerId);
     event.capacity = capacity;
@@ -123,8 +122,6 @@ export default class EventController {
           ? { identifier: req.params.eventId }
           : { id: req.params.eventId },
     });
-
-    console.log(event);
 
     if (event) {
       const repo = getManager().getRepository(Event);

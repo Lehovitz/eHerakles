@@ -7,6 +7,8 @@ import {
   ManyToMany,
   JoinTable,
   Unique,
+  JoinColumn,
+  RelationId,
 } from "typeorm";
 import { Trainer } from "./Trainer";
 import { Customer } from "./Customer";
@@ -45,10 +47,18 @@ export class Event {
   isAllDay?: Boolean;
 
   @ManyToOne(() => Trainer, (trainer) => trainer.id)
+  @JoinColumn({ name: "trainerId" })
   trainer: Trainer;
 
+  @RelationId((event: Event) => event.trainer)
+  trainerId: number;
+
   @ManyToOne(() => Room, (room) => room.id)
+  @JoinColumn({ name: "roomId" })
   room: Room;
+
+  @RelationId((event: Event) => event.room)
+  roomId: number;
 
   @ManyToMany(() => Customer, (customer) => customer.id)
   @JoinTable()

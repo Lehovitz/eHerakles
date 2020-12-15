@@ -23,7 +23,6 @@ export default function authenticateToken(
       req.email = tokenBody.email;
       req.role = tokenBody.role;
       //TODO:: wylaczyc bledy, bo ja ich nie popelniam
-      console.log(req);
       next(); // pass the execution off to whatever request the client intended
     }
   );

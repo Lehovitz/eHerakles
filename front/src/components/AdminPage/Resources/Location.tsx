@@ -70,7 +70,6 @@ export const LocationCreate = (props: CreateProps) => {
   return (
     <Create title="Create a Location" {...props}>
       <SimpleForm>
-        <TextInput disabled source="id" />
         <TextInput source="country" />
         <TextInput source="city" />
         <TextInput source="postalCode" />

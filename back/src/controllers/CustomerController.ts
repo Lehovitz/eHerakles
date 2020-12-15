@@ -115,12 +115,9 @@ export default class CustomerController {
       .take(take)
       .getMany();
 
-    console.log(data);
-
     // Filtrowanie encji
     const filteredData = data.filter((elem) => {
       for (let filter of Object.keys(filters)) {
-        console.log(filter);
         if (elem[filter] != filters[filter]) return false;
       }
 
