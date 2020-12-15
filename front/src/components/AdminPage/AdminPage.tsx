@@ -22,6 +22,7 @@ import {
   LocationList,
   LocationShow,
 } from "./Resources/Location";
+import { Helmet } from "react-helmet";
 
 export const history = createBrowserHistory();
 const dataProvider = restProvider("http://localhost:5000");
@@ -59,32 +60,43 @@ const authProvider = {
 
 const AdminPage = () => {
   return (
-    <Provider store={adminStore}>
-      <Admin
-        dataProvider={dataProvider}
-        authProvider={authProvider}
-        history={history}
-        i18nProvider={i18nProvider}
-        title="eHerakles Admin"
-      >
-        <Resource
-          name="events"
-          list={EventList}
-          edit={EventEdit}
-          create={EventCreate}
-          show={EventShow}
-          icon={EventIcon}
-        />
-        <Resource
-          name="locations"
-          list={LocationList}
-          edit={LocationEdit}
-          create={LocationCreate}
-          show={LocationShow}
-          icon={LocationIcon}
-        />
-      </Admin>
-    </Provider>
+    <>
+      <Helmet>
+        <style type="text/css">
+          {`
+            #root > header {
+              display: none;
+            }
+          `}
+        </style>
+      </Helmet>
+      <Provider store={adminStore}>
+        <Admin
+          dataProvider={dataProvider}
+          authProvider={authProvider}
+          history={history}
+          i18nProvider={i18nProvider}
+          title="eHerakles Admin"
+        >
+          <Resource
+            name="events"
+            list={EventList}
+            edit={EventEdit}
+            create={EventCreate}
+            show={EventShow}
+            icon={EventIcon}
+          />
+          <Resource
+            name="locations"
+            list={LocationList}
+            edit={LocationEdit}
+            create={LocationCreate}
+            show={LocationShow}
+            icon={LocationIcon}
+          />
+        </Admin>
+      </Provider>
+    </>
   );
 };
 
