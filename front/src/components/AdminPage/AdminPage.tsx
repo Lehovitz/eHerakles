@@ -30,6 +30,27 @@ import {
   RoomShow,
   RoomIcon,
 } from "./Resources/Room";
+import {
+  CustomerCreate,
+  CustomerEdit,
+  CustomerIcon,
+  CustomerList,
+  CustomerShow,
+} from "./Resources/Customer";
+import {
+  TrainerCreate,
+  TrainerEdit,
+  TrainerIcon,
+  TrainerList,
+  TrainerShow,
+} from "./Resources/Trainer";
+import {
+  ModeratorCreate,
+  ModeratorEdit,
+  ModeratorIcon,
+  ModeratorList,
+  ModeratorShow,
+} from "./Resources/Moderator";
 
 export const history = createBrowserHistory();
 const dataProvider = restProvider("http://localhost:5000");
@@ -108,6 +129,30 @@ const AdminPage = () => {
             create={RoomCreate}
             show={RoomShow}
             icon={RoomIcon}
+          />
+          <Resource
+            name="customers"
+            list={CustomerList}
+            edit={CustomerEdit}
+            create={CustomerCreate}
+            show={CustomerShow}
+            icon={CustomerIcon}
+          />
+          <Resource
+            name="trainers"
+            list={TrainerList}
+            edit={TrainerEdit}
+            create={TrainerCreate}
+            show={TrainerShow}
+            icon={TrainerIcon}
+          />
+          <Resource
+            name="moderators"
+            list={ModeratorList}
+            edit={ModeratorEdit}
+            create={ModeratorCreate}
+            show={ModeratorShow}
+            icon={ModeratorIcon}
           />
         </Admin>
       </Provider>

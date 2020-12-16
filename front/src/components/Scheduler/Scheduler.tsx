@@ -51,8 +51,8 @@ type EventFront = {
 
 type Trainer = {
   id: number;
-  trainerName: string;
-  trainerSurname: string;
+  name: string;
+  surname: string;
 };
 
 type Room = {
@@ -84,7 +84,7 @@ const SchedulerComponent = () => {
       instances: trainers.map((trainer) => {
         return {
           id: trainer.id,
-          text: `${trainer.trainerName} ${trainer.trainerSurname}`,
+          text: `${trainer.name} ${trainer.surname}`,
           color: "grey",
         };
       }),

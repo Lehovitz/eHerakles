@@ -9,8 +9,8 @@ import clean from "../utils/clean";
 export default class CustomerController {
   async create(req: Request, res: Response) {
     const {
-      email,
-      password,
+      custMail,
+      custPass,
       country,
       city,
       postalCode,
@@ -18,9 +18,9 @@ export default class CustomerController {
       surname,
       gender,
       docType,
-      dateOfBirth,
+      birthDate,
       phoneNum,
-      PESEL,
+      pesel,
       docNumber,
       address,
     } = req.body;
@@ -34,7 +34,7 @@ export default class CustomerController {
     });
 
     let person = await personRepo.findOne({
-      where: { pesel: PESEL, phoneNum: phoneNum },
+      where: { pesel: pesel, phoneNum: phoneNum },
     });
 
     let customer = person && person.customer;
@@ -58,9 +58,9 @@ export default class CustomerController {
       person.docType = docType;
       person.docNumber = docNumber;
       person.gender = gender;
-      person.birthDate = dateOfBirth;
+      person.birthDate = birthDate;
       person.phoneNum = phoneNum;
-      person.pesel = PESEL;
+      person.pesel = pesel;
       person.address = address;
       person.location = location;
       console.log("utworzono nowa osobe");
@@ -72,9 +72,9 @@ export default class CustomerController {
 
     if (!customer) {
       customer = new Customer();
-      customer.custMail = email;
+      customer.custMail = custMail;
       const salt = bcrypt.genSaltSync(10);
-      const hash = await bcrypt.hash(password, salt);
+      const hash = await bcrypt.hash(custPass, salt);
       customer.custPass = hash;
       console.log("utworzono nowego customera");
       customer.person = person;
@@ -82,14 +82,30 @@ export default class CustomerController {
     } else {
       console.log("Taki Customer juz istnieje :3");
     }
-    res.send(customer);
+    res.send({ id: customer.id, custMail: customer.custMail });
   }
 
   async readOne(req: Request, res: Response) {
-    const { id } = req.params;
     const repo = getManager().getRepository(Customer);
-    let cust = await repo.findOneOrFail(id);
-    res.send(cust);
+    const customer = await repo
+      .createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.person", "person")
+      .leftJoinAndSelect("person.location", "location")
+      .where("customer.id = :id", { id: req.params.id })
+      .getOne();
+
+    if (customer) {
+      const { person } = customer;
+      const { location } = person;
+
+      delete customer.custPass;
+      delete customer.person;
+      delete person.id;
+      delete person.location;
+      delete location.id;
+
+      res.status(200).send({ ...customer, ...person, ...location });
+    } else res.status(400).send();
   }
 
   async readAll(req: Request, res: Response) {
@@ -110,6 +126,7 @@ export default class CustomerController {
     let data = await repo
       .createQueryBuilder("customer")
       .leftJoinAndSelect("customer.person", "person")
+      .leftJoinAndSelect("person.location", "location")
       .orderBy(`customer.${sort[0]}`, sort[1])
       .skip(skip)
       .take(take)
@@ -131,21 +148,19 @@ export default class CustomerController {
     const result = [];
 
     for (let elem of filteredData) {
-      const { id, custMail } = elem;
-      const personRepo = getManager().getRepository(Person);
-      const person = await personRepo.findOne(elem.person);
+      // const personRepo = getManager().getRepository(Person);
+      // const person = await personRepo.findOne(elem.person);
 
-      const { name, surname, birthDate, docNumber, docType } = person;
+      const { person } = elem;
+      const { location } = person;
 
-      result.push({
-        id,
-        custMail,
-        name,
-        surname,
-        birthDate,
-        docType,
-        docNumber,
-      });
+      delete elem.person;
+      delete elem.custPass;
+      delete person.id;
+      delete person.location;
+      delete location.id;
+
+      result.push({ ...elem, ...person, ...location });
     }
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
@@ -158,7 +173,65 @@ export default class CustomerController {
   }
 
   async update(req: Request, res: Response) {
-    const { id, mail, name, surname, birthDate, docType, docNumber } = req.body;
+    const {
+      custMail,
+      name,
+      surname,
+      gender,
+      docType,
+      birthDate,
+      phoneNum,
+      pesel,
+      docNumber,
+      address,
+      country,
+      city,
+      postalCode,
+    } = req.body;
+
+    const repo = getManager().getRepository(Customer);
+    const personRepo = getManager().getRepository(Person);
+    const locationRepo = getManager().getRepository(Location);
+
+    const customer = await repo
+      .createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.person", "person")
+      .leftJoinAndSelect("person.location", "location")
+      .where("customer.id = :id", { id: req.params.id })
+      .getOne();
+
+    if (customer) {
+      const { person } = customer;
+      const { location } = person;
+
+      customer.custMail = custMail;
+
+      person.name = name;
+      person.surname = surname;
+      person.birthDate = birthDate;
+      person.docType = docType;
+      person.docNumber = docNumber;
+      person.gender = gender;
+      person.pesel = pesel;
+      person.phoneNum = phoneNum;
+      person.address = address;
+
+      location.country = country;
+      location.city = city;
+      location.postalCode = postalCode;
+
+      await repo.save(customer);
+      await personRepo.save(person);
+      await locationRepo.save(location);
+
+      delete customer.custPass;
+      delete customer.person;
+      delete person.id;
+      delete person.location;
+      delete location.id;
+
+      res.status(200).send({ ...customer, ...person, ...location });
+    } else res.status(400).send("Nie istnieje taki customer");
   }
 
   async delete(req: Request, res: Response) {

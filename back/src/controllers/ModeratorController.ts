@@ -25,6 +25,7 @@ export default class ModeratorController {
     let data = await repo
       .createQueryBuilder("moderator")
       .leftJoinAndSelect("moderator.person", "person")
+      .leftJoinAndSelect("person.location", "location")
       .orderBy(`moderator.${sort[0]}`, sort[1])
       .skip(skip)
       .take(take)
@@ -46,21 +47,16 @@ export default class ModeratorController {
     const result = [];
 
     for (let elem of filteredData) {
-      const { id, modMail } = elem;
-      const personRepo = getManager().getRepository(Person);
-      const person = await personRepo.findOne(elem.person);
+      const { person } = elem;
+      const { location } = person;
 
-      const { name, surname, birthDate, docNumber, docType } = person;
+      delete elem.modPass;
+      delete elem.person;
+      delete person.id;
+      delete person.location;
+      delete location.id;
 
-      result.push({
-        id,
-        modMail,
-        name,
-        surname,
-        birthDate,
-        docType,
-        docNumber,
-      });
+      result.push({ ...elem, ...person, ...location });
     }
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami

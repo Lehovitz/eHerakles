@@ -9,8 +9,8 @@ import clean from "../utils/clean";
 export default class TrainerController {
   async create(req: Request, res: Response) {
     const {
-      email,
-      password,
+      trainerMail,
+      trainerPass,
       country,
       city,
       postalCode,
@@ -18,9 +18,9 @@ export default class TrainerController {
       surname,
       gender,
       docType,
-      dateOfBirth,
+      birthDate,
       phoneNum,
-      PESEL,
+      pesel,
       docNumber,
       address,
     } = req.body;
@@ -30,11 +30,11 @@ export default class TrainerController {
     const personRepo = getManager().getRepository(Person);
 
     let location = await locRepo.findOne({
-      where: { Country: country, City: city },
+      where: { country: country, city: city },
     });
 
     let person = await personRepo.findOne({
-      where: { PESEL: PESEL, PhoneNum: phoneNum },
+      where: { pesel: pesel, phoneNum: phoneNum },
     });
 
     let trainer = person && person.trainer;
@@ -58,9 +58,9 @@ export default class TrainerController {
       person.docType = docType;
       person.docNumber = docNumber;
       person.gender = gender;
-      person.birthDate = dateOfBirth;
+      person.birthDate = birthDate;
       person.phoneNum = phoneNum;
-      person.pesel = PESEL;
+      person.pesel = pesel;
       person.address = address;
       person.location = location;
       console.log("utworzono nowa osobe");
@@ -72,9 +72,9 @@ export default class TrainerController {
 
     if (!trainer) {
       trainer = new Trainer();
-      trainer.trainerMail = email;
+      trainer.trainerMail = trainerMail;
       const salt = bcrypt.genSaltSync(10);
-      const hash = await bcrypt.hash(password, salt);
+      const hash = await bcrypt.hash(trainerPass, salt);
       trainer.trainerPass = hash;
       console.log("utworzono nowego customera");
       trainer.person = person;
@@ -82,7 +82,8 @@ export default class TrainerController {
     } else {
       console.log("Taki Trainer juz istnieje :3");
     }
-    res.send();
+
+    res.send({ id: trainer.id, trainerMail: trainer.trainerMail });
   }
 
   async readAll(req: Request, res: Response) {
@@ -103,6 +104,7 @@ export default class TrainerController {
     let data = await repo
       .createQueryBuilder("trainer")
       .leftJoinAndSelect("trainer.person", "person")
+      .leftJoinAndSelect("person.location", "location")
       .orderBy(`trainer.${sort[0]}`, sort[1])
       .skip(skip)
       .take(take)
@@ -124,21 +126,16 @@ export default class TrainerController {
     const result = [];
 
     for (let elem of filteredData) {
-      const { id, trainerMail } = elem;
-      const personRepo = getManager().getRepository(Person);
-      const person = await personRepo.findOne(elem.person);
+      const { person } = elem;
+      const { location } = person;
 
-      const { name, surname, birthDate, docNumber, docType } = person;
+      delete elem.trainerPass;
+      delete elem.person;
+      delete person.id;
+      delete person.location;
+      delete location.id;
 
-      result.push({
-        id,
-        trainerMail,
-        name,
-        surname,
-        birthDate,
-        docType,
-        docNumber,
-      });
+      result.push({ ...elem, ...person, ...location });
     }
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
@@ -152,19 +149,87 @@ export default class TrainerController {
 
   async readOne(req: Request, res: Response) {
     const repo = getManager().getRepository(Trainer);
-    const data = await repo.findOne(req.params.id);
-    const { id, trainerMail } = data;
-    const { name, surname, birthDate, docType, docNumber } = data.person;
+    const trainer = await repo
+      .createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.person", "person")
+      .leftJoinAndSelect("person.location", "location")
+      .where("trainer.id = :id", { id: req.params.id })
+      .getOne();
 
-    res
-      .status(200)
-      .send({ id, trainerMail, name, surname, birthDate, docType, docNumber });
+    if (trainer) {
+      const { person } = trainer;
+      const { location } = person;
+
+      delete trainer.trainerPass;
+      delete trainer.person;
+      delete person.id;
+      delete person.location;
+      delete location.id;
+
+      res.status(200).send({ ...trainer, ...person, ...location });
+    } else res.status(400).send();
   }
 
   async update(req: Request, res: Response) {
-    const { id, mail, name, surname, birthDate, docType, docNumber } = req.body;
+    const {
+      trainerMail,
+      name,
+      surname,
+      gender,
+      docType,
+      birthDate,
+      phoneNum,
+      pesel,
+      docNumber,
+      address,
+      country,
+      city,
+      postalCode,
+    } = req.body;
 
-    // ważne żeby update miał tylko te pola które zwraca read
+    const repo = getManager().getRepository(Trainer);
+    const personRepo = getManager().getRepository(Person);
+    const locationRepo = getManager().getRepository(Location);
+
+    const trainer = await repo
+      .createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.person", "person")
+      .leftJoinAndSelect("person.location", "location")
+      .where("trainer.id = :id", { id: req.params.id })
+      .getOne();
+
+    if (trainer) {
+      const { person } = trainer;
+      const { location } = person;
+
+      trainer.trainerMail = trainerMail;
+
+      person.name = name;
+      person.surname = surname;
+      person.birthDate = birthDate;
+      person.docType = docType;
+      person.docNumber = docNumber;
+      person.gender = gender;
+      person.pesel = pesel;
+      person.phoneNum = phoneNum;
+      person.address = address;
+
+      location.country = country;
+      location.city = city;
+      location.postalCode = postalCode;
+
+      await repo.save(trainer);
+      await personRepo.save(person);
+      await locationRepo.save(location);
+
+      delete trainer.trainerPass;
+      delete trainer.person;
+      delete person.id;
+      delete person.location;
+      delete location.id;
+
+      res.status(200).send({ ...trainer, ...person, ...location });
+    } else res.status(400).send("Nie istnieje taki trainer");
   }
 
   async delete(req: Request, res: Response) {
