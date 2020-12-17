@@ -111,9 +111,11 @@ export default class CustomerController {
   async readAll(req: Request, res: Response) {
     const repo = getManager().getRepository(Customer);
 
-    const sort = JSON.parse(req.query.sort.toString());
-    const filters = JSON.parse(req.query.filter.toString());
-    const range = JSON.parse(req.query.range.toString());
+    let { sort, filters, range } = req.query;
+
+    sort = sort ? JSON.parse(sort.toString()) : ["id", "ASC"];
+    filters = filters ? JSON.parse(filters.toString()) : {};
+    range = range ? JSON.parse(range.toString()) : [0, 1000000];
 
     // Parametry metody find używanej poniżej
     const order = {};

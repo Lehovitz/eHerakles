@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Event } from "@material-ui/icons";
 import {
+  AutocompleteInput,
   BooleanField,
   BooleanInput,
   Create,
@@ -15,12 +16,14 @@ import {
   ListProps,
   NumberField,
   NumberInput,
+  ReferenceInput,
   Show,
   ShowButton,
   ShowProps,
   SimpleForm,
   SimpleShowLayout,
   TextField,
+  SelectInput,
   TextInput,
   TitleProps,
 } from "react-admin";
@@ -96,8 +99,12 @@ export const EventEdit = (props: EditProps) => {
         <TextInput source="exDate" />
         <TextInput source="rule" />
         <TextInput source="description" />
-        <NumberInput source="trainerId" />
-        <NumberInput source="roomId" />
+        <ReferenceInput label="Trainer" source="trainerId" reference="trainers">
+          <SelectInput optionText="id" />
+        </ReferenceInput>
+        <ReferenceInput label="Room" source="roomId" reference="rooms">
+          <SelectInput optionText="id" />
+        </ReferenceInput>
       </SimpleForm>
     </Edit>
   );
@@ -116,8 +123,12 @@ export const EventCreate = (props: CreateProps) => {
         <TextInput source="exDate" />
         <TextInput source="rRule" />
         <TextInput source="notes" />
-        <NumberInput source="trainerId" />
-        <NumberInput source="roomId" />
+        <ReferenceInput label="Trainer" source="trainerId" reference="trainers">
+          <SelectInput optionText="id" />
+        </ReferenceInput>
+        <ReferenceInput label="Room" source="roomId" reference="rooms">
+          <SelectInput optionText="id" />
+        </ReferenceInput>
       </SimpleForm>
     </Create>
   );

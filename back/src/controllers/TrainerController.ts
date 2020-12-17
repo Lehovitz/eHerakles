@@ -76,7 +76,7 @@ export default class TrainerController {
       const salt = bcrypt.genSaltSync(10);
       const hash = await bcrypt.hash(trainerPass, salt);
       trainer.trainerPass = hash;
-      console.log("utworzono nowego customera");
+      console.log("utworzono nowego trenera");
       trainer.person = person;
       await trainerRepo.save(trainer);
     } else {
@@ -89,9 +89,11 @@ export default class TrainerController {
   async readAll(req: Request, res: Response) {
     const repo = getManager().getRepository(Trainer);
 
-    const sort = JSON.parse(req.query.sort.toString());
-    const filters = JSON.parse(req.query.filter.toString());
-    const range = JSON.parse(req.query.range.toString());
+    let { sort, filters, range } = req.query;
+
+    sort = sort ? JSON.parse(sort.toString()) : ["id", "ASC"];
+    filters = filters ? JSON.parse(filters.toString()) : {};
+    range = range ? JSON.parse(range.toString()) : [0, 1000000];
 
     // Parametry metody find używanej poniżej
     const order = {};
