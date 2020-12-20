@@ -11,8 +11,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "./redux";
 import jwtDecode from "jwt-decode";
 import DecodedToken from "./models/DecodedToken";
-import BMICalculator from "./components/BMICalculator/BMICalculator";
+import BMICalculator from "./components/BMRCalculator/BMRCalculator";
 import AdminPage from "./components/AdminPage/AdminPage";
+import BMRCalculator from "./components/BMRCalculator/BMRCalculator";
 
 export default () => (
   <BrowserRouter>
@@ -23,19 +24,22 @@ export default () => (
     </MuiThemeProvider>
     <Route exact path="/" component={LoginPage} />
     <Route exact path="/register" component={RegisterPage} />
-    {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
-    <ProtectedRoute
-      exact
-      path="/"
-      role="customer"
-      component={SchedulerComponent}
-    />
-    <ProtectedRoute
-      exact
-      path="/"
-      role="trainer"
-      component={SchedulerComponent}
-    />
+    <MuiThemeProvider>
+      <>
+        <ProtectedRoute
+          exact
+          path="/bmr"
+          role="customer"
+          component={BMRCalculator}
+        />
+        <ProtectedRoute
+          exact
+          path="/bmr"
+          role="trainer"
+          component={BMRCalculator}
+        />
+      </>
+    </MuiThemeProvider>
     <MuiThemeProvider>
       <>
         <ProtectedRoute
@@ -52,6 +56,20 @@ export default () => (
         />
       </>
     </MuiThemeProvider>
+    {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
+    <ProtectedRoute
+      exact
+      path="/"
+      role="customer"
+      component={SchedulerComponent}
+    />
+    <ProtectedRoute
+      exact
+      path="/"
+      role="trainer"
+      component={SchedulerComponent}
+    />
+
     <ProtectedRoute
       exact
       path="/"

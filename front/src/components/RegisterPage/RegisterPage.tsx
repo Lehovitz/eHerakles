@@ -22,8 +22,8 @@ const RegisterPage = () => {
     [gender, setGender] = useState(""),
     [docType, setDocType] = useState(""),
     [docNumber, setDocNumber] = useState(""),
-    [PESEL, setPESEL] = useState(""),
-    [dateOfBirth, setDateOfBirth] = useState("2020-01-01"),
+    [pesel, setPesel] = useState(""),
+    [birthDate, setDateOfBirth] = useState("2020-01-01"),
     [country, setCountry] = useState(""),
     [postalCode, setPostalCode] = useState(""),
     [city, setCity] = useState(""),
@@ -50,8 +50,8 @@ const RegisterPage = () => {
   ) => {
     setDocNumber(event.target.value);
   };
-  const handlePESELChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPESEL(event.target.value);
+  const handlePeselChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPesel(event.target.value);
   };
   const handleDateOfBirthChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -88,6 +88,24 @@ const RegisterPage = () => {
   };
 
   const handleRegisterClick = async () => {
+    console.log(
+      JSON.stringify({
+        email,
+        password,
+        country,
+        city,
+        postalCode,
+        name,
+        surname,
+        gender,
+        docType,
+        birthDate,
+        phoneNum,
+        pesel,
+        docNumber,
+        address,
+      })
+    );
     const response = await fetch("http://localhost:5000/customers/", {
       method: "POST",
       body: JSON.stringify({
@@ -100,9 +118,9 @@ const RegisterPage = () => {
         surname,
         gender,
         docType,
-        dateOfBirth,
+        birthDate,
         phoneNum,
-        PESEL,
+        pesel,
         docNumber,
         address,
       }),
@@ -227,7 +245,7 @@ const RegisterPage = () => {
             id="PESELReg"
             label="PESEL"
             variant="filled"
-            onChange={handlePESELChange}
+            onChange={handlePeselChange}
           ></TextField>
         </Grid>
 
@@ -239,7 +257,7 @@ const RegisterPage = () => {
             type="date"
             label="Date of birth"
             variant="filled"
-            defaultValue={dateOfBirth}
+            defaultValue={birthDate}
             onChange={handleDateOfBirthChange}
           ></TextField>
         </Grid>

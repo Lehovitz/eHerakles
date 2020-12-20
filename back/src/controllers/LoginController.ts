@@ -12,7 +12,7 @@ export default class LoginController {
 
     const customerRepository = getManager().getRepository(Customer);
     let customer = await customerRepository.findOne({
-      where: { custMail: email },
+      where: { email: email },
     });
 
     const trainerRepository = getManager().getRepository(Trainer);
@@ -26,7 +26,7 @@ export default class LoginController {
     });
 
     if (customer) {
-      const passCorrect = await bcrypt.compare(password, customer.custPass);
+      const passCorrect = await bcrypt.compare(password, customer.password);
       if (passCorrect) {
         const token = jwt.sign(
           { email, role: "customer" },

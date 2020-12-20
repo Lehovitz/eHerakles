@@ -9,8 +9,8 @@ import clean from "../utils/clean";
 export default class CustomerController {
   async create(req: Request, res: Response) {
     const {
-      custMail,
-      custPass,
+      email,
+      password,
       country,
       city,
       postalCode,
@@ -71,18 +71,21 @@ export default class CustomerController {
     }
 
     if (!customer) {
+      console.log(password);
+
       customer = new Customer();
-      customer.custMail = custMail;
+      customer.email = email;
       const salt = bcrypt.genSaltSync(10);
-      const hash = await bcrypt.hash(custPass, salt);
-      customer.custPass = hash;
+      const hash = await bcrypt.hash(password, salt);
+      customer.password = hash;
       console.log("utworzono nowego customera");
       customer.person = person;
       await custRepo.save(customer);
     } else {
       console.log("Taki Customer juz istnieje :3");
     }
-    res.send({ id: customer.id, custMail: customer.custMail });
+    console.log({ id: customer.id, email: customer.email })
+    res.send({ id: customer.id, email: customer.email });
   }
 
   async readOne(req: Request, res: Response) {
@@ -98,7 +101,7 @@ export default class CustomerController {
       const { person } = customer;
       const { location } = person;
 
-      delete customer.custPass;
+      delete customer.password;
       delete customer.person;
       delete person.id;
       delete person.location;
@@ -157,7 +160,7 @@ export default class CustomerController {
       const { location } = person;
 
       delete elem.person;
-      delete elem.custPass;
+      delete elem.password;
       delete person.id;
       delete person.location;
       delete location.id;
@@ -176,7 +179,7 @@ export default class CustomerController {
 
   async update(req: Request, res: Response) {
     const {
-      custMail,
+      email,
       name,
       surname,
       gender,
@@ -206,7 +209,7 @@ export default class CustomerController {
       const { person } = customer;
       const { location } = person;
 
-      customer.custMail = custMail;
+      customer.email = email;
 
       person.name = name;
       person.surname = surname;
@@ -226,7 +229,7 @@ export default class CustomerController {
       await personRepo.save(person);
       await locationRepo.save(location);
 
-      delete customer.custPass;
+      delete customer.password;
       delete customer.person;
       delete person.id;
       delete person.location;
@@ -246,6 +249,6 @@ export default class CustomerController {
       .set({
         "Content-Type": "application/json",
       })
-      .send({ id: object.id, custMail: object.custMail });
+      .send({ id: object.id, email: object.email });
   }
 }

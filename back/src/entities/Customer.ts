@@ -17,10 +17,10 @@ export class Customer {
   id: number;
 
   @Column()
-  custMail: string;
+  email: string;
 
   @Column()
-  custPass: string;
+  password: string;
 
   @OneToOne(() => Person, (pers) => pers.id)
   @JoinColumn()
