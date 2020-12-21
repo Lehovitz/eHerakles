@@ -5,7 +5,7 @@ import { IconButton } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { Menu } from "@material-ui/icons";
-import { Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { updateToken } from "../../redux/bearerToken/actions";
 import DecodedToken from "../../models/DecodedToken";
@@ -21,13 +21,19 @@ const AppBarComponent = () => {
     history.push("/");
   };
   const handleSchedulerClick = () => {
+    setRedirectBMR(false);
+    setRedirectBMI(false);
     setRedirectScheduler(true);
   };
   const handleBMIClick = () => {
+    setRedirectBMR(false);
     setRedirectBMI(true);
+    setRedirectScheduler(false);
   };
   const handleBMRClick = () => {
     setRedirectBMR(true);
+    setRedirectBMI(false);
+    setRedirectScheduler(false);
   };
   const [redirectBMI, setRedirectBMI] = useState(false);
   const [redirectBMR, setRedirectBMR] = useState(false);
@@ -56,6 +62,9 @@ const AppBarComponent = () => {
         <Button onClick={handleBMRClick} color="inherit">
           BMR
         </Button>
+        <Link to="payments" style={{ display: "block", height: "100%" }}>
+          <Button>Payment</Button>
+        </Link>
         <Button color="inherit">Login</Button>
       </Toolbar>
     </AppBar>

@@ -29,6 +29,7 @@ export class Customer {
   @ManyToMany(() => Event, (cl) => cl.id)
   classes: Event[];
 
-  @OneToMany(() => Card, (card) => card.id)
-  cards: Card[];
+  @OneToOne(() => Card, (card) => card.id)
+  card: Card;
+
 }

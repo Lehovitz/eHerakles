@@ -21,6 +21,7 @@ import {
   TitleProps,
   SelectInput,
   SelectField,
+  NumberField,
 } from "react-admin";
 
 const genderChoices = [
@@ -41,7 +42,7 @@ export const CustomerList = (props: ListProps) => {
     <List {...props}>
       <Datagrid>
         <TextField source="id" />
-        <TextField source="custMail" />
+        <TextField source="email" />
         <TextField source="name" />
         <TextField source="surname" />
         <EditButton />
@@ -56,7 +57,7 @@ export const CustomerShow = (props: ShowProps) => {
     <Show {...props}>
       <SimpleShowLayout>
         <TextField source="id" />
-        <TextField source="custMail" />
+        <TextField source="email" />
         <TextField source="name" />
         <TextField source="surname" />
         <SelectField choices={genderChoices} source="gender" />
@@ -83,7 +84,7 @@ export const CustomerEdit = (props: EditProps) => {
     <Edit title={<CustomerTitle />} {...props}>
       <SimpleForm>
         <TextInput disabled source="id" />
-        <TextInput source="custMail" />
+        <TextInput source="email" />
         <TextInput source="name" />
         <TextInput source="surname" />
         <SelectInput choices={genderChoices} source="gender" />
@@ -105,7 +106,7 @@ export const CustomerCreate = (props: CreateProps) => {
   return (
     <Create title="Create a Customer" {...props}>
       <SimpleForm>
-        <TextInput source="custMail" />
+        <TextInput source="email" />
         <TextInput source="custPass" />
         <TextInput source="name" />
         <TextInput source="surname" />

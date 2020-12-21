@@ -13,7 +13,7 @@ import { TextField } from "material-ui";
 import React, { Component, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const BMICalculator = () => {
+const BMRCalculator = () => {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [gender, setGender] = useState("");
@@ -162,7 +162,7 @@ const BMICalculator = () => {
               Your Basal Metabolic Rate is: {bmr.toFixed()} kcal
             </Typography>
             <Typography>
-              Including your activity your daily consumption should be:{" "}
+              Including your activity your daily consumption should be:
               {bmrExt.toFixed()}
               kcal
             </Typography>
@@ -173,4 +173,4 @@ const BMICalculator = () => {
   );
 };
 
-export default BMICalculator;
+export default BMRCalculator;

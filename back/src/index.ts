@@ -16,11 +16,13 @@ import roomRouter from "./routes/RoomRoute";
 import loginRouter from "./routes/LoginRoute";
 import moderatorRouter from "./routes/ModeratorRoute";
 import locationRouter from "./routes/LocationRoute";
+import cardRouter from "./routes/CardRoute";
 import bcrypt from "bcryptjs";
 import { DocumentType, Gender } from "./entities/Person";
-
+import cron from "node-cron"
 import dotenv from "dotenv";
 import cors from "cors";
+import emailHelper from "./utils/emailNotification";
 createConnection({
   type: "postgres",
   host: "localhost",
@@ -75,7 +77,8 @@ createConnection({
     app.use("/locations", locationRouter);
     app.use("/moderators", moderatorRouter);
     app.use("/login", loginRouter);
-    app.use("/bmiCalc", bmiRouter);
+    app.use("/cards", cardRouter);
+    emailHelper("michallechowicz14@gmail.com");
 
     app.listen(5000);
     console.log("Listening on port 5000...");

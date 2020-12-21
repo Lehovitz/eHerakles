@@ -11,9 +11,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "./redux";
 import jwtDecode from "jwt-decode";
 import DecodedToken from "./models/DecodedToken";
-import BMICalculator from "./components/BMRCalculator/BMRCalculator";
+import BMICalculator from "./components/BMICalculator/BMICalculator";
 import AdminPage from "./components/AdminPage/AdminPage";
 import BMRCalculator from "./components/BMRCalculator/BMRCalculator";
+import Payment from "./components/Payment/Payment";
 
 export default () => (
   <BrowserRouter>
@@ -48,6 +49,7 @@ export default () => (
           role="customer"
           component={BMICalculator}
         />
+
         <ProtectedRoute
           exact
           path="/bmi"
@@ -55,6 +57,14 @@ export default () => (
           component={BMICalculator}
         />
       </>
+    </MuiThemeProvider>
+    <MuiThemeProvider>
+      <ProtectedRoute
+        exact
+        path="/payments"
+        role="customer"
+        component={Payment}
+      />
     </MuiThemeProvider>
     {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
     <ProtectedRoute

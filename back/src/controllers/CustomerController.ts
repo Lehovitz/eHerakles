@@ -103,7 +103,7 @@ export default class CustomerController {
 
       delete customer.password;
       delete customer.person;
-      delete person.id;
+      //delete person.id;
       delete person.location;
       delete location.id;
 

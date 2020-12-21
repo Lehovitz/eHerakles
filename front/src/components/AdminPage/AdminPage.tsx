@@ -51,6 +51,13 @@ import {
   ModeratorList,
   ModeratorShow,
 } from "./Resources/Moderator";
+import {
+  CardList,
+  CardCreate,
+  CardIcon,
+  CardEdit,
+  CardShow,
+} from "./Resources/Card";
 
 export const history = createBrowserHistory();
 const dataProvider = restProvider("http://localhost:5000");
@@ -153,6 +160,14 @@ const AdminPage = () => {
             create={ModeratorCreate}
             show={ModeratorShow}
             icon={ModeratorIcon}
+          />
+          <Resource
+            name="cards"
+            list={CardList}
+            edit={CardEdit}
+            create={CardCreate}
+            show={CardShow}
+            icon={CardIcon}
           />
         </Admin>
       </Provider>
