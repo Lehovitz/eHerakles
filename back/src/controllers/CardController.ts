@@ -14,12 +14,8 @@ export default class CardController {
     let cust = await custRepo.findOne({
       where: {email: email},
     });
-    console.log(req.params);
-    console.log(cust);
 
     let card = await cardRepo.findOne({where: {customer : cust}});
-
-    console.log(card);
 
     if(card){
       return res.status(200).send(card);

@@ -7,6 +7,29 @@ import { Location } from "../entities/Location";
 import clean from "../utils/clean";
 
 export default class CustomerController {
+  async findByMail(req: Request, res: Response)
+  {
+    const {email} = req.params;
+    const custRepo = getManager().getRepository(Customer);
+    const personRepo = getManager().getRepository(Person);
+    //const cust = await custRepo.findOne({where: {email : email}});
+    let cust = await custRepo
+      .createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.person", "person")
+      .where("customer.email = :email", {email: req.params.email }).getOne();
+
+    console.log("QUERY CUST   ---------" + cust);
+
+    if(cust){
+      res.status(200).send({cust});// person});
+    }
+    else 
+    {
+      res.status(400).send();
+    }
+  }
+  
+
   async create(req: Request, res: Response) {
     const {
       email,

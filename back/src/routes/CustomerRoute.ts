@@ -8,4 +8,6 @@ router.get("/:id", customerController.readOne);
 router.put("/:id", customerController.update);
 router.delete("/:id", customerController.delete);
 router.post("/", customerController.create);
+router.get("/findByEmail/:email", customerController.findByMail);
+
 export default router;
