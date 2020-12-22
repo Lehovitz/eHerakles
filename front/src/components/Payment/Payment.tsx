@@ -56,43 +56,24 @@ const Payment = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      const res: Customer = await fetch(
-        `http://localhost:5000/customers/findByEmail/${email!.replace(
-          "@",
-          "%40"
-        )}`
-      ).then((res) => res.json());
-      setCust(res);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const res: Customer = await fetch(
+  //       `http://localhost:5000/customers/findByEmail/${email!.replace(
+  //         "@",
+  //         "%40"
+  //       )}`
+  //     ).then((res) => res.json());
+  //     setCust(res);
+  //   })();
+  // }, []);
 
   const sendPayment = () => {
-    const fvNum = "FV " + faker.random.number({ min: 1000, max: 99999 });
-
-    console.log(fvNum);
-    console.log(cust);
-    var mailOptions = {
-      from: "eHerakles",
-      to: "michallechowicz14@gmail.com",
-      subject: "Payment",
-      text: "Hello" + cust!.person.name + " " + cust!.person.surname,
+    async () => {
+      await fetch(`http://localhost:5000/emails/${id}`).then((res) =>
+        res.json()
+      );
     };
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "eHeraklesTeam@gmail.com",
-        pass: "pass@word1",
-      },
-    });
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
   };
 
   return (
