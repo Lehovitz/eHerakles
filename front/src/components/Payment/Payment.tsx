@@ -46,6 +46,7 @@ const Payment = () => {
     decodedToken: DecodedToken | undefined =
       bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
   const email = decodedToken?.email;
+  const id = decodedToken?.id;
 
   useEffect(() => {
     (async () => {
@@ -66,14 +67,10 @@ const Payment = () => {
   //     ).then((res) => res.json());
   //     setCust(res);
   //   })();
-  // }, []);
+  // }, []);A
 
-  const sendPayment = () => {
-    async () => {
-      await fetch(`http://localhost:5000/emails/${id}`).then((res) =>
-        res.json()
-      );
-    };
+  const sendPayment = async () => {
+    await fetch(`http://localhost:5000/emails/${id}`).then((res) => res.json());
   };
 
   return (

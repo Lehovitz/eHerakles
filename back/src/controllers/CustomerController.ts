@@ -7,20 +7,20 @@ import { Location } from "../entities/Location";
 import clean from "../utils/clean";
 
 export default class CustomerController {
-  async findIdByMail(req: Request, res: Response)
-  {
-    const {email} = req.params;
-    const custRepo = getManager().getRepository(Customer);
-    const custId = await (await custRepo.findOne({where: {email : email}})).id;
+  // async findIdByMail(req: Request, res: Response)
+  // {
+  //   const {email} = req.params;
+  //   const custRepo = getManager().getRepository(Customer);
+  //   const custId = await (await custRepo.findOne({where: {email : email}})).id;
 
-    if(custId){
-      res.status(200).send({custId});
-    }
-    else 
-    {
-      res.status(400).send();
-    }
-  }
+  //   if(custId){
+  //     res.status(200).send({custId});
+  //   }
+  //   else 
+  //   {
+  //     res.status(400).send();
+  //   }
+  // }
   
 
   async create(req: Request, res: Response) {

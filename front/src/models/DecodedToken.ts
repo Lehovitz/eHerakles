@@ -1,5 +1,6 @@
 type DecodedToken = {
     email: string;
+    id: number
     role: string;
 }
 

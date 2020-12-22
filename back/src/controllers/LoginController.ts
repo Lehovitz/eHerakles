@@ -8,7 +8,7 @@ import { Moderator } from "../entities/Moderator";
 
 export default class LoginController {
   async login(req: Request, res: Response) {
-    const { email, password } = req.body;
+    const { email, password} = req.body;
 
     const customerRepository = getManager().getRepository(Customer);
     let customer = await customerRepository.findOne({
@@ -29,7 +29,7 @@ export default class LoginController {
       const passCorrect = await bcrypt.compare(password, customer.password);
       if (passCorrect) {
         const token = jwt.sign(
-          { email, role: "customer" },
+          { email, role: "customer", id: customer.id },
           process.env.TOKEN_SECRET
         );
         res.send(token);
