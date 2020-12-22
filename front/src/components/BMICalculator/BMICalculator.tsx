@@ -3,15 +3,16 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  TextField,
   Grid,
   Radio,
   RadioGroup,
   Typography,
 } from "@material-ui/core";
-import { TextField } from "material-ui";
 
 import React, { Component, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
 const BMICalculator = () => {
   const [weight, setWeight] = useState("");
@@ -31,11 +32,11 @@ const BMICalculator = () => {
     setBmi(parseFloat(weight) / (parseFloat(height) / 100) ** 2);
   };
   return (
-    <div>
+    <PaperWithHeader headerText="Count your BMI">
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <FormControl component="fieldset">
-            <FormLabel component="legend">Count your BMI</FormLabel>
+            <FormLabel component="legend">Gender</FormLabel>
             <RadioGroup
               aria-label="Gender"
               name="docType"
@@ -51,12 +52,20 @@ const BMICalculator = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <h1>Weight [kg]</h1>
-          <TextField id="weight" type="number" onChange={handleWeightChange} />
+          <TextField
+            id="weight"
+            type="number"
+            onChange={handleWeightChange}
+            label="Weight [kg]"
+          />
         </Grid>
         <Grid item xs={12}>
-          <h1>Height [cm]</h1>
-          <TextField id="height" type="number" onChange={handleHeightChange} />
+          <TextField
+            id="height"
+            type="number"
+            onChange={handleHeightChange}
+            label="Height [cm]"
+          />
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -111,7 +120,7 @@ const BMICalculator = () => {
           </Grid>
         )}
       </Grid>
-    </div>
+    </PaperWithHeader>
   );
 };
 

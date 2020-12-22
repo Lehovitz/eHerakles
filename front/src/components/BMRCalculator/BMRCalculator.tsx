@@ -7,11 +7,12 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  TextField,
 } from "@material-ui/core";
-import { TextField } from "material-ui";
 
 import React, { Component, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
 const BMRCalculator = () => {
   const [weight, setWeight] = useState("");
@@ -78,11 +79,11 @@ const BMRCalculator = () => {
     }
   };
   return (
-    <div>
+    <PaperWithHeader headerText="Count your BMR">
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <FormControl component="fieldset">
-            <FormLabel component="legend">Count your BMI</FormLabel>
+            <FormLabel component="legend">Gender</FormLabel>
             <RadioGroup
               aria-label="Gender"
               name="gender"
@@ -134,18 +135,29 @@ const BMRCalculator = () => {
             </RadioGroup>
           </FormControl>
         </Grid>
-
         <Grid item xs={12}>
-          <h1>Age</h1>
-          <TextField id="age" type="number" onChange={handleAgeChange} />
+          <TextField
+            id="age"
+            type="number"
+            onChange={handleAgeChange}
+            label="Age"
+          />
         </Grid>
         <Grid item xs={12}>
-          <h1>Weight [kg]</h1>
-          <TextField id="weight" type="number" onChange={handleWeightChange} />
+          <TextField
+            id="weight"
+            type="number"
+            onChange={handleWeightChange}
+            label="Weight [kg]"
+          />
         </Grid>
         <Grid item xs={12}>
-          <h1>Height [cm]</h1>
-          <TextField id="height" type="number" onChange={handleHeightChange} />
+          <TextField
+            id="height"
+            type="number"
+            onChange={handleHeightChange}
+            label="Height [cm]"
+          />
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -169,7 +181,7 @@ const BMRCalculator = () => {
           </Grid>
         )}
       </Grid>
-    </div>
+    </PaperWithHeader>
   );
 };
 

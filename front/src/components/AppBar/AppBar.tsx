@@ -10,11 +10,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateToken } from "../../redux/bearerToken/actions";
 import DecodedToken from "../../models/DecodedToken";
 import { RootState } from "../../redux";
-import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
+import styles from "./AppBar.module.scss";
 
 const AppBarComponent = () => {
   const history = useHistory(),
     dispatch = useDispatch();
+
+  const bearerToken = useSelector((state: RootState) => state.token),
+    decodedToken: DecodedToken | undefined =
+      bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined,
+    role = decodedToken?.role ?? "none";
 
   const handleLogout = () => {
     dispatch(updateToken(""));
@@ -40,32 +46,40 @@ const AppBarComponent = () => {
   const [redirectScheduler, setRedirectScheduler] = useState(false);
 
   return (
-    <AppBar position="static" color="default">
-      <Toolbar style={{ background: "blue" }}>
+    <AppBar position="static" color="primary">
+      <Toolbar style={{ backgroundColor: "#2196f3" }}>
         {redirectBMI && <Redirect to="/customer/bmi"></Redirect>}
         {redirectBMR && <Redirect to="/customer/bmr"></Redirect>}
 
         {redirectScheduler && <Redirect to="/"></Redirect>}
 
-        <IconButton edge="start" color="inherit" aria-label="menu">
+        {/* <IconButton edge="start" color="inherit" aria-label="menu">
           <Menu />
-        </IconButton>
-        <Button onClick={handleLogout} color="inherit">
-          Logout
-        </Button>
-        <Button onClick={handleSchedulerClick} color="inherit">
-          Scheduler
-        </Button>
-        <Button onClick={handleBMIClick} color="inherit">
-          BMI
-        </Button>
-        <Button onClick={handleBMRClick} color="inherit">
-          BMR
-        </Button>
-        <Link to="payments" style={{ display: "block", height: "100%" }}>
-          <Button>Payment</Button>
-        </Link>
-        <Button color="inherit">Login</Button>
+        </IconButton> */}
+
+        <div className={styles.actionsContainer}>
+          {role !== "none" ? (
+            <>
+              <Button onClick={handleSchedulerClick} color="inherit">
+                Scheduler
+              </Button>
+              <Button onClick={handleBMIClick} color="inherit">
+                BMI
+              </Button>
+              <Button onClick={handleBMRClick} color="inherit">
+                BMR
+              </Button>
+              <Link className={styles.action} to="payments">
+                <Button style={{ color: "white" }}>Payment</Button>
+              </Link>
+              <Button onClick={handleLogout} color="inherit">
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button color="inherit">Login</Button>
+          )}
+        </div>
       </Toolbar>
     </AppBar>
   );

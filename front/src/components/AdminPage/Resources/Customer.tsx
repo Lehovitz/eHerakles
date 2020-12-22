@@ -107,7 +107,7 @@ export const CustomerCreate = (props: CreateProps) => {
     <Create title="Create a Customer" {...props}>
       <SimpleForm>
         <TextInput source="email" />
-        <TextInput source="custPass" />
+        <TextInput source="password" />
         <TextInput source="name" />
         <TextInput source="surname" />
         <SelectInput choices={genderChoices} source="gender" />

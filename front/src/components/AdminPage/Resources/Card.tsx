@@ -7,6 +7,7 @@ import {
   CreateProps,
   Datagrid,
   DateField,
+  DateInput,
   Edit,
   EditButton,
   EditProps,
@@ -80,7 +81,7 @@ export const CardEdit = (props: EditProps) => {
       <SimpleForm>
         <TextInput disabled source="id" />
         <SelectInput choices={subChoices} source="subType" />
-        <TextInput source="expDate" />
+        <DateInput source="expDate" />
         <NumberInput source="due" />
         <BooleanInput source="isActive" />
       </SimpleForm>
@@ -100,7 +101,7 @@ export const CardCreate = (props: CreateProps) => {
           <SelectInput optionText="email" />
         </ReferenceInput>
         <SelectInput choices={subChoices} source="subType" />
-        <TextInput source="expDate" />
+        <DateInput source="expDate" />
         <NumberInput source="due" />
         <BooleanInput source="isActive" />
       </SimpleForm>

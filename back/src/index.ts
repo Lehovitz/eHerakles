@@ -23,6 +23,7 @@ import cron from "node-cron"
 import dotenv from "dotenv";
 import cors from "cors";
 import emailHelper from "./utils/emailNotification";
+
 createConnection({
   type: "postgres",
   host: "localhost",
@@ -37,35 +38,35 @@ createConnection({
   .then(async () => {
     dotenv.config();
 
-    const moderatorRepository = getManager().getRepository(Moderator);
-    const moderator = new Moderator();
-    moderator.isAdmin = true;
-    moderator.modMail = "mod@xd.pl";
-    moderator.modPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
-    const location = new Location();
-    location.city = "aa";
-    location.country = "aa";
-    location.postalCode = "aaa";
+    // const moderatorRepository = getManager().getRepository(Moderator);
+    // const moderator = new Moderator();
+    // moderator.isAdmin = true;
+    // moderator.modMail = "mod@xd.pl";
+    // moderator.modPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
+    // const location = new Location();
+    // location.city = "aa";
+    // location.country = "aa";
+    // location.postalCode = "aaa";
 
-    const person = new Person();
-    person.address = "aaaa";
-    person.birthDate = new Date();
-    person.gender = Gender.Male;
-    person.docNumber = "98239483";
-    person.docType = DocumentType.Passport;
-    person.name = "imie";
-    person.pesel = "2938329823";
-    person.phoneNum = "2394823834";
-    person.surname = "surname";
+    // const person = new Person();
+    // person.address = "aaaa";
+    // person.birthDate = new Date();
+    // person.gender = Gender.Male;
+    // person.docNumber = "98239483";
+    // person.docType = DocumentType.Passport;
+    // person.name = "imie";
+    // person.pesel = "2938329823";
+    // person.phoneNum = "2394823834";
+    // person.surname = "surname";
 
-    location.person = person;
-    person.location = location;
-    person.moderator = moderator;
-    moderator.person = person;
+    // location.person = person;
+    // person.location = location;
+    // person.moderator = moderator;
+    // moderator.person = person;
 
-    await moderatorRepository.save(moderator);
+    // await moderatorRepository.save(moderator);
 
-    console.log("dodano moda");
+    // console.log("dodano moda");
 
     const app = express();
     app.use(cors());

@@ -19,74 +19,63 @@ import Payment from "./components/Payment/Payment";
 export default () => (
   <BrowserRouter>
     <MuiThemeProvider>
-      <ThemeProvider theme={darkTheme}>
-        <AppBarComponent></AppBarComponent>
-      </ThemeProvider>
-    </MuiThemeProvider>
-    <Route exact path="/" component={LoginPage} />
-    <Route exact path="/register" component={RegisterPage} />
-    <MuiThemeProvider>
       <>
-        <ProtectedRoute
-          exact
-          path="/bmr"
-          role="customer"
-          component={BMRCalculator}
-        />
-        <ProtectedRoute
-          exact
-          path="/bmr"
-          role="trainer"
-          component={BMRCalculator}
-        />
+        <ThemeProvider theme={theme}>
+          <AppBarComponent></AppBarComponent>
+          <Route exact path="/" component={LoginPage} />
+          <Route exact path="/register" component={RegisterPage} />
+          <ProtectedRoute
+            exact
+            path="/bmr"
+            role="customer"
+            component={BMRCalculator}
+          />
+          <ProtectedRoute
+            exact
+            path="/bmr"
+            role="trainer"
+            component={BMRCalculator}
+          />
+          <ProtectedRoute
+            exact
+            path="/bmi"
+            role="customer"
+            component={BMICalculator}
+          />
+          <ProtectedRoute
+            exact
+            path="/bmi"
+            role="trainer"
+            component={BMICalculator}
+          />
+          <ProtectedRoute
+            exact
+            path="/payments"
+            role="customer"
+            component={Payment}
+          />
+          <ProtectedRoute
+            exact
+            path="/"
+            role="customer"
+            component={SchedulerComponent}
+          />
+          <ProtectedRoute
+            exact
+            path="/"
+            role="trainer"
+            component={SchedulerComponent}
+          />
+          <ProtectedRoute
+            exact
+            path="/"
+            role="moderator"
+            component={SchedulerComponent}
+          />
+          <ProtectedRoute path="/" role="admin" component={AdminPage} />
+        </ThemeProvider>
       </>
     </MuiThemeProvider>
-    <MuiThemeProvider>
-      <>
-        <ProtectedRoute
-          exact
-          path="/bmi"
-          role="customer"
-          component={BMICalculator}
-        />
-
-        <ProtectedRoute
-          exact
-          path="/bmi"
-          role="trainer"
-          component={BMICalculator}
-        />
-      </>
-    </MuiThemeProvider>
-    <MuiThemeProvider>
-      <ProtectedRoute
-        exact
-        path="/payments"
-        role="customer"
-        component={Payment}
-      />
-    </MuiThemeProvider>
-    {/* <Route exact path="/scheduler" component={SchedulerComponent} /> */}
-    <ProtectedRoute
-      exact
-      path="/"
-      role="customer"
-      component={SchedulerComponent}
-    />
-    <ProtectedRoute
-      exact
-      path="/"
-      role="trainer"
-      component={SchedulerComponent}
-    />
-
-    <ProtectedRoute
-      exact
-      path="/"
-      role="moderator"
-      component={SchedulerComponent}
-    />
-    <ProtectedRoute path="/" role="admin" component={AdminPage} />
   </BrowserRouter>
 );
 
@@ -123,13 +112,14 @@ const ProtectedRoute = ({
   );
 };
 
-const darkTheme = createMuiTheme({
+const theme = createMuiTheme({
   palette: {
-    primary: blue,
-    background: {
-      paper: "#212121",
-      default: "#212121",
+    primary: {
+      light: "#2196f3",
+      main: "#2196f3",
+      dark: "#2196f3",
+      contrastText: "#fff",
     },
-    type: "dark",
+    type: "light",
   },
 });
