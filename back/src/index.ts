@@ -17,6 +17,7 @@ import loginRouter from "./routes/LoginRoute";
 import moderatorRouter from "./routes/ModeratorRoute";
 import locationRouter from "./routes/LocationRoute";
 import cardRouter from "./routes/CardRoute";
+import emailRouter from "./routes/EmailRoute";
 import bcrypt from "bcryptjs";
 import { DocumentType, Gender } from "./entities/Person";
 import cron from "node-cron"
@@ -79,7 +80,9 @@ createConnection({
     app.use("/moderators", moderatorRouter);
     app.use("/login", loginRouter);
     app.use("/cards", cardRouter);
-    emailHelper("michallechowicz14@gmail.com");
+    app.use("/emails", emailRouter);
+
+    //emailHelper("michallechowicz14@gmail.com");
 
     app.listen(5000);
     console.log("Listening on port 5000...");
