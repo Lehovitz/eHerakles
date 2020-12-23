@@ -3,19 +3,29 @@ import { Resources, ViewState } from "@devexpress/dx-react-scheduler";
 import {
   Appointments,
   Scheduler,
+  TodayButton,
+  DateNavigator,
+  DayView,
+  MonthView,
   WeekView,
   AllDayPanel,
   AppointmentTooltip,
   ConfirmationDialog,
   EditRecurrenceMenu,
   AppointmentForm,
+  Toolbar,
+  ViewSwitcher,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { Paper } from "material-ui";
 import { MuiThemeProvider } from "material-ui/styles";
 import { EditingState } from "@devexpress/dx-react-scheduler";
 import { useEffect, useState } from "react";
-
-const currentDate = new Date();
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux";
+import DecodedToken from "../../models/DecodedToken";
+import jwtDecode from "jwt-decode";
+import Header from "./Header/Header";
+import { Dialog } from "@material-ui/core";
 
 type LastIndex = {
   lastIndex: number;
@@ -65,6 +75,10 @@ const SchedulerComponent = () => {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [data, setData] = useState<EventFront[]>([]);
+  const bearerToken = useSelector((state: RootState) => state.token),
+    decodedToken: DecodedToken | undefined =
+      bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined,
+    role = decodedToken?.role ?? "";
 
   const resources = [
     {
@@ -182,23 +196,42 @@ const SchedulerComponent = () => {
     setData(newData);
   };
 
+
+
   return (
-    <MuiThemeProvider>
-      <Paper>
-        <Scheduler data={data} height={660}>
-          <ViewState currentDate={currentDate} />
-          <EditingState onCommitChanges={commitChanges} />
-          <WeekView startDayHour={9} endDayHour={17} />
-          <AllDayPanel />
-          <EditRecurrenceMenu />
-          <ConfirmationDialog />
-          <Appointments />
+    <Paper>
+      <Scheduler data={data} height={660}>
+        <ViewState
+          defaultCurrentDate={new Date()}
+          defaultCurrentViewName="Week"
+        />
+        <EditingState onCommitChanges={commitChanges} />
+        <DayView startDayHour={9} endDayHour={17} />
+        <WeekView startDayHour={9} endDayHour={17} />
+        <WeekView
+          name="work-week"
+          displayName="Work Week"
+          excludedDays={[0, 6]}
+          startDayHour={9}
+          endDayHour={17}
+        />
+        <AllDayPanel />
+        <EditRecurrenceMenu />
+        <ConfirmationDialog />
+        <Toolbar />
+        <ViewSwitcher />
+        <DateNavigator />
+        <TodayButton />
+        <Appointments />
+        {["trainer", "moderator"].includes(role) ? (
           <AppointmentTooltip showOpenButton showDeleteButton />
-          <AppointmentForm />
-          <Resources data={resources} palette={[]} mainResourceName="roomId" />
-        </Scheduler>
-      </Paper>
-    </MuiThemeProvider>
+        ) : (
+          <AppointmentTooltip headerComponent={Header} />
+        )}
+        {["trainer", "moderator"].includes(role) && <AppointmentForm />}
+        <Resources data={resources} palette={[]} mainResourceName="roomId" />
+      </Scheduler>
+    </Paper>
   );
 };
 
