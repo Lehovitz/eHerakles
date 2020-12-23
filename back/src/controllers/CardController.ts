@@ -45,7 +45,7 @@ export default class CardController {
   
         card.customer = cust;
         card.isActive = false;
-        card.subType = SubscriptionType.None;
+        //card.sub = SubscriptionType.None;
         card.due = 0;
         card.expDate = new Date();
         await cardRepo.save(card);
@@ -84,6 +84,7 @@ export default class CardController {
     let data = await repo
       .createQueryBuilder("card")
       .leftJoinAndSelect("card.customer", "customer")
+      .leftJoinAndSelect("card.subscription", "subscription")
       .orderBy(`customer.${sort[0]}`, sort[1])
       .skip(skip)
       .take(take)
@@ -107,13 +108,14 @@ export default class CardController {
  
      for (let elem of filteredData) {
  
-        const { customer } = elem;
+        const { customer, subscription } = elem;
     //     delete customer.email;
     //     delete customer.password;
          delete customer.id;
+         delete subscription.id;
        
  
-      result.push({ ...elem, ...customer });
+      result.push({ ...elem, ...customer, ...subscription });
     }
     //  console.log("wyciaganie ok");
 
@@ -146,7 +148,7 @@ export default class CardController {
   }
 
   async update(req: Request, res: Response) {
-    const { isActive, subType, due, expDate, customer } = req.body;
+    const { isActive, subscription, due, expDate, customer } = req.body;
     const repo = getManager().getRepository(Card);
 
     const card = await repo
@@ -156,7 +158,7 @@ export default class CardController {
 
     if (card) {
       card.isActive = isActive;
-      card.subType = subType;
+      card.subscription = subscription;
       card.due = due;
       card.expDate = expDate;
       card.customer = customer;

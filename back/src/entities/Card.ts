@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToOne, RelationId } from "typeorm";
 import { Customer } from "./Customer";
+import { Subscription } from "./Subscription";
 import { Trainer } from "./Trainer";
 
 export enum SubscriptionType {
@@ -20,14 +21,17 @@ export class Card {
   @Column()
   isActive: boolean;
 
-  @Column("enum", { enum: SubscriptionType })
-  subType: SubscriptionType;
 
   @Column({type: 'decimal', precision:6, scale: 2})
   due: Number;
 
   @Column()
   expDate: Date;
+
+  
+  @ManyToOne(() => Subscription, (sub) => sub.id)
+  @JoinColumn({ name: "subscriptionId" })
+  subscription: Subscription;
 
   @OneToOne(() => Customer, (cust) => cust.id)
   @JoinColumn()

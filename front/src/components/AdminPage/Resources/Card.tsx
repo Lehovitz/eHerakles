@@ -28,14 +28,6 @@ import {
   TitleProps,
 } from "react-admin";
 
-const subChoices = [
-  { id: "N", name: "None" },
-  { id: "M", name: "Monthly" },
-  { id: "Q", name: "Quarterly" },
-  { id: "S", name: "Semestral" },
-  { id: "Y", name: "Yearly" },
-];
-
 export const CardIcon = CreditCardIcon;
 
 export const CardList = (props: ListProps) => {
@@ -43,8 +35,8 @@ export const CardList = (props: ListProps) => {
     <List {...props}>
       <Datagrid>
         <TextField source="id" />
-        <TextField source="email" />
-        <SelectField choices={subChoices} source="subType" />
+        <TextField source="email" label="Customer" />
+        <TextField source="name" label="Subscription name" />
         <DateField source="expDate" />
         <NumberField source="due" />
         <BooleanField source="isActive" />
@@ -60,8 +52,8 @@ export const CardShow = (props: ShowProps) => {
     <Show {...props}>
       <SimpleShowLayout>
         <TextField source="id" />
-        <TextField source="email" />
-        <SelectField choices={subChoices} source="subType" />
+        <TextField source="email" label="Customer" />
+        <TextField source="name" label="Subscription name" />
         <DateField source="expDate" />
         <NumberField source="due" />
         <BooleanField source="isActive" />
@@ -80,7 +72,13 @@ export const CardEdit = (props: EditProps) => {
     <Edit title={<CardTitle />} {...props}>
       <SimpleForm>
         <TextInput disabled source="id" />
-        <SelectInput choices={subChoices} source="subType" />
+        <ReferenceInput
+          label="Subscription"
+          source="subscription"
+          reference="subscriptions"
+        >
+          <SelectInput optionText="name" />
+        </ReferenceInput>
         <DateInput source="expDate" />
         <NumberInput source="due" />
         <BooleanInput source="isActive" />
@@ -100,7 +98,13 @@ export const CardCreate = (props: CreateProps) => {
         >
           <SelectInput optionText="email" />
         </ReferenceInput>
-        <SelectInput choices={subChoices} source="subType" />
+        <ReferenceInput
+          label="Subscription"
+          source="subscription"
+          reference="subscriptions"
+        >
+          <SelectInput optionText="name" />
+        </ReferenceInput>
         <DateInput source="expDate" />
         <NumberInput source="due" />
         <BooleanInput source="isActive" />

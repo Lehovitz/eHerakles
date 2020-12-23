@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import DecodedToken from "../../models/DecodedToken";
 import { RootState } from "../../redux";
 import { stringify } from "querystring";
+import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
 type Card = {
   id: number;
@@ -35,13 +36,8 @@ type Customer = {
 };
 
 const Payment = () => {
-  // const [subType, setSubType] = useState("");
-  // const [due, setDue] = useState(0);
-  // const [expDate, setExpDate] = useState(new Date());
-  // const [isActive, setIsActive] = useState(false);
   const [card, setCard] = useState<Card>();
   const [cust, setCust] = useState<Customer>();
-  const [person, setPerson] = useState<Person>();
   const bearerToken = useSelector((state: RootState) => state.token),
     decodedToken: DecodedToken | undefined =
       bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
@@ -74,9 +70,9 @@ const Payment = () => {
   };
 
   return (
-    <div className={styles.mainContainer}>
-      <Grid container spacing={3} className={styles.container}>
-        <Grid item xs={2} className={styles.textField}>
+    <PaperWithHeader headerText="Payments">
+      <Grid container spacing={3}>
+        <Grid item xs={4} className={styles.textField}>
           <div className={styles.label}>SubscriptionType</div>
           <div>{card?.subType}</div>
         </Grid>
@@ -100,7 +96,7 @@ const Payment = () => {
           </Button>
         </Grid>
       </Grid>
-    </div>
+    </PaperWithHeader>
   );
 };
 
