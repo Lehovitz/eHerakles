@@ -5,27 +5,23 @@ import { Customer } from "../entities/Customer";
 import clean from "../utils/clean";
 
 export default class CardController {
-  async findCardByEmail(req: Request, res: Response)
-  {
-    const {email} = req.params;
+  async findCardByEmail(req: Request, res: Response) {
+    const { email } = req.params;
     const cardRepo = getManager().getRepository(Card);
-    const custRepo =  getManager().getRepository(Customer);
+    const custRepo = getManager().getRepository(Customer);
 
     let cust = await custRepo.findOne({
-      where: {email: email},
+      where: { email: email },
     });
 
-    let card = await cardRepo.findOne({where: {customer : cust}});
+    let card = await cardRepo.findOne({ where: { customer: cust } });
 
-    if(card){
+    if (card) {
       return res.status(200).send(card);
-    }
-    else 
-    {
+    } else {
       res.status(400).send();
     }
   }
-  
 
   async create(req: Request, res: Response) {
     const { customer } = req.body;
@@ -33,16 +29,16 @@ export default class CardController {
     const custRepo = getManager().getRepository(Customer);
 
     let cust = await custRepo.findOne({
-      where: {id : customer},
+      where: { id: customer },
     });
     console.log(customer);
     console.log(cust);
-    let card = await cardRepo.findOne({where: {customer: customer}})
-    if(cust) {
+    let card = await cardRepo.findOne({ where: { customer: customer } });
+    if (cust) {
       if (!card) {
         const card = new Card();
         console.log("utworzono nowy karnet ");
-  
+
         card.customer = cust;
         card.isActive = false;
         //card.sub = SubscriptionType.None;
@@ -53,15 +49,11 @@ export default class CardController {
 
         res.send(card);
         console.log("res k ");
-
-
       } else res.status(400).send();
-    }
-    else {
-      console.log("nie ma takiego klienta")
+    } else {
+      console.log("nie ma takiego klienta");
       res.status(400).send();
     }
-    
   }
 
   async readAll(req: Request, res: Response) {
@@ -90,7 +82,6 @@ export default class CardController {
       .take(take)
       .getMany();
 
-    
     // Filtrowanie encji
     const filteredData = data.filter((elem) => {
       for (let filter of Object.keys(filters)) {
@@ -100,51 +91,51 @@ export default class CardController {
       return true;
     });
 
-     // Usuwanie pól będących nullami / undefined
+    // Usuwanie pól będących nullami / undefined
     //  filteredData.forEach((elem) => clean(elem));
     // console.log(filteredData);
-     // Wyciąganie tylko istotnych pól
-     const result = [];
- 
-     for (let elem of filteredData) {
- 
-        const { customer, subscription } = elem;
-    //     delete customer.email;
-    //     delete customer.password;
-         delete customer.id;
-         delete subscription.id;
-       
- 
+    // Wyciąganie tylko istotnych pól
+    const result = [];
+
+    for (let elem of filteredData) {
+      const { customer, subscription } = elem;
+
+      if (customer) {
+        // delete customer.email;
+        delete customer.password;
+        delete customer.id;
+      }
+
+      if (subscription) {
+        delete subscription.id;
+      }
+
       result.push({ ...elem, ...customer, ...subscription });
     }
     //  console.log("wyciaganie ok");
 
- 
-     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
-     res
-       .set({
-         "Content-Range": `cards ${range[0]}-${range[1]}/${result.length}`,
-         "Access-Control-Expose-Headers": "Content-Range",
-       })
-       .send(result);
-
-   }
-  
+    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
+    res
+      .set({
+        "Content-Range": `cards ${range[0]}-${range[1]}/${result.length}`,
+        "Access-Control-Expose-Headers": "Content-Range",
+      })
+      .send(result);
+  }
 
   async readOne(req: Request, res: Response) {
     const repo = getManager().getRepository(Card);
     const card = await repo
-    .createQueryBuilder("card")
-    .leftJoinAndSelect("card.customer", "customer")
-    .where("card.id = :id",  { id: req.params.id }).getOne();
+      .createQueryBuilder("card")
+      .leftJoinAndSelect("card.customer", "customer")
+      .where("card.id = :id", { id: req.params.id })
+      .getOne();
 
     console.log(req.params);
-    if(card)
-    {
+    if (card) {
       const { customer } = card;
-      return res.status(200).send({...card, ...customer});
-    }
-    else res.status(400).send();
+      return res.status(200).send({ ...card, ...customer });
+    } else res.status(400).send();
   }
 
   async update(req: Request, res: Response) {
@@ -152,9 +143,10 @@ export default class CardController {
     const repo = getManager().getRepository(Card);
 
     const card = await repo
-    .createQueryBuilder("card")
-    .leftJoinAndSelect("card.customer", "customer")
-    .where("card.id = :id",  { id: req.params.id }).getOne();
+      .createQueryBuilder("card")
+      .leftJoinAndSelect("card.customer", "customer")
+      .where("card.id = :id", { id: req.params.id })
+      .getOne();
 
     if (card) {
       card.isActive = isActive;

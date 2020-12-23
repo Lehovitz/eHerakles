@@ -27,7 +27,7 @@ export default class SubscriptionController {
   }
 
   async readAll(req: Request, res: Response) {
-    console.log("read all subscription")
+    console.log("read all subscription");
 
     const repo = getManager().getRepository(Subscription);
     let { sort, filters, range } = req.query;
@@ -61,7 +61,7 @@ export default class SubscriptionController {
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami, w pierwszym trzeba zmienić nazwę encji
     res
       .set({
-        "Content-Range": `rooms ${range[0]}-${range[1]}/${filteredData.length}`,
+        "Content-Range": `subscriptions ${range[0]}-${range[1]}/${filteredData.length}`,
         "Access-Control-Expose-Headers": "Content-Range",
       })
       .send(filteredData);

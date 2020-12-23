@@ -56,19 +56,19 @@ export default () => (
           />
           <ProtectedRoute
             exact
-            path="/"
+            path="/scheduler"
             role="customer"
             component={SchedulerComponent}
           />
           <ProtectedRoute
             exact
-            path="/"
+            path="/scheduler"
             role="trainer"
             component={SchedulerComponent}
           />
           <ProtectedRoute
             exact
-            path="/"
+            path="/scheduler"
             role="moderator"
             component={SchedulerComponent}
           />

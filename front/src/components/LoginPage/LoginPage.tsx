@@ -63,7 +63,11 @@ const LoginPage = () => {
     if (loggedIn) {
       const decodedToken: DecodedToken = jwt_decode(bearerToken.token);
 
-      return <Redirect to={`${decodedToken.role}/`}></Redirect>;
+      return decodedToken.role === "admin" ? (
+        <Redirect to="/admin" />
+      ) : (
+        <Redirect to={`/${decodedToken.role}/scheduler`}></Redirect>
+      );
     }
   };
 

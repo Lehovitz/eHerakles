@@ -70,24 +70,20 @@ const SchedulerComponent = () => {
     {
       fieldName: "roomId",
       title: "Room",
-      instances: rooms.map((room) => {
-        return {
-          id: room.id,
-          text: `${room.roomNumber} - ${room.roomName}`,
-          color: "blue",
-        };
-      }),
+      instances: rooms.map((room) => ({
+        id: room.id,
+        text: `${room.roomNumber} - ${room.roomName}`,
+        color: "blue",
+      })),
     },
     {
       fieldName: "trainerId",
       title: "Trainer",
-      instances: trainers.map((trainer) => {
-        return {
-          id: trainer.id,
-          text: `${trainer.name} ${trainer.surname}`,
-          color: "grey",
-        };
-      }),
+      instances: trainers.map((trainer) => ({
+        id: trainer.id,
+        text: `${trainer.name} ${trainer.surname}`,
+        color: "grey",
+      })),
     },
   ];
 
