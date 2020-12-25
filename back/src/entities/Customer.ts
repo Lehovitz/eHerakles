@@ -10,6 +10,7 @@ import {
 import { Person } from "./Person";
 import { Card } from "./Card";
 import { Event } from "./Event";
+import { Payment } from "./Payment";
 
 @Entity()
 export class Customer {
@@ -32,4 +33,6 @@ export class Customer {
   @OneToOne(() => Card, (card) => card.id)
   card: Card;
 
+  @OneToMany(() => Payment, (paym) => paym.id)
+  payment: Payment[];
 }

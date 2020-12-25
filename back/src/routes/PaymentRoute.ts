@@ -1,0 +1,12 @@
+import express from "express";
+import PaymentController from "../controllers/PaymentController";
+const router = express.Router();
+
+const paymentController = new PaymentController();
+router.get("/", paymentController.readAll);
+router.get("/:id", paymentController.readOne);
+router.put("/:id", paymentController.update);
+router.delete("/:id", paymentController.delete);
+router.post("/", paymentController.create);
+
+export default router;

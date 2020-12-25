@@ -65,6 +65,13 @@ import {
   SubscriptionList,
   SubscriptionShow,
 } from "./Resources/Subscription";
+import {
+  PaymentCreate,
+  PaymentEdit,
+  paymentIcon,
+  PaymentList,
+  PaymentShow,
+} from "./Resources/Payment";
 
 export const history = createBrowserHistory();
 const dataProvider = restProvider("http://localhost:5000");
@@ -183,6 +190,14 @@ const AdminPage = () => {
             create={SubscriptionCreate}
             show={SubscriptionShow}
             icon={SubscriptionIcon}
+          />
+          <Resource
+            name="payments"
+            list={PaymentList}
+            edit={PaymentEdit}
+            create={PaymentCreate}
+            show={PaymentShow}
+            icon={paymentIcon}
           />
         </Admin>
       </Provider>

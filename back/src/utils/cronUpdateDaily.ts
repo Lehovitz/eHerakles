@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import { getManager } from 'typeorm';
-import { Card, SubscriptionType } from '../entities/Card';
+import { Card } from '../entities/Card';
 
 export default () => {
   cron.schedule('0 3 * * *', async () => {

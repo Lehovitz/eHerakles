@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
-import { Card, SubscriptionType } from "../entities/Card";
+import { Card } from "../entities/Card";
 import { Customer } from "../entities/Customer";
 import clean from "../utils/clean";
 
@@ -92,7 +92,7 @@ export default class CardController {
     });
 
     // Usuwanie pól będących nullami / undefined
-    //  filteredData.forEach((elem) => clean(elem));
+    filteredData.forEach((elem) => clean(elem));
     // console.log(filteredData);
     // Wyciąganie tylko istotnych pól
     const result = [];

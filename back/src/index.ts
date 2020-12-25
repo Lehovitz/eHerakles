@@ -19,7 +19,7 @@ import locationRouter from "./routes/LocationRoute";
 import cardRouter from "./routes/CardRoute";
 import emailRouter from "./routes/EmailRoute";
 import subscriptionRouter from "./routes/SubscriptionRoute";
-
+import paymentRouter from "./routes/PaymentRoute";
 import bcrypt from "bcryptjs";
 import { DocumentType, Gender } from "./entities/Person";
 import cron from "node-cron"
@@ -27,6 +27,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import emailHelper from "./utils/emailNotification";
 import { Subscription } from "./entities/Subscription";
+import { Payment } from "./entities/Payment";
 
 createConnection({
   type: "postgres",
@@ -35,7 +36,7 @@ createConnection({
   username: "postgres",
   password: "pass",
   database: "eHerakles",
-  entities: [Customer, Moderator, Card, Event, Location, Room, Trainer, Person, Subscription],
+  entities: [Payment, Customer, Moderator, Card, Event, Location, Room, Trainer, Person, Subscription],
   synchronize: true,
   logging: false,
 })
@@ -85,6 +86,7 @@ createConnection({
     app.use("/cards", cardRouter);
     app.use("/emails", emailRouter);
     app.use("/subscriptions", subscriptionRouter);
+    app.use("/payments", paymentRouter);
 
     
 
