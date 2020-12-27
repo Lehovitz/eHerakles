@@ -15,6 +15,7 @@ import BMICalculator from "./components/BMICalculator/BMICalculator";
 import AdminPage from "./components/AdminPage/AdminPage";
 import BMRCalculator from "./components/BMRCalculator/BMRCalculator";
 import Payment from "./components/Payment/Payment";
+import PendingPayments from "./components/PendingPayments/PendingPayments";
 
 export default () => (
   <BrowserRouter>
@@ -71,6 +72,12 @@ export default () => (
             path="/scheduler"
             role="moderator"
             component={SchedulerComponent}
+          />
+          <ProtectedRoute
+            exact
+            path="/pendingPayments"
+            role="moderator"
+            component={PendingPayments}
           />
           <ProtectedRoute path="/" role="admin" component={AdminPage} />
         </ThemeProvider>

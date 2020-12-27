@@ -21,6 +21,7 @@ import {
   TitleProps,
   SelectInput,
   SelectField,
+  BooleanInput,
 } from "react-admin";
 
 const genderChoices = [
@@ -96,6 +97,7 @@ export const ModeratorEdit = (props: EditProps) => {
         <TextInput source="country" />
         <TextInput source="city" />
         <TextInput source="postalCode" />
+        <BooleanInput source="isAdmin" />
       </SimpleForm>
     </Edit>
   );
@@ -119,6 +121,7 @@ export const ModeratorCreate = (props: CreateProps) => {
         <TextInput source="country" />
         <TextInput source="city" />
         <TextInput source="postalCode" />
+        <BooleanInput source="isAdmin" />
       </SimpleForm>
     </Create>
   );

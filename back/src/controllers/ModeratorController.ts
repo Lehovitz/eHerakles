@@ -23,6 +23,7 @@ export default class ModeratorController {
       pesel,
       docNumber,
       address,
+      isAdmin
     } = req.body;
 
     const repo = getManager().getRepository(Moderator);
@@ -76,9 +77,13 @@ export default class ModeratorController {
       const salt = bcrypt.genSaltSync(10);
       const hash = await bcrypt.hash(modPass, salt);
       moderator.modPass = hash;
-      console.log("utworzono nowego customera");
       moderator.person = person;
+      moderator.isAdmin = isAdmin || false;
+
+      console.log(moderator);
+
       await repo.save(moderator);
+
     } else {
       console.log("Taki Moderator juz istnieje :3");
     }
@@ -187,6 +192,7 @@ export default class ModeratorController {
       country,
       city,
       postalCode,
+      isAdmin,
     } = req.body;
 
     const repo = getManager().getRepository(Moderator);
@@ -205,6 +211,7 @@ export default class ModeratorController {
       const { location } = person;
 
       moderator.modMail = modMail;
+      moderator.isAdmin = isAdmin || false;
 
       person.name = name;
       person.surname = surname;

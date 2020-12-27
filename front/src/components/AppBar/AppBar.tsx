@@ -59,6 +59,15 @@ const Actions = ({ type, closeDrawer }: ActionsProps) => {
               Payments
             </Button>
           </Link>
+          <Link
+            className={linkClass}
+            to="pendingPayments"
+            onClick={closeDrawer}
+          >
+            <Button className={buttonClass} color="inherit">
+              Pending payments
+            </Button>
+          </Link>
           <Button
             className={logoutClass}
             onClick={handleLogout}
