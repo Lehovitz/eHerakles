@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
+import { Customer } from "../entities/Customer";
 import { Payment, Status } from "../entities/Payment";
 
 import clean from "../utils/clean";
@@ -205,10 +206,7 @@ export default class PaymentController {
   }
 
   async acceptPayment(req: Request, res: Response) {
-    const { due, status, paymentDate, dueDate } = req.body;
-
     const repo = getManager().getRepository(Payment);
-
     let payment = await repo.findOne(req.params.id);
 
     if (payment) {
@@ -222,10 +220,7 @@ export default class PaymentController {
   }
 
   async rejectPayment(req: Request, res: Response) {
-    const { due, status, paymentDate, dueDate } = req.body;
-
     const repo = getManager().getRepository(Payment);
-
     let payment = await repo.findOne(req.params.id);
 
     if (payment) {
@@ -235,6 +230,38 @@ export default class PaymentController {
       res.send();
     } else {
       res.status(400).send("Taka Platnosc nie istnieje :(");
+    }
+  }
+
+  async makePaymentPending(req: Request, res: Response) {
+    const repo = getManager().getRepository(Payment);
+    let payment = await repo.findOne(req.params.id);
+
+    if (payment) {
+      payment.status = Status.Pending;
+      console.log("zaktualizowano platnosc");
+      await repo.save(payment);
+      res.send();
+    } else {
+      res.status(400).send("Taka Platnosc nie istnieje :(");
+    }
+  }
+
+  async findByEmail(req: Request, res: Response) {
+    const { email } = req.params;
+    const paymRepo = getManager().getRepository(Payment);
+    const custRepo = getManager().getRepository(Customer);
+
+    let cust = await custRepo.findOne({
+      where: { email: email },
+    });
+
+    let paym = await paymRepo.find({ where: { customer: cust } });
+
+    if (paym) {
+      return res.status(200).send(paym);
+    } else {
+      res.status(400).send();
     }
   }
 }

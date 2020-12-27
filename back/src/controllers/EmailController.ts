@@ -6,23 +6,31 @@ import { Request, Response} from "express"
 import htmlToText from "nodemailer-html-to-text"
 import { Card } from "../entities/Card";
 import faker from "faker"
+import { Payment } from "../entities/Payment";
 
     export default class emailController{
 
         async sendPayment(req: Request, res: Response){
+            const {paymId} = req.params;
             console.log("Send payment");
-            const custRepo = getManager().getRepository(Customer);
-            const cust = await custRepo
-            .createQueryBuilder("customer")
-            .leftJoinAndSelect("customer.person", "person")
-            .where("customer.id = :id", { id: req.params.id })
-            .getOne();
             const cardRepo = getManager().getRepository(Card);
-            const card = await cardRepo.findOne({where: {customer : cust}})
-            const person =   cust.person;          
+            const paymRepo = getManager().getRepository(Payment);
+            const payment = await paymRepo.findOne({where: {id: paymId}})
+
+            const paym = await paymRepo
+            .createQueryBuilder("payment")
+            .leftJoinAndSelect("payment.customer", "customer")
+            .leftJoinAndSelect("customer.person", "person")
+            .where("payment.id = :id", { id: paymId })
+            .getOne();
+            
+            const cust = paym.customer;
+            const person = cust.person;          
             const vatNum = "FV " + faker.random.number({'min': 10000, 'max': 99999});
             const fakeAccNum = faker.finance.iban().slice(2);
-            const dueDate = card.due.toString().split("T")[0];
+            const dueDate = payment.due.toString().split("T")[0];
+            const card = await cardRepo.findOne({where: {customer : cust}}); 
+
             var mailOptions = {
               from: "eHerakles",
               to: "michallechowicz14@gmail.com",
@@ -36,7 +44,6 @@ import faker from "faker"
                     <h3><b>Best regards! eHeraklesTeam</b></h3>`
 
                     
-              //text: "Hello " + person.name + " " + person.surname,
             };
             var transporter = nodemailer.createTransport({
               service: "gmail",

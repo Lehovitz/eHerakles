@@ -17,85 +17,90 @@ import { RootState } from "../../redux";
 import { stringify } from "querystring";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
-type Card = {
-  id: number;
-  subType: string;
+type Payment = {
+  id: string;
   due: number;
-  expDate: Date;
-  isActive: boolean;
+  dueDate: Date;
+  paymentDate: Date;
+  status: Status;
+  email: string;
 };
 
-type Person = {
-  id: number;
-  name: string;
-  surname: string;
-};
-type Customer = {
-  id: number;
-  person: Person;
+enum Status {
+  Started = "S",
+  Pending = "P",
+  Finalized = "F",
+  Rejected = "R",
+}
+
+type PaymentBack = {
+  id: string;
+  due: number;
+  dueDate: Date;
+  paymentDate: Date;
+  status: Status;
+  customer: { email: string };
 };
 
 const Payment = () => {
-  const [card, setCard] = useState<Card>();
-  const [cust, setCust] = useState<Customer>();
+  const [payments, setPayments] = useState<Payment[]>([]);
+
   const bearerToken = useSelector((state: RootState) => state.token),
     decodedToken: DecodedToken | undefined =
       bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
-  const email = decodedToken?.email;
-  const id = decodedToken?.id;
+  const email = decodedToken!.email;
+  const id = decodedToken!.id;
+
+  const sendPayment = async (paymId: string) => {
+    await fetch(`http://localhost:5000/emails/${paymId}`);
+    await fetch(`http://localhost:5000/payments/pend/${paymId}`, {
+      method: "PUT",
+    });
+  };
 
   useEffect(() => {
     (async () => {
-      const res: Card = await fetch(
-        `http://localhost:5000/cards/findByEmail/${email!.replace("@", "%40")}`
+      const res: PaymentBack[] = await fetch(
+        `http://localhost:5000/payments/findByEmail/${email}`
       ).then((res) => res.json());
-      setCard(res);
+
+      const result = res.map((payment) => ({
+        ...payment,
+        email: email,
+      }));
+      setPayments(result);
     })();
   }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const res: Customer = await fetch(
-  //       `http://localhost:5000/customers/findByEmail/${email!.replace(
-  //         "@",
-  //         "%40"
-  //       )}`
-  //     ).then((res) => res.json());
-  //     setCust(res);
-  //   })();
-  // }, []);A
-
-  const sendPayment = async () => {
-    await fetch(`http://localhost:5000/emails/${id}`).then((res) => res.json());
-  };
-
   return (
-    <PaperWithHeader headerText="Payments">
-      <Grid container spacing={3}>
-        <Grid item xs={4} className={styles.textField}>
-          <div className={styles.label}>SubscriptionType</div>
-          <div>{card?.subType}</div>
+    <PaperWithHeader headerText="All payments">
+      {payments.map((payment) => (
+        <Grid key={payment.id} container spacing={3}>
+          <Grid item xs={2}>
+            {payment.id}
+          </Grid>
+          <Grid item xs={2}>
+            {payment.due}
+          </Grid>
+          <Grid item xs={2}>
+            {payment.dueDate}
+          </Grid>
+          <Grid item xs={2}>
+            {payment.email}
+          </Grid>
+          <Grid item xs={2}>
+            {payment.paymentDate}
+          </Grid>
+          <Grid item xs={2}>
+            {payment.status}
+          </Grid>
+          <Grid item xs={2}>
+            <Button color="primary" onClick={() => sendPayment(payment.id)}>
+              Send Payment
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={2} className={styles.textField}>
-          <div className={styles.label}>Due</div>
-          <div>{card?.due}</div>
-        </Grid>
-        <Grid item xs={2} className={styles.textField}>
-          <div className={styles.label}>Expire date</div>
-          <div>{card?.expDate.toString().split("T")[0]}</div>
-        </Grid>
-        <Grid item xs={2} className={styles.textField}>
-          <div className={styles.label}>isActive</div>
-          <div>
-            <Checkbox checked={card?.isActive}></Checkbox>
-          </div>
-        </Grid>
-        <Grid item xs={2} className={styles.textField}>
-          <Button className={styles.button} onClick={sendPayment}>
-            Payment
-          </Button>
-        </Grid>
-      </Grid>
+      ))}
     </PaperWithHeader>
   );
 };

@@ -16,6 +16,13 @@ export default () => {
       {
         card.isActive = false;
         //twoj karnet wygasl
+
+        //     await fetch(`http://localhost:5000/payments/`, {
+        //   method: "POST",
+        //   body: JSON.stringify({
+          
+        //   }),
+        // });
       }
       else if(dateDiff === 3)
       {

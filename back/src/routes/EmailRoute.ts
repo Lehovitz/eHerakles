@@ -5,7 +5,7 @@ const router = express.Router();
 
 const emails = new emailController();
 
-router.get("/:id", emails.sendPayment);
+router.get("/:paymId", emails.sendPayment);
 //router.use(authenticateToken);
 
 export default router;
