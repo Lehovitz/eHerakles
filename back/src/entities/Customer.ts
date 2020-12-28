@@ -12,6 +12,14 @@ import { Card } from "./Card";
 import { Event } from "./Event";
 import { Payment } from "./Payment";
 
+
+export enum Goal {
+  MuscleMass = "M",
+  GetFit = "Fit",
+  Reduction = "Rd",
+  Relaxation = "Rel",
+}
+
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn()
