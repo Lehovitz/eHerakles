@@ -40,9 +40,12 @@ type EventBack = {
   exDate?: string;
   capacity: number;
   identifier: number;
+  customers: {
+    email: string;
+  }[];
 };
 
-type EventFront = {
+export type EventFront = {
   title: string;
   id: number;
   startDate: Date;
@@ -54,6 +57,9 @@ type EventFront = {
   rRule?: string;
   exDate?: string;
   capacity: number;
+  customers: {
+    email: string;
+  }[];
 };
 
 type Trainer = {
@@ -136,6 +142,7 @@ const SchedulerComponent = () => {
           rRule: event.rule,
           exDate: event.exDate,
           capacity: event.capacity,
+          customers: event.customers,
         };
         events.push(eventFront);
       }
@@ -193,8 +200,6 @@ const SchedulerComponent = () => {
     setData(newData);
   };
 
-
-
   return (
     <Paper>
       <Scheduler data={data} height={660}>
@@ -223,7 +228,11 @@ const SchedulerComponent = () => {
         {["trainer", "moderator"].includes(role) ? (
           <AppointmentTooltip showOpenButton showDeleteButton />
         ) : (
-          <AppointmentTooltip headerComponent={Header} />
+          <AppointmentTooltip
+            headerComponent={(props) => (
+              <Header data={data} setData={setData} {...props} />
+            )}
+          />
         )}
         {["trainer", "moderator"].includes(role) && <AppointmentForm />}
         <Resources data={resources} palette={[]} mainResourceName="roomId" />

@@ -9,15 +9,28 @@ import {
   Typography,
 } from "@material-ui/core";
 import { AssignmentTurnedIn } from "@material-ui/icons";
+import jwtDecode from "jwt-decode";
 import { IconButton } from "material-ui";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import DecodedToken from "../../../models/DecodedToken";
+import { RootState } from "../../../redux";
+import { EventFront } from "../Scheduler";
 import styles from "./Header.module.scss";
 
-type HeaderProps = AppointmentTooltip.HeaderProps;
+type HeaderProps = AppointmentTooltip.HeaderProps & {
+  data: EventFront[];
+  setData: React.Dispatch<React.SetStateAction<EventFront[]>>;
+};
 
-const Header = ({ appointmentData, ...props }: HeaderProps) => {
+const Header = ({ appointmentData, setData, data, ...props }: HeaderProps) => {
   const [open, setOpen] = useState(false),
-    [loading, setLoading] = useState(false);
+    [loading, setLoading] = useState(false),
+    bearerToken = useSelector((state: RootState) => state.token),
+    decodedToken: DecodedToken | undefined =
+      bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined,
+    email = decodedToken?.email ?? "",
+    canUserSign = !appointmentData!.customers.includes(email);
 
   const handleDialogOpen = () => setOpen(true);
   const handleDialogClose = () => setOpen(false);
@@ -25,14 +38,27 @@ const Header = ({ appointmentData, ...props }: HeaderProps) => {
   const handleSignIn = async () => {
     setLoading(true);
 
-    // tu będzie jakaś async operacja
-    await new Promise((res, rej) => {
-      setTimeout(() => {
-        setLoading(false);
-        res("git");
-      }, 2000);
-    });
+    await fetch(
+      `http://localhost:5000/events/sign/${appointmentData!.id}/${email}`,
+      {
+        method: "PUT",
+      }
+    );
 
+    // TODO:: FIX
+
+    const eventsCopy = [...data];
+    const eventIndex = eventsCopy.findIndex(
+      (event) => event.id === appointmentData!.id
+    );
+    eventsCopy[eventIndex].customers = [
+      ...eventsCopy[eventIndex].customers,
+      { email },
+    ];
+
+    setData(eventsCopy);
+
+    setLoading(false);
     handleDialogClose();
   };
 
@@ -44,26 +70,33 @@ const Header = ({ appointmentData, ...props }: HeaderProps) => {
         </IconButton>
       </AppointmentTooltip.Header>
       <Dialog open={open} onClose={handleDialogClose}>
-        <DialogTitle>
-          <Typography variant="h5">Sign in for a training</Typography>
-        </DialogTitle>
+        <DialogTitle>Sign in for a training</DialogTitle>
+
         <DialogContent dividers>
-          Appointment data: {JSON.stringify(appointmentData) + "\n"}
-          TODO:: Może jakieś inne dane, ilość miejsc wolnych, przypomnienie jaki
-          jest trener, pokój, data
+          {canUserSign ? (
+            <>
+              Appointment data: {JSON.stringify(appointmentData) + "\n"}
+              TODO:: Może jakieś inne dane, ilość miejsc wolnych, przypomnienie
+              jaki jest trener, pokój, data
+            </>
+          ) : (
+            <>You've already signed for this event.</>
+          )}
         </DialogContent>
         <DialogActions>
           <Button color="inherit" onClick={handleDialogClose}>
             Close
           </Button>
-          <Button
-            startIcon={loading && <CircularProgress size={10} />}
-            disabled={loading}
-            color="primary"
-            onClick={handleSignIn}
-          >
-            Sign in
-          </Button>
+          {canUserSign && (
+            <Button
+              startIcon={loading && <CircularProgress size={10} />}
+              disabled={loading}
+              color="primary"
+              onClick={handleSignIn}
+            >
+              Sign in
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>
