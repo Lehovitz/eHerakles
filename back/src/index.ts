@@ -28,6 +28,7 @@ import cors from "cors";
 import emailHelper from "./utils/emailNotification";
 import { Subscription } from "./entities/Subscription";
 import { Payment } from "./entities/Payment";
+import cronUpdateDaily from "./utils/cronUpdateDaily";
 
 createConnection({
   type: "postgres",
@@ -88,6 +89,7 @@ createConnection({
     app.use("/subscriptions", subscriptionRouter);
     app.use("/payments", paymentRouter);
 
+    cronUpdateDaily();
     
 
     //emailHelper("michallechowicz14@gmail.com");

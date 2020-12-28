@@ -14,6 +14,8 @@ export default class PaymentController {
       where: { customer: customer, paymentDate:paymentDate, due: due, status:status},
     });
 
+    console.log(req.body);
+
     if (!payment) {
       payment = new Payment();
       payment.customer = customer;
