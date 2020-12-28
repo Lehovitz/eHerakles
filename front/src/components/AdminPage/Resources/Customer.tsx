@@ -21,7 +21,6 @@ import {
   TitleProps,
   SelectInput,
   SelectField,
-  NumberField,
 } from "react-admin";
 
 const genderChoices = [

@@ -1,5 +1,5 @@
 import { Paper, Typography } from "@material-ui/core";
-import React, { FunctionComponent } from "react";
+import React from "react";
 import styles from "./PaperWithHeader.module.scss";
 
 interface PaperWithHeaderProps {

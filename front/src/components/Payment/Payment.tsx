@@ -1,20 +1,9 @@
-import { Box, Button, Grid, MuiThemeProvider } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import jwtDecode from "jwt-decode";
-import { Checkbox, SelectField, TextField } from "material-ui";
-import React, { Component, useEffect, useState } from "react";
-import styles from "./Payment.module.scss";
-import faker from "faker";
-import nodemailer from "nodemailer";
-import {
-  BooleanField,
-  DateField,
-  NumberField,
-  useAuthState,
-} from "react-admin";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import DecodedToken from "../../models/DecodedToken";
 import { RootState } from "../../redux";
-import { stringify } from "querystring";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
 type Payment = {
@@ -49,7 +38,6 @@ const Payment = () => {
     decodedToken: DecodedToken | undefined =
       bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
   const email = decodedToken!.email;
-  const id = decodedToken!.id;
 
   const sendPayment = async (paymId: string) => {
     await fetch(`http://localhost:5000/emails/${paymId}`);
@@ -70,6 +58,7 @@ const Payment = () => {
       }));
       setPayments(result);
     })();
+    // eslint-disable-next-line
   }, []);
 
   return (

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Event } from "@material-ui/icons";
 import {
-  AutocompleteInput,
   BooleanField,
   BooleanInput,
   Create,

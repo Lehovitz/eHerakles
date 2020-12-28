@@ -5,7 +5,6 @@ import RegisterPage from "./components/RegisterPage/RegisterPage";
 import SchedulerComponent from "./components/Scheduler/Scheduler";
 import AppBarComponent from "./components/AppBar/AppBar";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
-import { blue } from "@material-ui/core/colors";
 import { MuiThemeProvider } from "material-ui/styles";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux";

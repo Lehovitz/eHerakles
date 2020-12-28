@@ -16,7 +16,6 @@ import {
   NumberField,
   NumberInput,
   ReferenceInput,
-  SelectField,
   SelectInput,
   Show,
   ShowButton,

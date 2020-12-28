@@ -10,8 +10,7 @@ import {
   TextField,
 } from "@material-ui/core";
 
-import React, { Component, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
 const BMRCalculator = () => {
@@ -59,7 +58,7 @@ const BMRCalculator = () => {
       default:
         setBmrExt(bmr);
     }
-  });
+  }, [bmr, activity]);
 
   const handleCountClick = () => {
     if (gender === "male") {

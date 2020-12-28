@@ -1,11 +1,11 @@
 import { AppointmentTooltip } from "@devexpress/dx-react-scheduler-material-ui";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  StylesProvider,
   Typography,
 } from "@material-ui/core";
 import { AssignmentTurnedIn } from "@material-ui/icons";
@@ -16,15 +16,18 @@ import styles from "./Header.module.scss";
 type HeaderProps = AppointmentTooltip.HeaderProps;
 
 const Header = ({ appointmentData, ...props }: HeaderProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false),
+    [loading, setLoading] = useState(false);
 
   const handleDialogOpen = () => setOpen(true);
   const handleDialogClose = () => setOpen(false);
 
-  const handleSignIn = () => {
-    // implement
+  const handleSignIn = async () => {
+    setLoading(true);
 
-    handleDialogClose();
+    setTimeout(() => setLoading(false), 2000);
+
+    // handleDialogClose();
   };
 
   return (
@@ -47,7 +50,12 @@ const Header = ({ appointmentData, ...props }: HeaderProps) => {
           <Button color="inherit" onClick={handleDialogClose}>
             Close
           </Button>
-          <Button color="primary" onClick={handleSignIn}>
+          <Button
+            startIcon={loading && <CircularProgress size={10} />}
+            disabled={loading}
+            color="primary"
+            onClick={handleSignIn}
+          >
             Sign in
           </Button>
         </DialogActions>

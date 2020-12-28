@@ -10,14 +10,13 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import React, { Component, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
 const BMICalculator = () => {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [gender, setGender] = useState("");
+  const [, setGender] = useState("");
   const [bmi, setBmi] = useState(0.0);
   const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGender(event.target.value);

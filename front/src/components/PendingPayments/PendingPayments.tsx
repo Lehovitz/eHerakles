@@ -1,20 +1,5 @@
-import { Box, Button, Grid, MuiThemeProvider } from "@material-ui/core";
-import jwtDecode from "jwt-decode";
-import { Checkbox, SelectField, TextField } from "material-ui";
-import React, { Component, useEffect, useState } from "react";
-import styles from "./Payment.module.scss";
-import faker from "faker";
-import nodemailer from "nodemailer";
-import {
-  BooleanField,
-  DateField,
-  NumberField,
-  useAuthState,
-} from "react-admin";
-import { useSelector } from "react-redux";
-import DecodedToken from "../../models/DecodedToken";
-import { RootState } from "../../redux";
-import { stringify } from "querystring";
+import { Button, Grid } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
 
 type Payment = {

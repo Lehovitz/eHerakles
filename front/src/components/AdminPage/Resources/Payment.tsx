@@ -1,8 +1,6 @@
 import * as React from "react";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import {
-  BooleanField,
-  BooleanInput,
   Create,
   CreateProps,
   Datagrid,
