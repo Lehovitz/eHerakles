@@ -1,4 +1,4 @@
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -63,33 +63,39 @@ const Payment = () => {
 
   return (
     <PaperWithHeader headerText="All payments">
-      {payments.map((payment) => (
-        <Grid key={payment.id} container spacing={3}>
-          <Grid item xs={2}>
+      {payments && payments.length > 0 ? (
+        payments.map((payment) => (
+          <Grid key={payment.id} container spacing={3}>
+            {/* <Grid item xs={2}>
             {payment.id}
+          </Grid> */}
+            <Grid item xs={2}>
+              {payment.due}
+            </Grid>
+            <Grid item xs={2}>
+              {payment.dueDate}
+            </Grid>
+            <Grid item xs={2}>
+              {payment.email}
+            </Grid>
+            <Grid item xs={2}>
+              {payment.paymentDate}
+            </Grid>
+            <Grid item xs={2}>
+              {payment.status}
+            </Grid>
+            <Grid item xs={2}>
+              <Button color="primary" onClick={() => sendPayment(payment.id)}>
+                Send Payment
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={2}>
-            {payment.due}
-          </Grid>
-          <Grid item xs={2}>
-            {payment.dueDate}
-          </Grid>
-          <Grid item xs={2}>
-            {payment.email}
-          </Grid>
-          <Grid item xs={2}>
-            {payment.paymentDate}
-          </Grid>
-          <Grid item xs={2}>
-            {payment.status}
-          </Grid>
-          <Grid item xs={2}>
-            <Button color="primary" onClick={() => sendPayment(payment.id)}>
-              Send Payment
-            </Button>
-          </Grid>
-        </Grid>
-      ))}
+        ))
+      ) : (
+        <Typography>
+          Couldn't find payments info, probably there aren't any.
+        </Typography>
+      )}
     </PaperWithHeader>
   );
 };

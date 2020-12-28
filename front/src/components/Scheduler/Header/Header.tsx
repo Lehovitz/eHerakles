@@ -25,9 +25,15 @@ const Header = ({ appointmentData, ...props }: HeaderProps) => {
   const handleSignIn = async () => {
     setLoading(true);
 
-    setTimeout(() => setLoading(false), 2000);
+    // tu będzie jakaś async operacja
+    await new Promise((res, rej) => {
+      setTimeout(() => {
+        setLoading(false);
+        res("git");
+      }, 2000);
+    });
 
-    // handleDialogClose();
+    handleDialogClose();
   };
 
   return (

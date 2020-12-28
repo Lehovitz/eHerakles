@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
+import { Customer } from "../entities/Customer";
 import { Event } from "../entities/Event";
 import { Room } from "../entities/Room";
 import { Trainer } from "../entities/Trainer";
@@ -60,7 +61,13 @@ export default class EventController {
     const take = +range[1] - +range[0];
 
     // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
-    let data = await repo.find({ order, skip, take });
+    let data = await repo
+      .createQueryBuilder("event")
+      .leftJoinAndSelect("event.customers", "customers")
+      .orderBy(`event.${sort[0]}`, sort[1])
+      .skip(skip)
+      .take(take)
+      .getMany();
 
     // Filtrowanie encji
     const filteredData = data.filter((event) => {
@@ -71,16 +78,25 @@ export default class EventController {
       return true;
     });
 
+    const result = [];
+
+    for (let event of filteredData) {
+      const customers = event.customers.map((cust) => cust.email);
+      delete event.customers;
+
+      result.push({ ...event, customers });
+    }
+
     // Usuwanie pól będących nullami / undefined
-    filteredData.forEach((elem) => clean(elem));
+    result.forEach((elem) => clean(elem));
 
     // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
     res
       .set({
-        "Content-Range": `events ${range[0]}-${range[1]}/${filteredData.length}`,
+        "Content-Range": `events ${range[0]}-${range[1]}/${result.length}`,
         "Access-Control-Expose-Headers": "Content-Range",
       })
-      .send(filteredData);
+      .send(result);
   }
 
   async readOne(req: Request, res: Response) {
@@ -171,5 +187,25 @@ export default class EventController {
         "Content-Type": "application/json",
       })
       .send(object);
+  }
+
+  async assignCustomer(req: Request, res: Response) {
+    const { identifier, email } = req.params;
+
+    const repo = getManager().getRepository(Event);
+    const custRepo = getManager().getRepository(Customer);
+
+    const event = await repo
+      .createQueryBuilder("event")
+      .leftJoinAndSelect("event.customers", "customers")
+      .where("event.identifier = :identifier", { identifier })
+      .getOne();
+    const customer = await custRepo.findOne({ where: { email } });
+
+    if (event && customer) {
+      event.customers.push(customer);
+      await repo.save(event);
+      res.status(200).send();
+    } else res.status(400).send();
   }
 }
