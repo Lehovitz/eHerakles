@@ -44,6 +44,7 @@ type EventBack = {
   exDate?: string;
   capacity: number;
   identifier: number;
+  isAccepted: boolean;
   customers: {
     email: string;
   }[];
@@ -65,6 +66,7 @@ export type EventFront = {
     email: string;
   }[];
   capacityId: number;
+  isAccepted: boolean;
 };
 
 type Trainer = {
@@ -178,6 +180,7 @@ const SchedulerComponent = () => {
           capacity: event.capacity,
           customers: event.customers,
           capacityId,
+          isAccepted: event.isAccepted,
         };
         events.push(eventFront);
       }

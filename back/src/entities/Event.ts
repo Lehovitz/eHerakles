@@ -47,6 +47,9 @@ export class Event {
     @Column({ nullable: true })
     isAllDay?: Boolean;
 
+    @Column({ default: false})
+    isAccepted: Boolean
+
     @ManyToOne(() => Trainer, (trainer) => trainer.id)
     @JoinColumn({ name: "trainerId" })
     trainer: Trainer;

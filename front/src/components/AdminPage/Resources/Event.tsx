@@ -72,6 +72,7 @@ export const EventShow = (props: ShowProps) => {
         <DateField source="dateStart" />
         <DateField source="dateEnd" />
         <BooleanField source="isAllDay" />
+        <BooleanField source="isAccepted" />
         <TextField source="exDate" />
         <TextField source="rule" />
         <TextField source="description" />
@@ -115,6 +116,7 @@ export const EventEdit = (props: EditProps) => {
         <DateTimeInput source="dateStart" />
         <DateTimeInput source="dateEnd" />
         <BooleanInput source="isAllDay" />
+        <BooleanInput source="isAccepted" />
         <TextInput source="exDate" />
         <TextInput source="rule" />
         <TextInput source="description" />
@@ -146,6 +148,7 @@ export const EventCreate = (props: CreateProps) => {
         <DateTimeInput source="startDate" />
         <DateTimeInput source="endDate" />
         <BooleanInput source="allDay" />
+        <BooleanInput source="isAccepted" />
         <TextInput source="exDate" />
         <TextInput source="rRule" />
         <TextInput source="notes" />
