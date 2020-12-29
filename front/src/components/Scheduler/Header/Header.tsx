@@ -48,19 +48,7 @@ const Header = ({ appointmentData, setData, data, ...props }: HeaderProps) => {
             }
         );
 
-        // TODO:: FIX
-
-        const eventsCopy = [...data];
-        const eventIndex = eventsCopy.findIndex(
-            (event) => event.id === appointmentData!.id
-        );
-        eventsCopy[eventIndex].customers = [
-            ...eventsCopy[eventIndex].customers,
-            { email },
-        ];
-
-        setData(eventsCopy);
-
+        window.location.reload();
         setLoading(false);
         handleDialogClose();
     };
@@ -80,15 +68,9 @@ const Header = ({ appointmentData, setData, data, ...props }: HeaderProps) => {
             </AppointmentTooltip.Header>
             <Dialog open={open} onClose={handleDialogClose}>
                 <DialogTitle>Sign in for a training</DialogTitle>
-
                 <DialogContent dividers>
                     {canUserSign ? (
-                        <>
-                            Appointment data:{" "}
-                            {JSON.stringify(appointmentData) + "\n"}
-                            TODO:: Może jakieś inne dane, ilość miejsc wolnych,
-                            przypomnienie jaki jest trener, pokój, data
-                        </>
+                        <>Zapisz się</>
                     ) : (
                         <>This event is full or you've already signed for it.</>
                     )}
