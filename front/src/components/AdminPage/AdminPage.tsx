@@ -72,6 +72,13 @@ import {
   PaymentList,
   PaymentShow,
 } from "./Resources/Payment";
+import {
+  CategoryCreate,
+  CategoryEdit,
+  categoryIcon,
+  CategoryList,
+  CategoryShow,
+} from "./Resources/Category";
 
 export const history = createBrowserHistory();
 const dataProvider = restProvider("http://localhost:5000");
@@ -198,6 +205,14 @@ const AdminPage = () => {
             create={PaymentCreate}
             show={PaymentShow}
             icon={paymentIcon}
+          />
+          <Resource
+            name="categories"
+            list={CategoryList}
+            edit={CategoryEdit}
+            create={CategoryCreate}
+            show={CategoryShow}
+            icon={categoryIcon}
           />
         </Admin>
       </Provider>

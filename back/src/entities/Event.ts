@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { Trainer } from "./Trainer";
 import { Customer } from "./Customer";
+import { Category } from "./Category";
 
 @Unique(["identifier"])
 @Entity()
@@ -59,6 +60,13 @@ export class Event {
 
     @RelationId((event: Event) => event.room)
     roomId: number;
+
+    @ManyToOne(() => Category, (cat) => cat.id)
+    @JoinColumn({ name: "categoryId" })
+    category: Category;
+
+    @RelationId((event: Event) => event.category)
+    categoryId: number;
 
     @ManyToMany(() => Customer, (customer) => customer.id)
     @JoinTable()

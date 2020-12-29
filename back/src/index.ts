@@ -29,6 +29,8 @@ import emailHelper from "./utils/emailNotification";
 import { Subscription } from "./entities/Subscription";
 import { Payment } from "./entities/Payment";
 import cronUpdateDaily from "./utils/cronUpdateDaily";
+import categoryRouter from "./routes/CategoryRoute";
+import { Category } from "./entities/Category";
 
 createConnection({
   type: "postgres",
@@ -37,7 +39,7 @@ createConnection({
   username: "postgres",
   password: "pass",
   database: "eHerakles",
-  entities: [Payment, Customer, Moderator, Card, Event, Location, Room, Trainer, Person, Subscription],
+  entities: [Payment, Customer, Moderator, Card, Event, Location, Room, Trainer, Person, Subscription, Category],
   synchronize: true,
   logging: false,
 })
@@ -88,6 +90,7 @@ createConnection({
     app.use("/emails", emailRouter);
     app.use("/subscriptions", subscriptionRouter);
     app.use("/payments", paymentRouter);
+    app.use("/categories", categoryRouter);
 
     cronUpdateDaily();
     
