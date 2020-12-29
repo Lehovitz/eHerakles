@@ -15,6 +15,7 @@ import AdminPage from "./components/AdminPage/AdminPage";
 import BMRCalculator from "./components/BMRCalculator/BMRCalculator";
 import Payment from "./components/Payment/Payment";
 import PendingPayments from "./components/PendingPayments/PendingPayments";
+import ProfilePage from "./components/ProfilePage/ProfilePage";
 
 export default () => (
   <BrowserRouter>
@@ -53,6 +54,12 @@ export default () => (
             path="/payments"
             role="customer"
             component={Payment}
+          />
+          <ProtectedRoute
+            exact
+            path="/profile"
+            role="customer"
+            component={ProfilePage}
           />
           <ProtectedRoute
             exact

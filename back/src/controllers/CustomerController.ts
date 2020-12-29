@@ -22,6 +22,140 @@ export default class CustomerController {
   //   }
   // }
   
+  async register(req: Request, res: Response)
+  {
+    const {
+      email,
+      password,
+    } = req.body;
+
+    const repo = getManager().getRepository(Customer);
+
+    let customer = await repo.findOne({where: {email: email}});
+
+    if (!customer) {
+      customer = new Customer();
+      customer.email = email;
+      const salt = bcrypt.genSaltSync(10);
+      const hash = await bcrypt.hash(password, salt);
+      customer.password = hash;
+      console.log("utworzono nowego customera");
+      await repo.save(customer);
+    } else {
+      console.log("Taki Customer juz istnieje :3");
+    }
+    res.send({ id: customer.id, email: customer.email });
+  }
+
+  async addProfileInfo(req: Request, res: Response) {
+    const {
+      country,
+      city,
+      postalCode,
+      name,
+      surname,
+      gender,
+      docType,
+      birthDate,
+      phoneNum,
+      pesel,
+      docNumber,
+      address,
+      goal
+    } = req.body;
+
+    const repo = getManager().getRepository(Customer);
+    const locRepo = getManager().getRepository(Location);
+    const personRepo = getManager().getRepository(Person);
+
+    const customer = await repo
+      .createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.person", "person")
+      .leftJoinAndSelect("person.location", "location")
+      .where("customer.id = :id", { id: req.params.id })
+      .getOne();
+
+      let { person } = customer;
+      
+
+    // let location = await locRepo.findOne({
+    //   where: { country: country, city: city },
+    // });
+    
+   
+    if(!person)
+    {  
+      console.log("adding info");
+      let location = await locRepo.findOne({where: { country: country, city: city, postalCode: postalCode}})
+      if (!location) {
+        location = new Location();
+        location.country = country;
+        location.city = city;
+        location.postalCode = postalCode;
+        await locRepo.save(location);
+      } else 
+
+      person = new Person();
+      person.name = name;
+      person.surname = surname;
+      person.docType = docType;
+      person.docNumber = docNumber;
+      person.gender = gender;
+      person.birthDate = birthDate;
+      person.phoneNum = phoneNum;
+      person.pesel = pesel;
+      person.address = address;
+      person.location = location;
+      console.log("utworzono nowa osobe");
+      await personRepo.save(person);
+      customer.person = person;
+      customer.goal = goal;
+      await repo.save(customer);
+      //zastanowic sie nad zyciem
+      res.status(200).send({ ...customer, ...person, ...location });
+    }
+    else
+    {
+      console.log("updating info");
+      let { location } = person;
+      if (!location) {
+        location = new Location();
+        location.country = country;
+        location.city = city;
+        location.postalCode = postalCode;
+        await locRepo.save(location);
+      } else {
+      }
+
+        person.name = name;
+        person.surname = surname;
+        person.birthDate = birthDate;
+        person.docType = docType;
+        person.docNumber = docNumber;
+        person.gender = gender;
+        person.pesel = pesel;
+        person.phoneNum = phoneNum;
+        person.address = address;
+  
+        location.country = country;
+        location.city = city;
+        location.postalCode = postalCode;
+        customer.goal = goal;
+
+        await repo.save(customer);
+        await personRepo.save(person);
+        await locRepo.save(location);
+  
+        delete customer.password;
+        delete customer.person;
+        delete person.id;
+        delete person.location;
+        delete location.id;
+
+        res.status(200).send({ ...customer, ...person, ...location });
+      } 
+    }
+  
 
   async create(req: Request, res: Response) {
     const {

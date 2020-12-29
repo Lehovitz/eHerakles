@@ -58,6 +58,11 @@ const Actions = ({ type, closeDrawer }: ActionsProps) => {
               Payments
             </Button>
           </Link>
+          <Link className={linkClass} to="profile" onClick={closeDrawer}>
+            <Button className={buttonClass} color="inherit">
+              Profile
+            </Button>
+          </Link>
           {role === "moderator" && (
             <Link
               className={linkClass}

@@ -92,7 +92,7 @@ createConnection({
     app.use("/payments", paymentRouter);
     app.use("/categories", categoryRouter);
 
-    cronUpdateDaily();
+    //cronUpdateDaily();
     
 
     //emailHelper("michallechowicz14@gmail.com");

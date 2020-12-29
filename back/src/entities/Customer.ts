@@ -13,9 +13,6 @@ import { Event } from "./Event";
 import { Payment } from "./Payment";
 import { Goal } from "./Category";
 
-
-
-
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn()

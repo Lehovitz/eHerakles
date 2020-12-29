@@ -8,14 +8,16 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core";
+import jwtDecode from "jwt-decode";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import styles from "./RegisterPage.module.scss";
+import DecodedToken from "../../models/DecodedToken";
+import { RootState } from "../../redux";
+import styles from "./ProfilePage.module.scss";
 
-const RegisterPage = () => {
-  const [email, setEmail] = useState(""),
-    [password, setPassword] = useState(""),
-    [redirect, setRedirect] = useState(false),
+const ProfilePage = () => {
+  const [redirect, setRedirect] = useState(false),
     [, setError] = useState(""),
     [name, setName] = useState(""),
     [surname, setSurname] = useState(""),
@@ -28,10 +30,16 @@ const RegisterPage = () => {
     [postalCode, setPostalCode] = useState(""),
     [city, setCity] = useState(""),
     [address, setAddress] = useState(""),
-    [phoneNum, setPhoneNum] = useState("");
+    [phoneNum, setPhoneNum] = useState(""),
+    [goal, setGoal] = useState("");
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+  const bearerToken = useSelector((state: RootState) => state.token),
+    decodedToken: DecodedToken | undefined =
+      bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
+  const id = decodedToken!.id;
+
+  const handleGoalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGoal(event.target.value);
   };
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -78,47 +86,34 @@ const RegisterPage = () => {
     setPhoneNum(event.target.value);
   };
 
-  const validateMail = () => {
-    var re = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
-    return re.test(email);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-  const handleRegisterClick = async () => {
-    // console.log(
-    //   JSON.stringify({
-    //     email,
-    //     password,
-    //     country,
-    //     city,
-    //     postalCode,
-    //     name,
-    //     surname,
-    //     gender,
-    //     docType,
-    //     birthDate,
-    //     phoneNum,
-    //     pesel,
-    //     docNumber,
-    //     address,
-    //   })
-    // );
-    const response = await fetch("http://localhost:5000/customers/register", {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const handleSaveButtonClick = async () => {
+    const response = await fetch(
+      `http://localhost:5000/customers/profileInfo/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          country,
+          city,
+          postalCode,
+          name,
+          surname,
+          gender,
+          docType,
+          birthDate,
+          phoneNum,
+          pesel,
+          docNumber,
+          address,
+          goal,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const responseText = await response.text();
     if (response.ok) {
-      setRedirect(true);
+      //setRedirect(true);
     } else {
       setError(responseText);
     }
@@ -132,30 +127,8 @@ const RegisterPage = () => {
         <Grid item xs={12}>
           <h1 className={styles.headers}>eHerakles</h1>
         </Grid>
+
         <Grid item xs={12}>
-          <TextField
-            className={styles.textField}
-            type="email"
-            id="emailRegister"
-            required
-            label="e-mail"
-            variant="filled"
-            onChange={handleEmailChange}
-            error={email !== "" && !validateMail()}
-          ></TextField>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            className={styles.textField}
-            required
-            id="PassRegister"
-            type="password"
-            label="Password"
-            variant="filled"
-            onChange={handlePasswordChange}
-          ></TextField>
-        </Grid>
-        {/* <Grid item xs={12}>
           <TextField
             className={styles.textField}
             required
@@ -304,8 +277,41 @@ const RegisterPage = () => {
             label="Phone number"
             variant="filled"
             onChange={handlePhoneNumberChange}
-          ></TextField> 
-        </Grid>*/}
+          ></TextField>
+        </Grid>
+        <Grid item xs={12}>
+          <FormControl component="fieldset" className={styles.textField}>
+            <FormLabel component="legend">Your goal</FormLabel>
+            <RadioGroup
+              aria-label="goal"
+              name="goal"
+              onChange={handleGoalChange}
+              // value={value}
+              // onChange={handleChange}
+            >
+              <FormControlLabel
+                value="M"
+                control={<Radio />}
+                label="Gaining mass"
+              />
+              <FormControlLabel
+                value="Fit"
+                control={<Radio />}
+                label="Getting fit"
+              />
+              <FormControlLabel
+                value="Rd"
+                control={<Radio />}
+                label="Weight reduction"
+              />
+              <FormControlLabel
+                value="Rel"
+                control={<Radio />}
+                label="Relaxation"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
         <Grid item xs={12}>
           <div className={styles.buttonGeneralBox}>
             <div className={styles.buttonBox}>
@@ -313,9 +319,9 @@ const RegisterPage = () => {
                 variant="contained"
                 id="RegisterButtons"
                 className={styles.button}
-                onClick={handleRegisterClick}
+                onClick={handleSaveButtonClick}
               >
-                Register
+                Confirm
               </Button>
             </div>
           </div>
@@ -325,4 +331,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default ProfilePage;

@@ -26,35 +26,36 @@ export class Person {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column( { nullable: true} )
   surname: string;
 
-  @Column()
+  @Column( { nullable: true} )
   name: string;
 
-  @Column("enum", { enum: Gender })
+  @Column("enum", { enum: Gender, nullable: true})
   gender: Gender;
 
-  @Column()
+  @Column( { nullable: true} )
   birthDate: Date;
 
-  @Column("enum", { enum: DocumentType })
+  @Column("enum", { enum: DocumentType, nullable: true})
   docType: DocumentType;
 
-  @Column()
+  @Column( { nullable: true} )
   docNumber: string;
 
-  @Column()
+  @Column( { nullable: true} )
   phoneNum: string;
 
-  @Column()
+  @Column( { nullable: true} )
   pesel: string;
 
-  @Column()
+  @Column( { nullable: true} )
   address: string;
 
   @ManyToOne(() => Location, (location) => location.id, {
     cascade: true,
+    nullable: true,
   })
   location: Location;
 
