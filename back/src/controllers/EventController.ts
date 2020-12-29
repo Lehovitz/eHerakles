@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
+import { Category } from "../entities/Category";
 import { Customer } from "../entities/Customer";
 import { Event } from "../entities/Event";
 import { Room } from "../entities/Room";
@@ -20,11 +21,13 @@ export default class EventController {
       rRule,
       exDate,
       capacity,
+      categoryId
     } = req.body;
 
     const repo = getManager().getRepository(Event);
     const trainer = getManager().getRepository(Trainer);
     const room = getManager().getRepository(Room);
+    const cat = getManager().getRepository(Category);
 
     const event = new Event();
     event.identifier = identifier;
@@ -38,6 +41,7 @@ export default class EventController {
     event.trainer = await trainer.findOne(trainerId);
     event.capacity = capacity;
     event.room = await room.findOne(roomId);
+    event.category = await cat.findOne(categoryId);
 
     console.log("utworzono nowe zajecia");
     await repo.save(event);
@@ -130,6 +134,7 @@ export default class EventController {
       rRule,
       exDate,
       capacity,
+      categoryId
     } = req.body;
     const repo = getManager().getRepository(Event);
 
@@ -146,6 +151,7 @@ export default class EventController {
       const repo = getManager().getRepository(Event);
       const trainer = getManager().getRepository(Trainer);
       const room = getManager().getRepository(Room);
+      const cat = getManager().getRepository(Category);
 
       event.identifier = identifier;
       event.dateStart = startDate;
@@ -158,6 +164,7 @@ export default class EventController {
       event.trainer = await trainer.findOne(trainerId);
       event.capacity = capacity;
       event.room = await room.findOne(roomId);
+      event.category = await cat.findOne(categoryId);
 
       console.log("updated LMAO   " + req.params.eventId);
       await repo.save(event);

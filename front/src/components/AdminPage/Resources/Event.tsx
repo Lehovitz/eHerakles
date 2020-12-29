@@ -25,6 +25,7 @@ import {
   SelectInput,
   TextInput,
   TitleProps,
+  ReferenceField,
 } from "react-admin";
 
 export const EventIcon = Event;
@@ -40,11 +41,19 @@ export const EventList = (props: ListProps) => {
         <DateField source="dateStart" />
         <DateField source="dateEnd" />
         <BooleanField source="isAllDay" />
-        <TextField source="exDate" />
-        <TextField source="rule" />
-        <TextField source="description" />
-        <NumberField source="trainerId" />
-        <NumberField source="roomId" />
+        <ReferenceField label="Trainer" source="trainerId" reference="trainers">
+          <TextField source="trainerMail" />
+        </ReferenceField>
+        <ReferenceField label="Room" source="roomId" reference="rooms">
+          <TextField source="roomName" />
+        </ReferenceField>
+        <ReferenceField
+          label="Category"
+          source="categoryId"
+          reference="categories"
+        >
+          <TextField source="name" />
+        </ReferenceField>
         <EditButton />
         <ShowButton />
       </Datagrid>
@@ -66,8 +75,19 @@ export const EventShow = (props: ShowProps) => {
         <TextField source="exDate" />
         <TextField source="rule" />
         <TextField source="description" />
-        <NumberField source="trainerId" />
-        <NumberField source="roomId" />
+        <ReferenceField label="Trainer" source="trainerId" reference="trainers">
+          <TextField source="trainerMail" />
+        </ReferenceField>
+        <ReferenceField label="Room" source="roomId" reference="rooms">
+          <TextField source="roomName" />
+        </ReferenceField>
+        <ReferenceField
+          label="Category"
+          source="categoryId"
+          reference="categories"
+        >
+          <TextField source="name" />
+        </ReferenceField>
       </SimpleShowLayout>
     </Show>
   );
@@ -99,10 +119,17 @@ export const EventEdit = (props: EditProps) => {
         <TextInput source="rule" />
         <TextInput source="description" />
         <ReferenceInput label="Trainer" source="trainerId" reference="trainers">
-          <SelectInput optionText="id" />
+          <SelectInput optionText="trainerMail" />
         </ReferenceInput>
         <ReferenceInput label="Room" source="roomId" reference="rooms">
-          <SelectInput optionText="id" />
+          <SelectInput optionText="roomName" />
+        </ReferenceInput>
+        <ReferenceInput
+          label="Category"
+          source="categoryId"
+          reference="categories"
+        >
+          <SelectInput optionText="name" />
         </ReferenceInput>
       </SimpleForm>
     </Edit>
@@ -123,10 +150,17 @@ export const EventCreate = (props: CreateProps) => {
         <TextInput source="rRule" />
         <TextInput source="notes" />
         <ReferenceInput label="Trainer" source="trainerId" reference="trainers">
-          <SelectInput optionText="id" />
+          <SelectInput optionText="trainerMail" />
         </ReferenceInput>
         <ReferenceInput label="Room" source="roomId" reference="rooms">
-          <SelectInput optionText="id" />
+          <SelectInput optionText="roomName" />
+        </ReferenceInput>
+        <ReferenceInput
+          label="Category"
+          source="categoryId"
+          reference="categories"
+        >
+          <SelectInput optionText="name" />
         </ReferenceInput>
       </SimpleForm>
     </Create>

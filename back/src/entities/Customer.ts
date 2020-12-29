@@ -11,14 +11,10 @@ import { Person } from "./Person";
 import { Card } from "./Card";
 import { Event } from "./Event";
 import { Payment } from "./Payment";
+import { Goal } from "./Category";
 
 
-export enum Goal {
-  MuscleMass = "M",
-  GetFit = "Fit",
-  Reduction = "Rd",
-  Relaxation = "Rel",
-}
+
 
 @Entity()
 export class Customer {
@@ -30,6 +26,15 @@ export class Customer {
 
   @Column()
   password: string;
+
+  @Column(
+    {
+    type: "enum",
+    enum: Goal,
+    default: Goal.GetFit
+    }
+  )
+  goal: Goal;
 
   @OneToOne(() => Person, (pers) => pers.id)
   @JoinColumn()
