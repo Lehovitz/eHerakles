@@ -32,6 +32,12 @@ type LastIndex = {
     lastIndex: number;
 };
 
+type Category = {
+    id: number;
+    name: string;
+    goal: string;
+};
+
 type EventBack = {
     title: string;
     dateStart: string;
@@ -40,6 +46,7 @@ type EventBack = {
     isAllDay?: boolean;
     description?: string;
     goal: string;
+    categoryId: number;
     roomId: number;
     rule?: string;
     exDate?: string;
@@ -55,6 +62,7 @@ export type EventFront = {
     endDate: Date;
     trainerId: number;
     allDay?: boolean;
+    categoryId: number;
     notes?: string;
     goal: string;
     roomId: number;
@@ -81,6 +89,7 @@ const SchedulerComponent = () => {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
     const [rooms, setRooms] = useState<Room[]>([]);
     const [data, setData] = useState<EventFront[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [filter, setFilter] = useState("All");
     const [filteredData, setFilteredData] = useState<EventFront[]>([]);
     const [userGoal, setUserGoal] = useState<string>("Fit");
@@ -115,6 +124,16 @@ const SchedulerComponent = () => {
             ],
         },
         {
+            fieldName: "categoryId",
+            title: "Category",
+            instances: categories.map((category) => ({
+                id: category.id,
+                // TODO:: zmienić category.goal na pełną nazwę
+                text: `${category.name} - ${category.goal}`,
+                color: "lightgrey",
+            })),
+        },
+        {
             fieldName: "roomId",
             title: "Room",
             instances: rooms.map((room) => ({
@@ -133,6 +152,15 @@ const SchedulerComponent = () => {
             })),
         },
     ];
+
+    useEffect(() => {
+        (async () => {
+            const res: Category[] = await fetch(
+                `http://localhost:5000/categories`
+            ).then((res) => res.json());
+            setCategories(res);
+        })();
+    }, []);
 
     useEffect(() => {
         (async () => {
@@ -185,6 +213,7 @@ const SchedulerComponent = () => {
                     allDay: event.isAllDay,
                     notes: event.description,
                     roomId: event.roomId,
+                    categoryId: event.categoryId,
                     rRule: event.rule,
                     exDate: event.exDate,
                     goal: event.goal,
