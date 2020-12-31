@@ -17,6 +17,7 @@ import {
   Toolbar,
   ViewSwitcher,
 } from "@devexpress/dx-react-scheduler-material-ui";
+
 import { Paper } from "material-ui";
 import { EditingState } from "@devexpress/dx-react-scheduler";
 import { useEffect, useState } from "react";

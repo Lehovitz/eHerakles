@@ -1,6 +1,36 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  createStyles,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  makeStyles,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Theme,
+  Typography,
+} from "@material-ui/core";
+import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import DecodedToken from "../../models/DecodedToken";
+import { RootState } from "../../redux";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
+import Dialog from "@material-ui/core/Dialog";
+import PersonIcon from "@material-ui/icons/Person";
+import AddIcon from "@material-ui/icons/Add";
+import ConfirmDialog from "./ConfirmDialog";
+import Select from "react-select";
 
 type Subscription = {
   id: number;
@@ -15,87 +45,112 @@ type Card = {
   due: Number;
   expDate: Date;
   subscription: Subscription;
-  // TODcustomer??
+  subName: string;
+  subId: number;
+};
+
+type Selections = {
+  value: number;
+  label: string;
 };
 
 const Card = () => {
+  const bearerToken = useSelector((state: RootState) => state.token),
+    decodedToken: DecodedToken | undefined =
+      bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
+  const email = decodedToken!.email;
+
   const [card, setCard] = useState<Card>();
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [subNames, setSubNames] = useState<Selections[]>([]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<Selections>();
+  const [selected, setSelected] = useState("");
+
+  const handleSelectionChange = (event: any) => {
+    setValue(event.target.value);
+  };
+  const handleSubscriptionChange = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     (async () => {
       const res: Card = await fetch(
-        `http://localhost:5000/cards/findByCustomer`
+        `http://localhost:5000/cards/findByCustomer/${email}`
       ).then((res) => res.json());
 
       const result = {
         ...res,
-        name: res.subscription.name,
+        subName: res.subscription.name,
       };
+      setValue({ value: result.id, label: result.subName });
       setCard(result);
     })();
   }, []);
 
-  const acceptPayment = async (id: String) => {
-    await fetch(`http://localhost:5000/payments/accept/${id}`, {
-      method: "PUT",
-    });
-    const paymentsCopy = [...payments];
-    const index = payments.findIndex((payment) => payment.id === id);
-    paymentsCopy.splice(index, 1);
-    setPayments(paymentsCopy);
-  };
-  const rejectPayment = async (id: String) => {
-    await fetch(`http://localhost:5000/payments/reject/${id}`, {
-      method: "PUT",
-    });
-    const paymentsCopy = [...payments];
-    const index = payments.findIndex((payment) => payment.id === id);
-    paymentsCopy.splice(index, 1);
-    setPayments(paymentsCopy);
-  };
+  useEffect(() => {
+    (async () => {
+      const res: Subscription[] = await fetch(
+        `http://localhost:5000/subscriptions/`
+      ).then((res) => res.json());
+      setSubscriptions(res);
 
+      const result = res.map((sub) => ({
+        value: sub.id,
+        label: sub.name + " " + sub.cost + " PLN/" + sub.period + " month(s)",
+      }));
+      setSubNames(result);
+    })();
+  }, []);
+
+  const changeSubButton = () => {
+    setOpen(true);
+  };
   return (
     <PaperWithHeader headerText="All payments">
-      {payments && payments.length > 0 ? (
-        payments.map((payment) => (
-          <Grid key={payment.id} container spacing={3}>
-            {/* <Grid item xs={2}>
-            {payment.id}
-          </Grid> */}
-            <Grid item xs={2}>
-              {payment.due}
-            </Grid>
-            <Grid item xs={2}>
-              {payment.dueDate}
-            </Grid>
-            <Grid item xs={2}>
-              {payment.email}
-            </Grid>
-            <Grid item xs={2}>
-              {payment.paymentDate}
-            </Grid>
-            <Grid item xs={2}>
-              {payment.status}
-            </Grid>
-            <Grid item xs={2}>
-              <Button color="primary" onClick={() => acceptPayment(payment.id)}>
-                Accept
-              </Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                color="secondary"
-                onClick={() => rejectPayment(payment.id)}
-              >
-                Reject
-              </Button>
-            </Grid>
+      {card ? (
+        <Grid key={card.id} container spacing={3}>
+          <Grid item xs={2}>
+            {card.id}
           </Grid>
-        ))
+          <Grid item xs={2}>
+            {card.due}
+          </Grid>
+          <Grid item xs={2}>
+            {card.expDate}
+          </Grid>
+          <Grid item xs={2}>
+            {card.isActive}
+          </Grid>
+          <Grid item xs={2}>
+            {card.subName}
+          </Grid>
+          <Grid item xs={2}>
+            <Button onClick={changeSubButton}>Change your subscription</Button>
+          </Grid>
+          <ConfirmDialog
+            open={open}
+            setOpen={setOpen}
+            title={
+              "Are you sure you want to change your subscription? This will incur a fee."
+            }
+            onConfirm={handleSubscriptionChange}
+          >
+            <Typography variant="subtitle1">
+              Myslisz, ze moge tu cos wrzucic? :P
+            </Typography>
+            <FormControl>
+              <Select
+                value={value}
+                onChange={handleSelectionChange}
+                options={subNames}
+              ></Select>
+            </FormControl>
+          </ConfirmDialog>
+        </Grid>
       ) : (
-        <Typography>
-          Couldn't find payments info, probably there aren't any.
-        </Typography>
+        <Typography>Choose subscribtion!</Typography>
       )}
     </PaperWithHeader>
   );

@@ -10,6 +10,8 @@ router.put("/:id", cardController.update);
 router.delete("/:id", cardController.delete);
 router.post("/", cardController.create);
 router.get("/findByEmail/:email", cardController.findCardByEmail);
+router.get("/findByCustomer/:email", cardController.findByEmail);
+//POG
 //router.use(authenticateToken);
 
 export default router;

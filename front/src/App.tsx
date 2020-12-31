@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Redirect, Route, RouteProps } from "react-router-dom";
 import LoginPage from "./components/LoginPage/LoginPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
+import Card from "./components/Card/Card";
 import SchedulerComponent from "./components/Scheduler/Scheduler";
 import AppBarComponent from "./components/AppBar/AppBar";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
@@ -30,6 +31,12 @@ export default () => (
             path="/bmr"
             role="customer"
             component={BMRCalculator}
+          />
+          <ProtectedRoute
+            exact
+            path="/cards"
+            role="customer"
+            component={Card}
           />
           <ProtectedRoute
             exact

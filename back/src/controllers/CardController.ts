@@ -123,6 +123,27 @@ export default class CardController {
       .send(result);
   }
 
+  async findByEmail(req: Request, res: Response) {
+    const repo = getManager().getRepository(Card);
+    const card = await repo
+      .createQueryBuilder("card")
+      .leftJoinAndSelect("card.customer", "customer")
+      .leftJoinAndSelect("card.subscription", "subscription")
+      .where("customer.email = :email", { email: req.params.email })
+      .getOne();
+
+    if (card) {
+      const { customer } = card;
+      const {subscription} = card;
+
+      delete customer.id;
+      delete customer.password;
+      subscription && delete subscription.id;
+
+      return res.status(200).send({ ...card, ...customer, ...subscription });
+    } else res.status(400).send();
+  }
+
   async readOne(req: Request, res: Response) {
     const repo = getManager().getRepository(Card);
     const card = await repo

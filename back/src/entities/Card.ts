@@ -3,13 +3,13 @@ import { Customer } from "./Customer";
 import { Subscription } from "./Subscription";
 import { Trainer } from "./Trainer";
 
-export enum SubscriptionType {
-  Monthly = "M",
-  Quaterly = "Q",
-  Semestral = "S",
-  Yearly = "Y",
-  None = "N",
-}
+// export enum SubscriptionType {
+//   Monthly = "M",
+//   Quaterly = "Q",
+//   Semestral = "S",
+//   Yearly = "Y",
+//   None = "N",
+// }
 @Entity()
 export class Card {
   @PrimaryGeneratedColumn()
@@ -30,7 +30,7 @@ export class Card {
 
   
   @ManyToOne(() => Subscription, (sub) => sub.id)
-  @JoinColumn({ name: "subscriptionId" })
+  @JoinColumn()
   subscription: Subscription;
 
   @OneToOne(() => Customer, (cust) => cust.id)

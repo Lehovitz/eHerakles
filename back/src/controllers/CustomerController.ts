@@ -306,14 +306,18 @@ export default class CustomerController {
       // const personRepo = getManager().getRepository(Person);
       // const person = await personRepo.findOne(elem.person);
 
-      const { person } = elem;
-      const { location } = person;
+      const person = elem.person ? elem.person : undefined;
+      let location = null;
+      if(person)
+      { location = person.location ? person.location : undefined;} 
+  
+
 
       delete elem.person;
       delete elem.password;
-      delete person.id;
-      delete person.location;
-      delete location.id;
+      person && delete person.id;
+      location && delete person.location;
+      location && delete location.id;
 
       result.push({ ...elem, ...person, ...location });
     }
