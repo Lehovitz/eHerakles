@@ -8,211 +8,212 @@ import { Trainer } from "../entities/Trainer";
 import clean from "../utils/clean";
 
 export default class EventController {
-  async create(req: Request, res: Response) {
-    const {
-      title,
-      identifier,
-      startDate,
-      endDate,
-      trainerId,
-      allDay,
-      notes,
-      roomId,
-      rRule,
-      exDate,
-      capacity,
-      categoryId
-    } = req.body;
+    async create(req: Request, res: Response) {
+        const {
+            title,
+            identifier,
+            startDate,
+            endDate,
+            trainerId,
+            allDay,
+            notes,
+            roomId,
+            rRule,
+            exDate,
+            capacity,
+            categoryId,
+        } = req.body;
 
-    const repo = getManager().getRepository(Event);
-    const trainer = getManager().getRepository(Trainer);
-    const room = getManager().getRepository(Room);
-    const cat = getManager().getRepository(Category);
+        const repo = getManager().getRepository(Event);
+        const trainer = getManager().getRepository(Trainer);
+        const room = getManager().getRepository(Room);
+        const cat = getManager().getRepository(Category);
 
-    const event = new Event();
-    event.identifier = identifier;
-    event.dateStart = startDate;
-    event.dateEnd = endDate;
-    event.title = title;
-    event.isAllDay = Boolean(allDay);
-    event.description = notes;
-    event.rule = rRule;
-    event.exDate = exDate;
-    event.trainer = await trainer.findOne(trainerId);
-    event.capacity = capacity;
-    event.room = await room.findOne(roomId);
-    event.category = await cat.findOne(categoryId);
+        const event = new Event();
+        event.identifier = identifier;
+        event.dateStart = startDate;
+        event.dateEnd = endDate;
+        event.title = title;
+        event.isAllDay = Boolean(allDay);
+        event.description = notes;
+        event.rule = rRule;
+        event.exDate = exDate;
+        event.trainer = await trainer.findOne(trainerId);
+        event.capacity = capacity;
+        event.room = await room.findOne(roomId);
+        event.category = await cat.findOne(categoryId);
 
-    console.log("utworzono nowe zajecia");
-    await repo.save(event);
-    return res.send(event);
-  }
-
-  async readAll(req: Request, res: Response) {
-    const repo = getManager().getRepository(Event);
-
-    let { sort, filters, range } = req.query;
-
-    sort = sort ? JSON.parse(sort.toString()) : ["id", "ASC"];
-    filters = filters ? JSON.parse(filters.toString()) : {};
-    range = range ? JSON.parse(range.toString()) : [0, 1000000];
-
-    // Parametry metody find używanej poniżej
-    const order = {};
-    order[sort[0]] = sort[1];
-
-    const skip = +range[0];
-    const take = +range[1] - +range[0];
-
-    // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
-    let data = await repo
-      .createQueryBuilder("event")
-      .leftJoinAndSelect("event.customers", "customers")
-      .orderBy(`event.${sort[0]}`, sort[1])
-      .skip(skip)
-      .take(take)
-      .getMany();
-
-    // Filtrowanie encji
-    const filteredData = data.filter((event) => {
-      for (let filter of Object.keys(filters)) {
-        if (event[filter] != filters[filter]) return false;
-      }
-
-      return true;
-    });
-
-    const result = [];
-
-    for (let event of filteredData) {
-      const customers = event.customers.map((cust) => cust.email);
-      delete event.customers;
-
-      result.push({ ...event, customers });
+        console.log("utworzono nowe zajecia");
+        await repo.save(event);
+        return res.send(event);
     }
 
-    // Usuwanie pól będących nullami / undefined
-    result.forEach((elem) => clean(elem));
+    async readAll(req: Request, res: Response) {
+        const repo = getManager().getRepository(Event);
 
-    // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
-    res
-      .set({
-        "Content-Range": `events ${range[0]}-${range[1]}/${result.length}`,
-        "Access-Control-Expose-Headers": "Content-Range",
-      })
-      .send(result);
-  }
+        let { sort, filters, range } = req.query;
 
-  async readOne(req: Request, res: Response) {
-    const repo = getManager().getRepository(Event);
-    const data = await repo.findOne(req.params.eventId);
-    return res.status(200).send(data);
-  }
+        sort = sort ? JSON.parse(sort.toString()) : ["id", "ASC"];
+        filters = filters ? JSON.parse(filters.toString()) : {};
+        range = range ? JSON.parse(range.toString()) : [0, 1000000];
 
-  async getNextIndex(_req: Request, res: Response) {
-    const repo = getManager().getRepository(Event);
-    let lastRec = await repo.find({
-      order: {
-        identifier: "DESC",
-      },
-      take: 1,
-    });
-    let lastIndex = lastRec.length === 0 ? 0 : lastRec[0].identifier + 1;
-    return res.send({ lastIndex });
-  }
+        // Parametry metody find używanej poniżej
+        const order = {};
+        order[sort[0]] = sort[1];
 
-  async update(req: Request, res: Response) {
-    const {
-      title,
-      identifier,
-      startDate,
-      endDate,
-      trainerId,
-      allDay,
-      notes,
-      roomId,
-      rRule,
-      exDate,
-      capacity,
-      categoryId
-    } = req.body;
-    const repo = getManager().getRepository(Event);
+        const skip = +range[0];
+        const take = +range[1] - +range[0];
 
-    const idType = req.header("X-Identifier-Type");
+        // Wybieranie zakresu i sortowanie na podstawie wyżej podanych parametrów
+        let data = await repo
+            .createQueryBuilder("event")
+            .leftJoinAndSelect("event.customers", "customers")
+            .leftJoinAndSelect("event.category", "category")
+            .orderBy(`event.${sort[0]}`, sort[1])
+            .skip(skip)
+            .take(take)
+            .getMany();
 
-    let event = await repo.findOne({
-      where:
-        idType === "Identifier"
-          ? { identifier: req.params.eventId }
-          : { id: req.params.eventId },
-    });
+        // Filtrowanie encji
+        const filteredData = data.filter((event) => {
+            for (let filter of Object.keys(filters)) {
+                if (event[filter] != filters[filter]) return false;
+            }
 
-    if (event) {
-      const repo = getManager().getRepository(Event);
-      const trainer = getManager().getRepository(Trainer);
-      const room = getManager().getRepository(Room);
-      const cat = getManager().getRepository(Category);
+            return true;
+        });
 
-      event.identifier = identifier;
-      event.dateStart = startDate;
-      event.dateEnd = endDate;
-      event.title = title;
-      event.isAllDay = Boolean(allDay);
-      event.description = notes;
-      event.rule = rRule;
-      event.exDate = exDate;
-      event.trainer = await trainer.findOne(trainerId);
-      event.capacity = capacity;
-      event.room = await room.findOne(roomId);
-      event.category = await cat.findOne(categoryId);
+        const result = [];
 
-      console.log("updated LMAO   " + req.params.eventId);
-      await repo.save(event);
-      return res.send(event);
-    } else res.status(400).send("Event nie znaleziony!!!!");
-  }
+        for (let event of filteredData) {
+            const customers = event.customers.map((cust) => cust.email);
+            delete event.customers;
 
-  async deleteByIdentifier(req: Request, res: Response) {
-    const repo = getManager().getRepository(Event);
-    const event = await repo.findOne({
-      where: { identifier: req.params.identifier },
-    });
+            const goal = event.category ? event.category.goal : undefined;
 
-    await repo.delete(event.id);
+            result.push({ ...event, customers, goal });
+        }
 
-    return res.send(event);
-  }
+        // Usuwanie pól będących nullami / undefined
+        result.forEach((elem) => clean(elem));
 
-  async delete(req: Request, res: Response) {
-    const repo = getManager().getRepository(Event);
-    const object = await repo.findOne(req.params.eventId);
+        // Wysyłanie odpowiedzi z dwoma obowiązkowymi nagłówkami
+        res.set({
+            "Content-Range": `events ${range[0]}-${range[1]}/${result.length}`,
+            "Access-Control-Expose-Headers": "Content-Range",
+        }).send(result);
+    }
 
-    await repo.delete(req.params.eventId);
+    async readOne(req: Request, res: Response) {
+        const repo = getManager().getRepository(Event);
+        const data = await repo.findOne(req.params.eventId);
+        return res.status(200).send(data);
+    }
 
-    return res
-      .set({
-        "Content-Type": "application/json",
-      })
-      .send(object);
-  }
+    async getNextIndex(_req: Request, res: Response) {
+        const repo = getManager().getRepository(Event);
+        let lastRec = await repo.find({
+            order: {
+                identifier: "DESC",
+            },
+            take: 1,
+        });
+        let lastIndex = lastRec.length === 0 ? 0 : lastRec[0].identifier + 1;
+        return res.send({ lastIndex });
+    }
 
-  async assignCustomer(req: Request, res: Response) {
-    const { identifier, email } = req.params;
+    async update(req: Request, res: Response) {
+        const {
+            title,
+            identifier,
+            startDate,
+            endDate,
+            trainerId,
+            allDay,
+            notes,
+            roomId,
+            rRule,
+            exDate,
+            capacity,
+            categoryId,
+        } = req.body;
+        const repo = getManager().getRepository(Event);
 
-    const repo = getManager().getRepository(Event);
-    const custRepo = getManager().getRepository(Customer);
+        const idType = req.header("X-Identifier-Type");
 
-    const event = await repo
-      .createQueryBuilder("event")
-      .leftJoinAndSelect("event.customers", "customers")
-      .where("event.identifier = :identifier", { identifier })
-      .getOne();
-    const customer = await custRepo.findOne({ where: { email } });
+        let event = await repo.findOne({
+            where:
+                idType === "Identifier"
+                    ? { identifier: req.params.eventId }
+                    : { id: req.params.eventId },
+        });
 
-    if (event && customer) {
-      event.customers.push(customer);
-      await repo.save(event);
-      res.status(200).send();
-    } else res.status(400).send();
-  }
+        if (event) {
+            const repo = getManager().getRepository(Event);
+            const trainer = getManager().getRepository(Trainer);
+            const room = getManager().getRepository(Room);
+            const cat = getManager().getRepository(Category);
+
+            event.identifier = identifier;
+            event.dateStart = startDate;
+            event.dateEnd = endDate;
+            event.title = title;
+            event.isAllDay = Boolean(allDay);
+            event.description = notes;
+            event.rule = rRule;
+            event.exDate = exDate;
+            event.trainer = await trainer.findOne(trainerId);
+            event.capacity = capacity;
+            event.room = await room.findOne(roomId);
+            event.category = await cat.findOne(categoryId);
+
+            console.log("updated LMAO   " + req.params.eventId);
+            await repo.save(event);
+            return res.send(event);
+        } else res.status(400).send("Event nie znaleziony!!!!");
+    }
+
+    async deleteByIdentifier(req: Request, res: Response) {
+        const repo = getManager().getRepository(Event);
+        const event = await repo.findOne({
+            where: { identifier: req.params.identifier },
+        });
+
+        await repo.delete(event.id);
+
+        return res.send(event);
+    }
+
+    async delete(req: Request, res: Response) {
+        const repo = getManager().getRepository(Event);
+        const object = await repo.findOne(req.params.eventId);
+
+        await repo.delete(req.params.eventId);
+
+        return res
+            .set({
+                "Content-Type": "application/json",
+            })
+            .send(object);
+    }
+
+    async assignCustomer(req: Request, res: Response) {
+        const { identifier, email } = req.params;
+
+        const repo = getManager().getRepository(Event);
+        const custRepo = getManager().getRepository(Customer);
+
+        const event = await repo
+            .createQueryBuilder("event")
+            .leftJoinAndSelect("event.customers", "customers")
+            .where("event.identifier = :identifier", { identifier })
+            .getOne();
+        const customer = await custRepo.findOne({ where: { email } });
+
+        if (event && customer) {
+            event.customers.push(customer);
+            await repo.save(event);
+            res.status(200).send();
+        } else res.status(400).send();
+    }
 }
