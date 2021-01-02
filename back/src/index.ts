@@ -35,7 +35,7 @@ import { Category } from "./entities/Category";
 createConnection({
   type: "postgres",
   host: "localhost",
-  port: 5433,
+  port: 5432,
   username: "postgres",
   password: "pass",
   database: "eHerakles",

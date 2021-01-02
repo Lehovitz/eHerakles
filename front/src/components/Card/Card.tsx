@@ -19,6 +19,7 @@ import {
   RadioGroup,
   Theme,
   Typography,
+  Select,
 } from "@material-ui/core";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
@@ -30,12 +31,18 @@ import Dialog from "@material-ui/core/Dialog";
 import PersonIcon from "@material-ui/icons/Person";
 import AddIcon from "@material-ui/icons/Add";
 import ConfirmDialog from "./ConfirmDialog";
+import { NumberLiteralType } from "typescript";
 
 type Subscription = {
   id: number;
   period: number;
   name: string;
   cost: number;
+};
+
+type Customer = {
+  id: number;
+  email: string;
 };
 
 type Card = {
@@ -46,11 +53,29 @@ type Card = {
   subscription: Subscription;
   subName: string;
   subId: number;
+  customer: { id: string; email: string };
 };
 
 type Selections = {
   value: number;
   label: string;
+};
+
+enum Status {
+  Started = "S",
+  Pending = "P",
+  Finalized = "F",
+  Rejected = "R",
+}
+
+type Payment = {
+  id: string;
+  due: number;
+  dueDate: Date;
+  paymentDate: Date;
+  status: Status;
+  customer: { email: string };
+  period: number;
 };
 
 const Card = () => {
@@ -67,10 +92,32 @@ const Card = () => {
   const [selected, setSelected] = useState("");
 
   const handleSelectionChange = (event: any) => {
-    setValue(event.target.value);
+    setSelected(event.target.value);
   };
-  const handleSubscriptionChange = () => {
+  const handleSubscriptionChange = async () => {
     setOpen(false);
+    //znalezienie suba
+    const sub: Subscription = await fetch(
+      `http://localhost:5000/subscriptions/${selected}`
+    ).then((res) => res.json());
+
+    //generowanie platnosci
+    const res: Payment = await fetch(
+      `http://localhost:5000/payments/createWithCustId`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          due: sub!.cost,
+          status: Status.Started,
+          custId: decodedToken!.id,
+          dueDate: new Date(card!.expDate),
+          period: sub!.period,
+          paymentDate: new Date(),
+        }),
+        headers: { "Content-Type": "application/json" },
+      }
+    ).then((res) => res.json());
+    console.log(res);
   };
 
   useEffect(() => {
@@ -140,11 +187,13 @@ const Card = () => {
               Myslisz, ze moge tu cos wrzucic? :P
             </Typography>
             <FormControl>
-              <Select
-                value={value}
-                onChange={handleSelectionChange}
-                options={subNames}
-              ></Select>
+              <Select onChange={handleSelectionChange}>
+                {subNames.map((sub) => (
+                  <option key={sub.value} value={sub.value}>
+                    {sub.label}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
           </ConfirmDialog>
         </Grid>

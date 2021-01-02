@@ -7,7 +7,7 @@ import clean from "../utils/clean";
 
 export default class PaymentController {
   async create(req: Request, res: Response) {
-    const { due, status, paymentDate, customer, dueDate } = req.body;
+    const { due, status, paymentDate, customer, dueDate, period } = req.body;
     const repo = getManager().getRepository(Payment);
 
     let payment = await repo.findOne({
@@ -22,6 +22,7 @@ export default class PaymentController {
       payment.paymentDate = paymentDate;
       payment.due = due;
       payment.dueDate = dueDate;
+      payment.period = period;
 
       console.log("utworzono nowa platnosc");
       await repo.save(payment);
@@ -29,8 +30,37 @@ export default class PaymentController {
     } else {
       res.status(400).send("Taka Platnosc juz istnieje :3");
     }
-    // TODO:: poprawic tresci komunikatow, sprawdzic odpowiedni kod bledu,
-    // pozniej wymienic wszystkie hardcode string na labelki
+  }
+
+  async createWithCustId(req: Request, res: Response) {
+    const { due, status, paymentDate, custId, dueDate, period } = req.body;
+    const repo = getManager().getRepository(Payment);
+    const custRepo = getManager().getRepository(Customer);
+
+    const cust = await custRepo.findOne({ id: custId });
+    let payment = null;
+    if(cust)
+    {
+      payment = await repo.findOne({
+      where: { customer: cust, paymentDate:paymentDate, due: due, status:status, period:period},
+    });
+    }
+    console.log(req.body);
+
+    if (!payment) {
+      payment = new Payment();
+      payment.customer = cust;
+      payment.paymentDate = paymentDate;
+      payment.due = due;
+      payment.dueDate = dueDate;
+      payment.period = period;
+
+      console.log("utworzono nowa platnosc");
+      await repo.save(payment);
+      res.send(payment);
+    } else {
+      res.status(400).send("Taka Platnosc juz istnieje :3");
+    }
   }
 
   async readOne(req: Request, res: Response) {
@@ -111,7 +141,7 @@ export default class PaymentController {
   }
 
   async update(req: Request, res: Response) {
-    const { due, status, paymentDate, dueDate } = req.body;
+    const { due, status, paymentDate, dueDate, period } = req.body;
 
     const repo = getManager().getRepository(Payment);
 

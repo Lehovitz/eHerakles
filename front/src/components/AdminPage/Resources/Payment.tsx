@@ -51,6 +51,7 @@ export const PaymentList = (props: ListProps) => {
         <DateField source="paymentDate" />
         <DateField source="dueDate" />
         <NumberField source="due" />
+        <NumberField source="period" />
         <SelectField choices={statusChoices} source="status" />
         <EditButton />
         <ShowButton />
@@ -68,6 +69,7 @@ export const PaymentShow = (props: ShowProps) => {
         <DateField source="paymentDate" />
         <DateField source="dueDate" />
         <NumberField source="due" />
+        <NumberField source="period" />
         <SelectField choices={statusChoices} source="status" />
       </SimpleShowLayout>
     </Show>
@@ -94,6 +96,7 @@ export const PaymentEdit = (props: EditProps) => {
         <DateInput source="paymentDate" />
         <DateInput source="dueDate" />
         <NumberInput source="due" />
+        <NumberInput source="period" />
         <SelectInput choices={statusChoices} source="status" />
       </SimpleForm>
     </Edit>
@@ -114,6 +117,7 @@ export const PaymentCreate = (props: CreateProps) => {
         <DateInput source="paymentDate" />
         <DateInput source="dueDate" />
         <NumberInput source="due" />
+        <NumberInput source="period" />
         <SelectInput choices={statusChoices} source="status" />
       </SimpleForm>
     </Create>

@@ -19,6 +19,8 @@ export class Payment {
   @Column()
   dueDate: Date;
 
+  @Column({nullable:true})
+  period: number;
   
   @Column(
     {

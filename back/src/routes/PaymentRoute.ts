@@ -14,5 +14,6 @@ router.put("/pend/:id", paymentController.makePaymentPending);
 router.put("/:id", paymentController.update);
 router.delete("/:id", paymentController.delete);
 router.post("/", paymentController.create);
+router.post("/createWithCustId", paymentController.createWithCustId);
 
 export default router;
