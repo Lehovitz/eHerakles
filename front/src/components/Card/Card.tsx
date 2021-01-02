@@ -94,6 +94,19 @@ const Card = () => {
   const handleSelectionChange = (event: any) => {
     setSelected(event.target.value);
   };
+  const handleCardCreation = async () => {
+    const res: Card = await fetch(`http://localhost:5000/cards/createWithSub`, {
+      method: "POST",
+      body: JSON.stringify({
+        custId: decodedToken!.id,
+        subId: selected,
+      }),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => res.json());
+    setCard(res);
+    handleSubscriptionChange();
+  };
+
   const handleSubscriptionChange = async () => {
     setOpen(false);
     //znalezienie suba
@@ -117,7 +130,6 @@ const Card = () => {
         headers: { "Content-Type": "application/json" },
       }
     ).then((res) => res.json());
-    console.log(res);
   };
 
   useEffect(() => {
@@ -130,6 +142,7 @@ const Card = () => {
         ...res,
         subName: res.subscription.name,
       };
+
       setValue({ value: result.id, label: result.subName });
       setCard(result);
     })();
@@ -183,9 +196,6 @@ const Card = () => {
             }
             onConfirm={handleSubscriptionChange}
           >
-            <Typography variant="subtitle1">
-              Myslisz, ze moge tu cos wrzucic? :P
-            </Typography>
             <FormControl>
               <Select onChange={handleSelectionChange}>
                 {subNames.map((sub) => (
@@ -198,7 +208,21 @@ const Card = () => {
           </ConfirmDialog>
         </Grid>
       ) : (
-        <Typography>Choose subscribtion!</Typography>
+        <>
+          <Typography>Choose subscribtion!</Typography>
+          <FormControl>
+            <Select onChange={handleSelectionChange}>
+              {subNames.map((sub) => (
+                <option key={sub.value} value={sub.value}>
+                  {sub.label}
+                </option>
+              ))}
+            </Select>
+            <Button onClick={handleCardCreation}>
+              Confirm subscription choice
+            </Button>
+          </FormControl>
+        </>
       )}
     </PaperWithHeader>
   );
