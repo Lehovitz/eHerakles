@@ -1,8 +1,6 @@
 import express from "express";
-import CustomerController from "../controllers/CustomerController";
 import SubscriptionController from "../controllers/SubscriptionController";
 
-import authenticateToken from "../middlewares/authentication";
 
 const router = express.Router();
 
