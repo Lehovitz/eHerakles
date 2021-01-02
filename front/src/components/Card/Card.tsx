@@ -30,7 +30,6 @@ import Dialog from "@material-ui/core/Dialog";
 import PersonIcon from "@material-ui/icons/Person";
 import AddIcon from "@material-ui/icons/Add";
 import ConfirmDialog from "./ConfirmDialog";
-import Select from "react-select";
 
 type Subscription = {
   id: number;
