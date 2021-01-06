@@ -134,17 +134,19 @@ const Card = () => {
 
   useEffect(() => {
     (async () => {
-      const res: Card = await fetch(
+      const res = await fetch(
         `http://localhost:5000/cards/findByCustomer/${email}`
-      ).then((res) => res.json());
+      );
+      if (res.status === 200) {
+        const card: Card = await res.json();
+        const result = {
+          ...card,
+          subName: card.subscription.name,
+        };
 
-      const result = {
-        ...res,
-        subName: res.subscription.name,
-      };
-
-      setValue({ value: result.id, label: result.subName });
-      setCard(result);
+        setValue({ value: result.id, label: result.subName });
+        setCard(result);
+      }
     })();
   }, []);
 
@@ -167,7 +169,7 @@ const Card = () => {
     setOpen(true);
   };
   return (
-    <PaperWithHeader headerText="All payments">
+    <PaperWithHeader headerText="Your card and subscription">
       {card ? (
         <Grid key={card.id} container spacing={3}>
           <Grid item xs={2}>
@@ -209,7 +211,7 @@ const Card = () => {
         </Grid>
       ) : (
         <>
-          <Typography>Choose subscribtion!</Typography>
+          <Typography>Choose the subscribtion!</Typography>
           <FormControl>
             <Select onChange={handleSelectionChange}>
               {subNames.map((sub) => (

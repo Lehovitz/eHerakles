@@ -24,6 +24,9 @@ export class Customer {
     @Column()
     password: string;
 
+    @Column({nullable: true})
+    accountNumber: string;
+
     @Column({
         type: "enum",
         enum: Goal,
@@ -40,6 +43,7 @@ export class Customer {
 
     @OneToOne(() => Card, (card) => card.id)
     card: Card;
+    
 
     @OneToMany(() => Payment, (paym) => paym.id)
     payment: Payment[];

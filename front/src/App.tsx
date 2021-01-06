@@ -17,6 +17,7 @@ import BMRCalculator from "./components/BMRCalculator/BMRCalculator";
 import Payment from "./components/Payment/Payment";
 import PendingPayments from "./components/PendingPayments/PendingPayments";
 import ProfilePage from "./components/ProfilePage/ProfilePage";
+import FormFAB from "./utils/FormFAB";
 
 export default () => (
   <BrowserRouter>
@@ -24,6 +25,7 @@ export default () => (
       <>
         <ThemeProvider theme={theme}>
           <AppBarComponent></AppBarComponent>
+          <FormFAB></FormFAB>
           <Route exact path="/" component={LoginPage} />
           <Route exact path="/register" component={RegisterPage} />
           <ProtectedRoute
