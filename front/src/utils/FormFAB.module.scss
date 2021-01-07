@@ -2,4 +2,26 @@
   position: fixed;
   right: 10%;
   bottom: 10%;
+  z-index: 999;
+}
+
+.dialog {
+  min-width: 60%;
+  min-height: 80%;
+}
+
+div .button {
+  margin-left: auto !important;
+  background-color: "primary";
+}
+
+.buttonContainer {
+  display: flex;
+}
+
+.mail {
+  border: 1px solid !important;
+  margin-bottom: 1rem !important;
+  border-radius: 3px !important;
+  width: 70%;
 }

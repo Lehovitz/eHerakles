@@ -28,7 +28,7 @@ import { Payment } from "../entities/Payment";
             const person = cust.person;          
             const vatNum = "FV " + faker.random.number({'min': 10000, 'max': 99999});
             const fakeAccNum = faker.finance.iban().slice(2);
-            const dueDate = payment.due.toString().split("T")[0];
+            const dueDate = payment.dueDate.toString().split("T")[0];
             const card = await cardRepo.findOne({where: {customer : cust}}); 
 
             var mailOptions = {

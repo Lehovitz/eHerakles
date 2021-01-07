@@ -9,11 +9,13 @@ interface PaperWithHeaderProps {
 
 const PaperWithHeader = ({ headerText, children }: PaperWithHeaderProps) => {
   return (
-    <div className={styles.container}>
-      <Typography variant="h3">{headerText}</Typography>
-      <Paper className={styles.content} elevation={3}>
-        {children}
-      </Paper>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <Typography variant="h3">{headerText}</Typography>
+        <Paper className={styles.content} elevation={3}>
+          {children}
+        </Paper>
+      </div>
     </div>
   );
 };

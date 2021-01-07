@@ -1,23 +1,7 @@
 import {
-  Avatar,
   Button,
-  createStyles,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControl,
-  FormControlLabel,
   Grid,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  makeStyles,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Theme,
   Typography,
   Select,
 } from "@material-ui/core";
@@ -27,22 +11,15 @@ import { useSelector } from "react-redux";
 import DecodedToken from "../../models/DecodedToken";
 import { RootState } from "../../redux";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
-import Dialog from "@material-ui/core/Dialog";
-import PersonIcon from "@material-ui/icons/Person";
-import AddIcon from "@material-ui/icons/Add";
 import ConfirmDialog from "./ConfirmDialog";
-import { NumberLiteralType } from "typescript";
+import styles from "./Card.module.scss";
+import DateTransformation from "../../utils/DateTransformation";
 
 type Subscription = {
   id: number;
   period: number;
   name: string;
   cost: number;
-};
-
-type Customer = {
-  id: number;
-  email: string;
 };
 
 type Card = {
@@ -171,20 +148,30 @@ const Card = () => {
   return (
     <PaperWithHeader headerText="Your card and subscription">
       {card ? (
-        <Grid key={card.id} container spacing={3}>
-          <Grid item xs={2}>
-            {card.id}
+        <Grid container spacing={3}>
+          <Grid item xs={2} className={styles.header}>
+            Due ammount
           </Grid>
+          <Grid item xs={2} className={styles.header}>
+            Expiration date
+          </Grid>
+          <Grid item xs={2} className={styles.header}>
+            Activity
+          </Grid>
+          <Grid item xs={4} className={styles.header}>
+            Subscription name
+          </Grid>
+          <Grid item xs={2} className={styles.header}></Grid>
           <Grid item xs={2}>
             {card.due}
           </Grid>
           <Grid item xs={2}>
-            {card.expDate}
+            {DateTransformation(card.expDate)}
           </Grid>
           <Grid item xs={2}>
             {card.isActive}
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4}>
             {card.subName}
           </Grid>
           <Grid item xs={2}>
@@ -198,8 +185,8 @@ const Card = () => {
             }
             onConfirm={handleSubscriptionChange}
           >
-            <FormControl>
-              <Select onChange={handleSelectionChange}>
+            <FormControl style={{ width: `80%` }}>
+              <Select style={{ width: `80%` }} onChange={handleSelectionChange}>
                 {subNames.map((sub) => (
                   <option key={sub.value} value={sub.value}>
                     {sub.label}

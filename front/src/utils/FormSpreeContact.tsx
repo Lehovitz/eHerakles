@@ -2,7 +2,15 @@
 // Then import it with 'import MyForm from "./myform.js"'.
 // Finally, add a <MyForm/> element whereever you wish to display the form.
 
+import {
+  Button,
+  DialogActions,
+  InputLabel,
+  TextareaAutosize,
+  TextField,
+} from "@material-ui/core";
 import React, { useState } from "react";
+import styles from "./FormFAB.module.scss";
 
 export default () => {
   const [status, setStatus] = useState("");
@@ -28,16 +36,29 @@ export default () => {
 
   return (
     <form
+      style={{ width: `100%`, height: `100%` }}
       onSubmit={submitForm}
       action="https://formspree.io/f/mdoppqvr"
       method="POST"
     >
-      <label>Email:</label>
-      <input type="email" name="email" />
-      <label>Message:</label>
-      <input type="text" name="message" />
-      {status === "SUCCESS" ? <p>Thanks!</p> : <button>Submit</button>}
-      {status === "ERROR" && <p>Ooops! There was an error.</p>}
+      <InputLabel>Email:</InputLabel>
+      <TextField type="email" name="email" className={styles.mail} />
+      <InputLabel>Message:</InputLabel>
+      <TextareaAutosize
+        rowsMin="20"
+        name="message"
+        style={{ width: `30rem` }}
+      />
+      <div className={styles.buttonContainer}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={styles.button}
+        >
+          Submit
+        </Button>
+      </div>
     </form>
   );
 };
