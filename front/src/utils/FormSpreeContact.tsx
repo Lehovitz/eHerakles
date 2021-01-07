@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import { borderRadius } from "react-select/src/theme";
 import styles from "./FormFAB.module.scss";
 
 export default () => {
@@ -36,7 +37,7 @@ export default () => {
 
   return (
     <form
-      style={{ width: `100%`, height: `100%` }}
+      style={{ width: `100%`, height: `100%`, borderRadius: `5px` }}
       onSubmit={submitForm}
       action="https://formspree.io/f/mdoppqvr"
       method="POST"
@@ -56,7 +57,7 @@ export default () => {
           color="primary"
           className={styles.button}
         >
-          Submit
+          Send Message
         </Button>
       </div>
     </form>

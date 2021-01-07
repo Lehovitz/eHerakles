@@ -4,6 +4,7 @@ import {
   Grid,
   Typography,
   Select,
+  Checkbox,
 } from "@material-ui/core";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
@@ -146,7 +147,7 @@ const Card = () => {
     setOpen(true);
   };
   return (
-    <PaperWithHeader headerText="Your card and subscription">
+    <PaperWithHeader headerText="Your card">
       {card ? (
         <Grid container spacing={3}>
           <Grid item xs={2} className={styles.header}>
@@ -156,26 +157,32 @@ const Card = () => {
             Expiration date
           </Grid>
           <Grid item xs={2} className={styles.header}>
-            Activity
+            Active
           </Grid>
           <Grid item xs={4} className={styles.header}>
-            Subscription name
+            Subscription
           </Grid>
           <Grid item xs={2} className={styles.header}></Grid>
           <Grid item xs={2}>
-            {card.due}
+            {card.due + " PLN"}
           </Grid>
           <Grid item xs={2}>
             {DateTransformation(card.expDate)}
           </Grid>
           <Grid item xs={2}>
-            {card.isActive}
+            <Checkbox checked={card.isActive}></Checkbox>
           </Grid>
           <Grid item xs={4}>
             {card.subName}
           </Grid>
           <Grid item xs={2}>
-            <Button onClick={changeSubButton}>Change your subscription</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={changeSubButton}
+            >
+              Change your subscription
+            </Button>
           </Grid>
           <ConfirmDialog
             open={open}

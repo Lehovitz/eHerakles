@@ -38,7 +38,7 @@ const BMICalculator = () => {
             <FormLabel component="legend">Gender</FormLabel>
             <RadioGroup
               aria-label="Gender"
-              name="docType"
+              name="gender"
               onChange={handleGenderChange}
             >
               <FormControlLabel value="Male" control={<Radio />} label="Male" />

@@ -1,4 +1,11 @@
-import { Button, Dialog, DialogContent, Fab } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  Typography,
+} from "@material-ui/core";
 import React, { useState } from "react";
 import styles from "./FormFAB.module.scss";
 import ChatIcon from "@material-ui/icons/Chat";
@@ -19,6 +26,9 @@ export default () => {
     <div className={styles.fab}>
       {open && (
         <Dialog open={open} onClose={handleClose} className={styles.dialog}>
+          <DialogTitle style={{ marginBottom: `0.2rem` }}>
+            <Typography variant="h3">Contact us!</Typography>
+          </DialogTitle>
           <DialogContent>
             <FormSpreeContact></FormSpreeContact>
           </DialogContent>

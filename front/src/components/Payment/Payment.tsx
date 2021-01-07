@@ -115,7 +115,11 @@ const Payment = () => {
                 {DateTransformation(payment.paymentDate)}
               </Grid>
               <Grid item xs={2}>
-                <Button color="primary" onClick={() => sendPayment(payment.id)}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => sendPayment(payment.id)}
+                >
                   Send Payment
                 </Button>
               </Grid>
