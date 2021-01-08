@@ -19,7 +19,7 @@ import styles from "./ProfilePage.module.scss";
 
 const ProfilePage = () => {
   const [redirect, setRedirect] = useState(false),
-    [, setError] = useState(""),
+    [error, setError] = useState(""),
     [name, setName] = useState(""),
     [surname, setSurname] = useState(""),
     [gender, setGender] = useState(""),
@@ -77,6 +77,27 @@ const ProfilePage = () => {
     setPhoneNum(event.target.value);
   };
 
+  const checkIfDataIsComplete = () => {
+    if (
+      name !== "" &&
+      surname !== "" &&
+      gender !== "" &&
+      pesel !== "" &&
+      birthDate !== "" &&
+      country !== "" &&
+      postalCode !== "" &&
+      city !== "" &&
+      address !== "" &&
+      phoneNum !== "" &&
+      goal !== ""
+    ) {
+      console.log("true");
+      return true;
+    } else {
+      console.log("false");
+      return false;
+    }
+  };
   const handleSaveButtonClick = async () => {
     const response = await fetch(
       `http://localhost:5000/customers/profileInfo/${id}`,
@@ -256,12 +277,12 @@ const ProfilePage = () => {
         </Grid>
         <Grid item xs={4} />
         <Grid item xs={4} />
-
         <Grid item xs={4}>
           <Button
             variant="contained"
             color="primary"
             onClick={handleSaveButtonClick}
+            disabled={!checkIfDataIsComplete()}
           >
             Confirm
           </Button>
