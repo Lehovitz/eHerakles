@@ -23,8 +23,6 @@ const ProfilePage = () => {
     [name, setName] = useState(""),
     [surname, setSurname] = useState(""),
     [gender, setGender] = useState(""),
-    [docType, setDocType] = useState(""),
-    [docNumber, setDocNumber] = useState(""),
     [pesel, setPesel] = useState(""),
     [birthDate, setDateOfBirth] = useState("2020-01-01"),
     [country, setCountry] = useState(""),
@@ -50,14 +48,6 @@ const ProfilePage = () => {
   };
   const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGender(event.target.value);
-  };
-  const handleDocTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDocType(event.target.value);
-  };
-  const handleDocNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDocNumber(event.target.value);
   };
   const handlePeselChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPesel(event.target.value);
@@ -99,11 +89,9 @@ const ProfilePage = () => {
           name,
           surname,
           gender,
-          docType,
           birthDate,
           phoneNum,
           pesel,
-          docNumber,
           address,
           goal,
         }),
@@ -130,7 +118,7 @@ const ProfilePage = () => {
             required
             type="name"
             label="Name"
-            variant="filled"
+            variant="outlined"
             onChange={handleNameChange}
           ></TextField>
 
@@ -139,7 +127,7 @@ const ProfilePage = () => {
             required
             type="name"
             label="Surname"
-            variant="filled"
+            variant="outlined"
             onChange={handleSurnameChange}
           ></TextField>
           <TextField
@@ -147,7 +135,7 @@ const ProfilePage = () => {
             required
             type="date"
             label="Date of birth"
-            variant="filled"
+            variant="outlined"
             defaultValue={birthDate}
             onChange={handleDateOfBirthChange}
           ></TextField>
@@ -157,13 +145,18 @@ const ProfilePage = () => {
             required
             id="PESELReg"
             label="PESEL"
-            variant="filled"
+            variant="outlined"
             onChange={handlePeselChange}
           ></TextField>
-
-          <FormControl component="fieldset" className={styles.textField}>
-            <FormLabel component="legend">Your goal</FormLabel>
+          <FormControl component="fieldset">
+            <FormLabel
+              component="legend"
+              style={{ borderBottom: `0px`, color: `black` }}
+            >
+              Your goal
+            </FormLabel>
             <RadioGroup
+              className={styles.radio}
               aria-label="goal"
               name="goal"
               onChange={handleGoalChange}
@@ -194,38 +187,6 @@ const ProfilePage = () => {
           </FormControl>
         </Grid>
 
-        {/* <Grid item xs={4}>
-          <FormControl component="fieldset" className={styles.textField}>
-            <FormLabel component="legend">Document type</FormLabel>
-            <RadioGroup
-              aria-label="Document type"
-              name="docType"
-              onChange={handleDocTypeChange}
-            >
-              <FormControlLabel
-                value="Passport"
-                control={<Radio />}
-                label="Passport"
-              />
-              <FormControlLabel
-                value="IdCard"
-                control={<Radio />}
-                label="Id Card"
-              />
-            </RadioGroup>
-          </FormControl>
-        </Grid> */}
-
-        {/* <Grid item xs={4}>
-          <TextField
-            className={styles.textField}
-            required
-            id="DocNumber"
-            label="DocNumber"
-            variant="filled"
-            onChange={handleDocNumberChange}
-          ></TextField>
-        </Grid> */}
         <Grid item xs={6}>
           <TextField
             className={styles.textField}
@@ -233,7 +194,7 @@ const ProfilePage = () => {
             id="PhoneReg"
             type="phone"
             label="Phone number"
-            variant="filled"
+            variant="outlined"
             onChange={handlePhoneNumberChange}
           ></TextField>
 
@@ -243,7 +204,7 @@ const ProfilePage = () => {
             id="CountryReg"
             type="text"
             label="Country"
-            variant="filled"
+            variant="outlined"
             onChange={handleCountryChange}
           ></TextField>
           <TextField
@@ -252,7 +213,7 @@ const ProfilePage = () => {
             id="CityReg"
             type="text"
             label="City"
-            variant="filled"
+            variant="outlined"
             onChange={handleCityChange}
           ></TextField>
 
@@ -262,7 +223,7 @@ const ProfilePage = () => {
             id="AddressReg"
             type="text"
             label="Address"
-            variant="filled"
+            variant="outlined"
             onChange={handleAddressChange}
           ></TextField>
 
@@ -272,11 +233,16 @@ const ProfilePage = () => {
             id="PostalCodeReg"
             type="postalCode"
             label="Postal code"
-            variant="filled"
+            variant="outlined"
             onChange={handlePostalCodeChange}
           ></TextField>
           <FormControl component="fieldset" className={styles.textField}>
-            <FormLabel component="legend">Gender</FormLabel>
+            <FormLabel
+              component="legend"
+              style={{ borderBottom: `0px`, color: `black` }}
+            >
+              Gender
+            </FormLabel>
             <RadioGroup
               aria-label="gender"
               name="gender1"

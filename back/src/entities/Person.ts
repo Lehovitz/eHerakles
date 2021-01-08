@@ -38,12 +38,6 @@ export class Person {
   @Column( { nullable: true} )
   birthDate: Date;
 
-  @Column("enum", { enum: DocumentType, nullable: true})
-  docType: DocumentType;
-
-  @Column( { nullable: true} )
-  docNumber: string;
-
   @Column( { nullable: true} )
   phoneNum: string;
 

@@ -51,11 +51,9 @@ export default class CustomerController {
             name,
             surname,
             gender,
-            docType,
             birthDate,
             phoneNum,
             pesel,
-            docNumber,
             address,
             goal,
         } = req.body;
@@ -91,8 +89,6 @@ export default class CustomerController {
             } else person = new Person();
             person.name = name;
             person.surname = surname;
-            person.docType = docType;
-            person.docNumber = docNumber;
             person.gender = gender;
             person.birthDate = birthDate;
             person.phoneNum = phoneNum;
@@ -121,8 +117,6 @@ export default class CustomerController {
             person.name = name;
             person.surname = surname;
             person.birthDate = birthDate;
-            person.docType = docType;
-            person.docNumber = docNumber;
             person.gender = gender;
             person.pesel = pesel;
             person.phoneNum = phoneNum;
@@ -157,7 +151,6 @@ export default class CustomerController {
             name,
             surname,
             gender,
-            docType,
             birthDate,
             phoneNum,
             pesel,
@@ -195,8 +188,6 @@ export default class CustomerController {
             person = new Person();
             person.name = name;
             person.surname = surname;
-            person.docType = docType;
-            person.docNumber = docNumber;
             person.gender = gender;
             person.birthDate = birthDate;
             person.phoneNum = phoneNum;
@@ -324,11 +315,9 @@ export default class CustomerController {
             name,
             surname,
             gender,
-            docType,
             birthDate,
             phoneNum,
             pesel,
-            docNumber,
             address,
             country,
             city,
