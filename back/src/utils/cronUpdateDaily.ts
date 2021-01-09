@@ -22,7 +22,6 @@ export default () => {
 
       if(dateDiff===0)
       {
-        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         console.log(card);
         card.isActive = false;
         //twoj karnet wygasl

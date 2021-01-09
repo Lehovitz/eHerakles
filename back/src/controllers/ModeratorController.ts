@@ -17,11 +17,9 @@ export default class ModeratorController {
       name,
       surname,
       gender,
-      docType,
       birthDate,
       phoneNum,
       pesel,
-      docNumber,
       address,
       isAdmin
     } = req.body;
@@ -181,11 +179,9 @@ export default class ModeratorController {
       name,
       surname,
       gender,
-      docType,
       birthDate,
       phoneNum,
       pesel,
-      docNumber,
       address,
       country,
       city,

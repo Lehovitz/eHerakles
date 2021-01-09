@@ -29,11 +29,6 @@ const genderChoices = [
   { id: "O", name: "Other" },
 ];
 
-const docTypeChoices = [
-  { id: "Passport", name: "Passport" },
-  { id: "IdCard", name: "IdCard" },
-];
-
 export const TrainerIcon = FitnessCenter;
 
 export const TrainerList = (props: ListProps) => {
@@ -60,11 +55,9 @@ export const TrainerShow = (props: ShowProps) => {
         <TextField source="name" />
         <TextField source="surname" />
         <SelectField choices={genderChoices} source="gender" />
-        <SelectField choices={docTypeChoices} source="docType" />
         <DateField source="birthDate" />
         <TextField source="phoneNum" />
         <TextField source="pesel" />
-        <TextField source="docNumber" />
         <TextField source="address" />
         <TextField source="country" />
         <TextField source="city" />
@@ -87,11 +80,9 @@ export const TrainerEdit = (props: EditProps) => {
         <TextInput source="name" />
         <TextInput source="surname" />
         <SelectInput choices={genderChoices} source="gender" />
-        <SelectInput choices={docTypeChoices} source="docType" />
         <DateInput source="birthDate" />
         <TextInput source="phoneNum" />
         <TextInput source="pesel" />
-        <TextInput source="docNumber" />
         <TextInput source="address" />
         <TextInput source="country" />
         <TextInput source="city" />
@@ -110,11 +101,9 @@ export const TrainerCreate = (props: CreateProps) => {
         <TextInput source="name" />
         <TextInput source="surname" />
         <SelectInput choices={genderChoices} source="gender" />
-        <SelectInput choices={docTypeChoices} source="docType" />
         <DateInput source="birthDate" />
         <TextInput source="phoneNum" />
         <TextInput source="pesel" />
-        <TextInput source="docNumber" />
         <TextInput source="address" />
         <TextInput source="country" />
         <TextInput source="city" />

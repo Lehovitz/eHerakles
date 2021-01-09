@@ -101,11 +101,7 @@ const BMRCalculator = () => {
         <Grid item xs={12}>
           <FormControl component="fieldset">
             <FormLabel component="legend">Activity</FormLabel>
-            <RadioGroup
-              aria-label="Activity"
-              name="docType"
-              onChange={handleActivityChange}
-            >
+            <RadioGroup aria-label="Activity" onChange={handleActivityChange}>
               <FormControlLabel
                 value="none"
                 control={<Radio />}

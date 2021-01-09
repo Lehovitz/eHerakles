@@ -17,11 +17,9 @@ export default class TrainerController {
       name,
       surname,
       gender,
-      docType,
       birthDate,
       phoneNum,
       pesel,
-      docNumber,
       address,
     } = req.body;
 
@@ -176,11 +174,9 @@ export default class TrainerController {
       name,
       surname,
       gender,
-      docType,
       birthDate,
       phoneNum,
       pesel,
-      docNumber,
       address,
       country,
       city,

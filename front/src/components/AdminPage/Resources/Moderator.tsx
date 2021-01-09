@@ -30,11 +30,6 @@ const genderChoices = [
   { id: "O", name: "Other" },
 ];
 
-const docTypeChoices = [
-  { id: "Passport", name: "Passport" },
-  { id: "IdCard", name: "IdCard" },
-];
-
 export const ModeratorIcon = VerifiedUser;
 
 export const ModeratorList = (props: ListProps) => {
@@ -61,11 +56,11 @@ export const ModeratorShow = (props: ShowProps) => {
         <TextField source="name" />
         <TextField source="surname" />
         <SelectField choices={genderChoices} source="gender" />
-        <SelectField choices={docTypeChoices} source="docType" />
+
         <DateField source="birthDate" />
         <TextField source="phoneNum" />
         <TextField source="pesel" />
-        <TextField source="docNumber" />
+
         <TextField source="address" />
         <TextField source="country" />
         <TextField source="city" />
@@ -87,12 +82,9 @@ export const ModeratorEdit = (props: EditProps) => {
         <TextInput source="modMail" />
         <TextInput source="name" />
         <TextInput source="surname" />
-        <SelectInput choices={genderChoices} source="gender" />
-        <SelectInput choices={docTypeChoices} source="docType" />
         <DateInput source="birthDate" />
         <TextInput source="phoneNum" />
         <TextInput source="pesel" />
-        <TextInput source="docNumber" />
         <TextInput source="address" />
         <TextInput source="country" />
         <TextInput source="city" />
@@ -111,12 +103,9 @@ export const ModeratorCreate = (props: CreateProps) => {
         <TextInput source="modPass" />
         <TextInput source="name" />
         <TextInput source="surname" />
-        <SelectInput choices={genderChoices} source="gender" />
-        <SelectInput choices={docTypeChoices} source="docType" />
         <DateInput source="birthDate" />
         <TextInput source="phoneNum" />
         <TextInput source="pesel" />
-        <TextInput source="docNumber" />
         <TextInput source="address" />
         <TextInput source="country" />
         <TextInput source="city" />

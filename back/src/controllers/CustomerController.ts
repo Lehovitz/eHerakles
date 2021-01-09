@@ -154,7 +154,6 @@ export default class CustomerController {
             birthDate,
             phoneNum,
             pesel,
-            docNumber,
             address,
         } = req.body;
 
