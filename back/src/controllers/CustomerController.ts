@@ -344,8 +344,6 @@ export default class CustomerController {
             person.name = name;
             person.surname = surname;
             person.birthDate = birthDate;
-            person.docType = docType;
-            person.docNumber = docNumber;
             person.gender = gender;
             person.pesel = pesel;
             person.phoneNum = phoneNum;

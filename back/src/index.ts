@@ -22,7 +22,7 @@ import subscriptionRouter from "./routes/SubscriptionRoute";
 import paymentRouter from "./routes/PaymentRoute";
 import bcrypt from "bcryptjs";
 import { DocumentType, Gender } from "./entities/Person";
-import cron from "node-cron"
+import cron from "node-cron";
 import dotenv from "dotenv";
 import cors from "cors";
 import emailHelper from "./utils/emailNotification";
@@ -32,72 +32,111 @@ import cronUpdateDaily from "./utils/cronUpdateDaily";
 import categoryRouter from "./routes/CategoryRoute";
 import { Category } from "./entities/Category";
 
-createConnection({
-  type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "pass",
-  database: "eHerakles",
-  entities: [Payment, Customer, Moderator, Card, Event, Location, Room, Trainer, Person, Subscription, Category],
-  synchronize: true,
-  logging: false,
-})
-  .then(async () => {
-    dotenv.config();
+export const testDatabase = {
+    type: "postgres",
+    host: "localhost",
+    port: 5433,
+    username: "postgres",
+    password: "pass",
+    database: "eHerakles",
+    entities: [
+        Payment,
+        Customer,
+        Moderator,
+        Card,
+        Event,
+        Location,
+        Room,
+        Trainer,
+        Person,
+        Subscription,
+        Category,
+    ],
+    synchronize: true,
+    logging: false,
+};
 
-    const moderatorRepository = getManager().getRepository(Moderator);
-    const moderator = new Moderator();
-    moderator.isAdmin = true;
-    moderator.modMail = "mod@xd.pl";
-    moderator.modPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
-    const location = new Location();
-    location.city = "aa";
-    location.country = "aa";
-    location.postalCode = "aaa";
+const realDatabase = {
+    type: "postgres",
+    host: "localhost",
+    port: 5433,
+    username: "postgres",
+    password: "pass",
+    database: "eHerakles",
+    entities: [
+        Payment,
+        Customer,
+        Moderator,
+        Card,
+        Event,
+        Location,
+        Room,
+        Trainer,
+        Person,
+        Subscription,
+        Category,
+    ],
+    synchronize: true,
+    logging: false,
+};
 
-    const person = new Person();
-    person.address = "aaaa";
-    person.birthDate = new Date();
-    person.gender = Gender.Male;
-    person.docNumber = "98239483";
-    person.docType = DocumentType.Passport;
-    person.name = "imie";
-    person.pesel = "2938329823";
-    person.phoneNum = "2394823834";
-    person.surname = "surname";
+export const server = (options: any, port: number) =>
+    createConnection(options)
+        .then(async () => {
+            dotenv.config();
 
-    location.person = person;
-    person.location = location;
-    person.moderator = moderator;
-    moderator.person = person;
+            // const moderatorRepository = getManager().getRepository(Moderator);
+            // const moderator = new Moderator();
+            // moderator.isAdmin = true;
+            // moderator.modMail = "mod@xd.pl";
+            // moderator.modPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
+            // const location = new Location();
+            // location.city = "aa";
+            // location.country = "aa";
+            // location.postalCode = "aaa";
 
-    await moderatorRepository.save(moderator);
+            // const person = new Person();
+            // person.address = "aaaa";
+            // person.birthDate = new Date();
+            // person.gender = Gender.Male;
+            // person.name = "imie";
+            // person.pesel = "2938329823";
+            // person.phoneNum = "2394823834";
+            // person.surname = "surname";
 
-    console.log("dodano moda");
+            // location.person = person;
+            // person.location = location;
+            // person.moderator = moderator;
+            // moderator.person = person;
 
-    const app = express();
-    app.use(cors());
-    app.use(express.json());
-    app.use("/customers", custRouter);
-    app.use("/events", eventRouter);
-    app.use("/rooms", roomRouter);
-    app.use("/trainers", trainerRouter);
-    app.use("/locations", locationRouter);
-    app.use("/moderators", moderatorRouter);
-    app.use("/login", loginRouter);
-    app.use("/cards", cardRouter);
-    app.use("/emails", emailRouter);
-    app.use("/subscriptions", subscriptionRouter);
-    app.use("/payments", paymentRouter);
-    app.use("/categories", categoryRouter);
+            // await moderatorRepository.save(moderator);
 
-    //cronUpdateDaily();
-    
+            // console.log("dodano moda");
 
-    //emailHelper("michallechowicz14@gmail.com");
+            //cronUpdateDaily();
 
-    app.listen(5000);
-    console.log("Listening on port 5000...");
-  })
-  .catch((error) => console.log(error));
+            //emailHelper("michallechowicz14@gmail.com");
+
+            const app = express();
+            app.use(cors());
+            app.use(express.json());
+            app.use("/customers", custRouter);
+            app.use("/events", eventRouter);
+            app.use("/rooms", roomRouter);
+            app.use("/trainers", trainerRouter);
+            app.use("/locations", locationRouter);
+            app.use("/moderators", moderatorRouter);
+            app.use("/login", loginRouter);
+            app.use("/cards", cardRouter);
+            app.use("/emails", emailRouter);
+            app.use("/subscriptions", subscriptionRouter);
+            app.use("/payments", paymentRouter);
+            app.use("/categories", categoryRouter);
+
+            app.listen(port);
+            return app;
+        })
+        .catch();
+
+server(realDatabase, 5000);
+console.log("Listening on port 5000...");
