@@ -28,7 +28,6 @@ describe("Card endpoint", () => {
         app.get("/room").expect(404);
     });
    
-
     // test("GET /rooms/0", () => {
     //     app.get("/rooms/0").expect((res) => 200);
     // });
