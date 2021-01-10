@@ -1,4 +1,5 @@
 import { Button, Grid, TextField } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Redirect } from "react-router-dom";
@@ -10,7 +11,8 @@ const RegisterPage = () => {
     [confirmPass, setConfirmPass] = useState(""),
     [passIdentical, setPassIdentical] = useState(false),
     [redirect, setRedirect] = useState(false),
-    [, setError] = useState("");
+    [emailExists, setEmailExists] = useState(false),
+    [error, setError] = useState("");
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -32,9 +34,17 @@ const RegisterPage = () => {
   const handlePasswordConformationChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setPassword(event.target.value);
+    setConfirmPass(event.target.value);
   };
 
+  // const checkIfEmailExists = async () => {
+  //   const response = await fetch(
+  //     `http://localhost:5000/customers/getCustomerGoalByEmail/${email}`
+  //   );
+  //   if (response.status === 400) {
+  //     setEmailExists(true);
+  //   }
+  // };
   const handleRegisterClick = async () => {
     const response = await fetch("http://localhost:5000/customers/register", {
       method: "POST",
@@ -57,8 +67,11 @@ const RegisterPage = () => {
   return (
     <div className={styles.mainContainer}>
       {redirect && <Redirect to="/"></Redirect>}
+
       <Grid container spacing={2} className={styles.container}>
-        <Grid item xs={12} className={styles.alertBox}></Grid>
+        <Grid item xs={12} className={styles.alertBox}>
+          {error != "" && <Alert severity="error">{error}</Alert>}
+        </Grid>
         <Grid item xs={12}>
           <h1 className={styles.headers}>eHerakles</h1>
         </Grid>
@@ -71,7 +84,7 @@ const RegisterPage = () => {
             label="e-mail"
             variant="filled"
             onChange={handleEmailChange}
-            error={email !== "" && !validateMail()}
+            error={error !== ""}
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -93,7 +106,13 @@ const RegisterPage = () => {
             type="password"
             label="Confirm password"
             variant="filled"
-            onChange={handlePasswordChange}
+            onChange={handlePasswordConformationChange}
+            error={password !== "" && confirmPass !== "" && !passIdentical}
+            helperText={
+              password !== "" && confirmPass !== "" && !passIdentical
+                ? "Passwords don't match."
+                : ""
+            }
           ></TextField>
         </Grid>
         <Grid item xs={12}>
@@ -102,6 +121,12 @@ const RegisterPage = () => {
             id="RegisterButtons"
             className={styles.button}
             onClick={handleRegisterClick}
+            disabled={
+              email === "" ||
+              password === "" ||
+              confirmPass === "" ||
+              !passIdentical
+            }
           >
             Register
           </Button>

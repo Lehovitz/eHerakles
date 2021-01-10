@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { Person } from "../entities/Person";
 import { Location } from "../entities/Location";
 import clean from "../utils/clean";
+import faker from "faker";
 
 export default class CustomerController {
     // async findIdByMail(req: Request, res: Response)
@@ -38,7 +39,7 @@ export default class CustomerController {
             console.log("utworzono nowego customera");
             await repo.save(customer);
         } else {
-            console.log("Taki Customer juz istnieje :3");
+            res.status(400).send("Account with provided email already exists.")
         }
         res.send({ id: customer.id, email: customer.email });
     }
@@ -202,9 +203,11 @@ export default class CustomerController {
 
         if (!customer) {
             console.log(password);
+            const fakeAccNum = faker.finance.iban().slice(2);
 
             customer = new Customer();
             customer.email = email;
+            customer.accountNumber = fakeAccNum;
             const salt = bcrypt.genSaltSync(10);
             const hash = await bcrypt.hash(password, salt);
             customer.password = hash;
@@ -384,9 +387,10 @@ export default class CustomerController {
         const customer = await repo.findOne({
             where: { email: req.params.email },
         });
-
+        if(customer){
         return res
             .set({ "Content-Type": "application/json" })
             .send({ goal: customer.goal });
+        } else res.status(400).send()
     }
 }

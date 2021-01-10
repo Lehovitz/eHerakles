@@ -46,6 +46,7 @@ export const CustomerList = (props: ListProps) => {
         <TextField source="email" />
         <TextField source="name" />
         <TextField source="surname" />
+        <TextField source="accountNumber" />
         <EditButton />
         <ShowButton />
       </Datagrid>
@@ -61,6 +62,7 @@ export const CustomerShow = (props: ShowProps) => {
         <TextField source="email" />
         <TextField source="name" />
         <TextField source="surname" />
+        <TextField source="accountNumber" />
         <SelectField choices={goalChoices} source="goal" />
         <SelectField choices={genderChoices} source="gender" />
         <DateField source="birthDate" />
@@ -87,6 +89,7 @@ export const CustomerEdit = (props: EditProps) => {
         <TextInput source="email" />
         <TextInput source="name" />
         <TextInput source="surname" />
+        <TextInput source="accountNumber" />
         <SelectInput choices={goalChoices} source="goal" />
         <SelectInput choices={genderChoices} source="gender" />
         <DateInput source="birthDate" />
@@ -111,6 +114,7 @@ export const CustomerCreate = (props: CreateProps) => {
         <TextInput source="surname" />{" "}
         <SelectInput choices={goalChoices} source="goal" />
         <SelectInput choices={genderChoices} source="gender" />
+        <TextInput source="accountNumber" />
         <DateInput source="birthDate" />
         <TextInput source="phoneNum" />
         <TextInput source="pesel" />

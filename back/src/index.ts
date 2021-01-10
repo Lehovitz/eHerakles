@@ -35,10 +35,10 @@ import { Category } from "./entities/Category";
 export const testDatabase = {
     type: "postgres",
     host: "localhost",
-    port: 5433,
+    port: 5432,
     username: "postgres",
     password: "pass",
-    database: "eHerakles",
+    database: "test",
     entities: [
         Payment,
         Customer,
@@ -59,7 +59,7 @@ export const testDatabase = {
 const realDatabase = {
     type: "postgres",
     host: "localhost",
-    port: 5433,
+    port: 5432,
     username: "postgres",
     password: "pass",
     database: "eHerakles",

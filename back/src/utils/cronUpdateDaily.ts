@@ -3,6 +3,7 @@ import { getManager } from 'typeorm';
 import { Card } from '../entities/Card';
 import { Status } from '../entities/Payment';
 import fetch from "node-fetch";
+import { Customer } from '../entities/Customer';
 
 export default () => {
   cron.schedule('* * * * *', async () => {
@@ -16,6 +17,7 @@ export default () => {
       .leftJoinAndSelect("card.customer", "customer")
       .getMany();
 
+
     const today = new Date();
     for (let card of cards) {
       const dateDiff = Math.ceil(today.getDate() - card.expDate.getDate())/(1000*60*60*24);
@@ -24,7 +26,6 @@ export default () => {
       {
         console.log(card);
         card.isActive = false;
-        //twoj karnet wygasl
           await fetch(`http://localhost:5000/payments`, {
           method: "POST",
           body: JSON.stringify({
@@ -32,7 +33,6 @@ export default () => {
             status: Status.Started,
             customer: card.customer,
             dueDate: new Date(card.expDate.setMonth(card.expDate.getMonth() + card.subscription.period)),
-            //zastanowic sie nad zyciem
             paymentDate: new Date(),
           }),
           headers: {"Content-Type" : "application/json"}
@@ -40,20 +40,13 @@ export default () => {
       }
       else if(dateDiff === 3)
       {
-        //twoj karnet wygasnie za 3 dni, pamietaj o dokonaniu platnosci
+        await fetch(`http://localhost:5000/emails/expires/${card.customer.id}`);
       }
       if(dateDiff<0)
       {
         card.isActive = false;
-        //card.subType = SubscriptionType.None;
-
-        //card.due zmienic i dodac cennik 
-        //wyslac maila ze wygasl
       }
-
     }
   });
-
-
 };
 
