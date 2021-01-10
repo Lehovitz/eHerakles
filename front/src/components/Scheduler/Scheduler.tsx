@@ -337,7 +337,7 @@ const SchedulerComponent = () => {
                     <TodayButton />
                 </Hidden>
                 <Appointments />
-                {["trainer", "moderator"].includes(role) ? (
+                {["trainer", "moderator", "admin"].includes(role) ? (
                     <AppointmentTooltip showOpenButton showDeleteButton />
                 ) : (
                     <AppointmentTooltip
@@ -346,13 +346,15 @@ const SchedulerComponent = () => {
                         )}
                     />
                 )}
-                {["trainer", "moderator"].includes(role) && <AppointmentForm />}
+                {["trainer", "moderator", "admin"].includes(role) && (
+                    <AppointmentForm />
+                )}
                 <Resources
                     data={resources}
                     palette={[]}
                     mainResourceName="capacityId"
                 />
-                {["trainer", "moderator"].includes(role) && (
+                {["trainer", "moderator", "admin"].includes(role) && (
                     <DragDropProvider />
                 )}
             </Scheduler>
