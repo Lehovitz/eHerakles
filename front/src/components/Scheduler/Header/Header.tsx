@@ -10,7 +10,7 @@ import {
 import { AssignmentTurnedIn } from "@material-ui/icons";
 import jwtDecode from "jwt-decode";
 import { IconButton } from "material-ui";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import DecodedToken from "../../../models/DecodedToken";
 import { RootState } from "../../../redux";
@@ -24,6 +24,7 @@ type HeaderProps = AppointmentTooltip.HeaderProps & {
 
 const Header = ({ appointmentData, setData, data, ...props }: HeaderProps) => {
     const [open, setOpen] = useState(false),
+        [hasCard, setHasCard] = useState(false),
         [loading, setLoading] = useState(false),
         bearerToken = useSelector((state: RootState) => state.token),
         decodedToken: DecodedToken | undefined =
@@ -33,7 +34,18 @@ const Header = ({ appointmentData, setData, data, ...props }: HeaderProps) => {
         email = decodedToken?.email ?? "",
         canUserSign =
             !appointmentData!.customers.includes(email) &&
-            appointmentData!.customers.length < appointmentData!.capacity;
+            appointmentData!.customers.length < appointmentData!.capacity &&
+            hasCard;
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetch(
+                `http://localhost:5000/customers/checkIfHasCard/${email}`
+            );
+
+            setHasCard(response.status === 200);
+        })();
+    }, []);
 
     const handleDialogOpen = () => setOpen(true);
     const handleDialogClose = () => setOpen(false);

@@ -40,7 +40,7 @@ export default class CustomerController {
             console.log("utworzono nowego customera");
             await repo.save(customer);
         } else {
-            res.status(400).send("Account with provided email already exists.")
+            res.status(400).send("Account with provided email already exists.");
         }
         res.send({ id: customer.id, email: customer.email });
     }
@@ -389,34 +389,31 @@ export default class CustomerController {
         const customer = await repo.findOne({
             where: { email: req.params.email },
         });
-        if(customer){
-        return res
-            .set({ "Content-Type": "application/json" })
-            .send({ goal: customer.goal });
-        } else res.status(400).send()
- 
+        if (customer) {
+            return res
+                .set({ "Content-Type": "application/json" })
+                .send({ goal: customer.goal });
+        } else res.status(400).send();
     }
 
     async checkIfHasProfile(req: Request, res: Response) {
         const repo = getManager().getRepository(Customer);
-        const customer = await repo.findOne({where: {id: req.params.id}});
-        if(customer.person)
-        {
+        const customer = await repo.findOne({ where: { id: req.params.id } });
+        if (customer.person) {
             res.status(200).send();
-        }
-        else res.status(400).send();
+        } else res.status(400).send();
     }
 
     async checkIfHasCard(req: Request, res: Response) {
         const repo = getManager().getRepository(Customer);
-        const customer = await repo.findOne({where: {id: req.params.id}});
+        const customer = await repo.findOne({
+            where: { email: req.params.email },
+        });
         const cardRepo = getManager().getRepository(Card);
-        const card = await cardRepo.findOne({where: {customer: customer}})
+        const card = await cardRepo.findOne({ where: { customer: customer } });
 
-        if(card.isActive)
-        {
+        if (card.isActive) {
             res.status(200).send();
-        }
-        else res.status(400).send();
+        } else res.status(400).send();
     }
 }

@@ -47,6 +47,7 @@ type EventBack = {
     isAllDay?: boolean;
     description?: string;
     goal: string;
+    isAccepted: boolean;
     categoryId: number;
     roomId: number;
     rule?: string;
@@ -65,6 +66,7 @@ export type EventFront = {
     allDay?: boolean;
     categoryId: number;
     notes?: string;
+    isAccepted: boolean;
     goal: string;
     roomId: number;
     rRule?: string;
@@ -214,6 +216,7 @@ const SchedulerComponent = () => {
                     allDay: event.isAllDay,
                     notes: event.description,
                     roomId: event.roomId,
+                    isAccepted: event.isAccepted,
                     categoryId: event.categoryId,
                     rRule: event.rule,
                     exDate: event.exDate,
@@ -233,16 +236,28 @@ const SchedulerComponent = () => {
     useEffect(() => {
         switch (filter) {
             case "All":
-                setFilteredData(data);
+                setFilteredData(
+                    data.filter(
+                        (event) => event.isAccepted || role !== "customer"
+                    )
+                );
                 break;
             case "My events":
                 setFilteredData(
-                    data.filter((event) => event.customers.includes(email))
+                    data
+                        .filter((event) => event.customers.includes(email))
+                        .filter(
+                            (event) => event.isAccepted || role !== "customer"
+                        )
                 );
                 break;
             case "Recommended":
                 setFilteredData(
-                    data.filter((event) => event.goal === userGoal)
+                    data
+                        .filter((event) => event.goal === userGoal)
+                        .filter(
+                            (event) => event.isAccepted || role !== "customer"
+                        )
                 );
                 break;
         }
