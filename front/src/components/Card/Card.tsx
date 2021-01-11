@@ -68,6 +68,7 @@ const Card = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<Selections>();
   const [selected, setSelected] = useState("");
+  const [customerVerification, setCustomerVerification] = useState(false);
 
   const handleSelectionChange = (event: any) => {
     setSelected(event.target.value);
@@ -130,6 +131,17 @@ const Card = () => {
 
   useEffect(() => {
     (async () => {
+      const res = await fetch(
+        `http://localhost:5000/customers/check/${decodedToken?.id}`
+      );
+      if (res.status === 200) {
+        setCustomerVerification(false);
+      } else setCustomerVerification(true);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
       const res: Subscription[] = await fetch(
         `http://localhost:5000/subscriptions/`
       ).then((res) => res.json());
@@ -148,77 +160,89 @@ const Card = () => {
   };
   return (
     <PaperWithHeader headerText="Your card">
-      {card ? (
-        <Grid container spacing={3}>
-          <Grid item xs={2} className={styles.header}>
-            Due ammount
-          </Grid>
-          <Grid item xs={2} className={styles.header}>
-            Expiration date
-          </Grid>
-          <Grid item xs={2} className={styles.header}>
-            Active
-          </Grid>
-          <Grid item xs={4} className={styles.header}>
-            Subscription
-          </Grid>
-          <Grid item xs={2} className={styles.header}></Grid>
-          <Grid item xs={2}>
-            {card.due + " PLN"}
-          </Grid>
-          <Grid item xs={2}>
-            {DateTransformation(card.expDate)}
-          </Grid>
-          <Grid item xs={2}>
-            <Checkbox checked={card.isActive}></Checkbox>
-          </Grid>
-          <Grid item xs={4}>
-            {card.subName}
-          </Grid>
-          <Grid item xs={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={changeSubButton}
-            >
-              Change your subscription
-            </Button>
-          </Grid>
-          <ConfirmDialog
-            open={open}
-            setOpen={setOpen}
-            title={
-              "Are you sure you want to change your subscription? This will incur a fee."
-            }
-            onConfirm={handleSubscriptionChange}
-          >
-            <FormControl style={{ width: `80%` }}>
-              <Select style={{ width: `80%` }} onChange={handleSelectionChange}>
-                {subNames.map((sub) => (
-                  <option key={sub.value} value={sub.value}>
-                    {sub.label}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-          </ConfirmDialog>
-        </Grid>
-      ) : (
+      {console.log(customerVerification)}
+      {!customerVerification ? (
         <>
-          <Typography>Choose the subscribtion!</Typography>
-          <FormControl>
-            <Select onChange={handleSelectionChange}>
-              {subNames.map((sub) => (
-                <option key={sub.value} value={sub.value}>
-                  {sub.label}
-                </option>
-              ))}
-            </Select>
-            <Button onClick={handleCardCreation}>
-              Confirm subscription choice
-            </Button>
-          </FormControl>
+          {card ? (
+            <Grid container spacing={3}>
+              <Grid item xs={2} className={styles.header}>
+                Due ammount
+              </Grid>
+              <Grid item xs={2} className={styles.header}>
+                Expiration date
+              </Grid>
+              <Grid item xs={2} className={styles.header}>
+                Active
+              </Grid>
+              <Grid item xs={4} className={styles.header}>
+                Subscription
+              </Grid>
+              <Grid item xs={2} className={styles.header}></Grid>
+              <Grid item xs={2}>
+                {card.due + " PLN"}
+              </Grid>
+              <Grid item xs={2}>
+                {DateTransformation(card.expDate)}
+              </Grid>
+              <Grid item xs={2}>
+                <Checkbox checked={card.isActive}></Checkbox>
+              </Grid>
+              <Grid item xs={4}>
+                {card.subName}
+              </Grid>
+              <Grid item xs={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={changeSubButton}
+                >
+                  Change your subscription
+                </Button>
+              </Grid>
+              <ConfirmDialog
+                open={open}
+                setOpen={setOpen}
+                title={
+                  "Are you sure you want to change your subscription? This will incur a fee."
+                }
+                onConfirm={handleSubscriptionChange}
+              >
+                <FormControl style={{ width: `80%` }}>
+                  <Select
+                    style={{ width: `80%` }}
+                    onChange={handleSelectionChange}
+                  >
+                    {subNames.map((sub) => (
+                      <option key={sub.value} value={sub.value}>
+                        {sub.label}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </ConfirmDialog>
+            </Grid>
+          ) : (
+            <>
+              <Typography>Choose the subscribtion!</Typography>
+              <FormControl>
+                <Select onChange={handleSelectionChange}>
+                  {subNames.map((sub) => (
+                    <option key={sub.value} value={sub.value}>
+                      {sub.label}
+                    </option>
+                  ))}
+                </Select>
+                <Button onClick={handleCardCreation}>
+                  Confirm subscription choice
+                </Button>
+              </FormControl>
+            </>
+          )}
         </>
+      ) : (
+        <Typography>
+          To create your card, complete your profile info!
+        </Typography>
       )}
     </PaperWithHeader>
   );

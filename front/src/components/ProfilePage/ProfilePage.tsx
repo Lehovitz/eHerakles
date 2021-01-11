@@ -35,6 +35,7 @@ const ProfilePage = () => {
   const bearerToken = useSelector((state: RootState) => state.token),
     decodedToken: DecodedToken | undefined =
       bearerToken.token.length > 0 ? jwtDecode(bearerToken.token) : undefined;
+
   const id = decodedToken!.id;
 
   const handleGoalChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -6,6 +6,7 @@ import { Person } from "../entities/Person";
 import { Location } from "../entities/Location";
 import clean from "../utils/clean";
 import faker from "faker";
+import { Card } from "../entities/Card";
 
 export default class CustomerController {
     // async findIdByMail(req: Request, res: Response)
@@ -70,6 +71,7 @@ export default class CustomerController {
             .where("customer.id = :id", { id: req.params.id })
             .getOne();
 
+        console.log(customer);
         let { person } = customer;
 
         // let location = await locRepo.findOne({
@@ -392,5 +394,29 @@ export default class CustomerController {
             .set({ "Content-Type": "application/json" })
             .send({ goal: customer.goal });
         } else res.status(400).send()
+ 
+    }
+
+    async checkIfHasProfile(req: Request, res: Response) {
+        const repo = getManager().getRepository(Customer);
+        const customer = await repo.findOne({where: {id: req.params.id}});
+        if(customer.person)
+        {
+            res.status(200).send();
+        }
+        else res.status(400).send();
+    }
+
+    async checkIfHasCard(req: Request, res: Response) {
+        const repo = getManager().getRepository(Customer);
+        const customer = await repo.findOne({where: {id: req.params.id}});
+        const cardRepo = getManager().getRepository(Card);
+        const card = await cardRepo.findOne({where: {customer: customer}})
+
+        if(card.isActive)
+        {
+            res.status(200).send();
+        }
+        else res.status(400).send();
     }
 }

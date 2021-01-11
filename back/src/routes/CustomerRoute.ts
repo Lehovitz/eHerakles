@@ -11,6 +11,7 @@ router.put("/:id", customerController.update);
 router.delete("/:id", customerController.delete);
 router.post("/", customerController.create);
 router.post("/register", customerController.register);
+router.get("/check/:id", customerController.checkIfHasProfile);
 
 // router.get("/findByEmail/:email", customerController.findIdByMail);
 
