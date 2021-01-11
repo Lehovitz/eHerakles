@@ -32,7 +32,7 @@ export class Person {
   @Column()
   name: string;
 
-  @Column("enum", { enum: Gender})
+  @Column("enum", { enum: Gender, default: Gender.Other})
   gender: Gender;
 
   @Column()

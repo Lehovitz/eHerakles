@@ -1,6 +1,8 @@
 import { Button, Grid, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import PaperWithHeader from "../Shared/PaperWithHeader/PaperWithHeader";
+import DateTransformation from "../../utils/DateTransformation";
+import styles from "../PendingPayments/PendingPayments.module.scss";
 
 type Payment = {
   id: string;
@@ -64,42 +66,60 @@ const PendingPayments = () => {
   };
 
   return (
-    <PaperWithHeader headerText="All payments">
+    <PaperWithHeader headerText="Pending payments">
+      <Grid container spacing={3}>
+        <Grid item xs={3} className="header" style={{ fontWeight: `bold` }}>
+          Due
+        </Grid>
+        <Grid item xs={4} className="header" style={{ fontWeight: `bold` }}>
+          Email
+        </Grid>
+        <Grid item xs={3} className="header" style={{ fontWeight: `bold` }}>
+          Payment date
+        </Grid>
+        <Grid item xs={2}></Grid>
+      </Grid>
       {payments && payments.length > 0 ? (
         payments.map((payment) => (
-          <Grid key={payment.id} container spacing={3}>
-            {/* <Grid item xs={2}>
-            {payment.id}
-          </Grid> */}
-            <Grid item xs={2}>
-              {payment.due}
-            </Grid>
-            <Grid item xs={2}>
-              {payment.dueDate}
-            </Grid>
-            <Grid item xs={2}>
-              {payment.email}
-            </Grid>
-            <Grid item xs={2}>
-              {payment.paymentDate}
-            </Grid>
-            <Grid item xs={2}>
+          <React.Fragment key={payment.id}>
+            <Grid container spacing={2}>
+              <Grid item xs={3}>
+                {payment.due + " PLN"}
+              </Grid>
+
+              <Grid item xs={4}>
+                {payment.email}
+              </Grid>
+              <Grid item xs={3}>
+                {DateTransformation(payment.paymentDate)}
+              </Grid>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}></Grid>
+
+              {/* <Grid item xs={2}>
               {payment.status}
+            </Grid> */}
+              <Grid item xs={2}>
+                <Button
+                  color="primary"
+                  onClick={() => acceptPayment(payment.id)}
+                  variant="contained"
+                >
+                  Accept
+                </Button>
+              </Grid>
+              <Grid item xs={2}>
+                <Button
+                  color="secondary"
+                  onClick={() => rejectPayment(payment.id)}
+                  variant="contained"
+                >
+                  Reject
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={2}>
-              <Button color="primary" onClick={() => acceptPayment(payment.id)}>
-                Accept
-              </Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                color="secondary"
-                onClick={() => rejectPayment(payment.id)}
-              >
-                Reject
-              </Button>
-            </Grid>
-          </Grid>
+          </React.Fragment>
         ))
       ) : (
         <Typography>

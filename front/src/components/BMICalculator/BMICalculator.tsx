@@ -77,45 +77,76 @@ const BMICalculator = () => {
         </Grid>
         {bmi > 0.0 && bmi < 18.5 && (
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
+            <Typography
+              variant="subtitle1"
+              style={{ fontWeight: "bold", color: "red" }}
+            >
               Your body mass index is: {bmi.toFixed()}
             </Typography>
-            <Typography> and your body seems to be underweight.</Typography>
+            <Typography style={{ fontWeight: "bold", color: "red" }}>
+              {" "}
+              and your body seems to be underweight.
+            </Typography>
           </Grid>
         )}
         {bmi > 18.5 && bmi < 24.9 && (
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
+            <Typography
+              variant="subtitle1"
+              style={{ fontWeight: "bold", color: "green" }}
+            >
               Your body mass index is: {bmi.toFixed()}
             </Typography>
-            <Typography> and your body seems to be normal.</Typography>
+            <Typography style={{ fontWeight: "bold", color: "green" }}>
+              {" "}
+              and you are witin the norm. Keep going!
+            </Typography>
           </Grid>
         )}
         {bmi > 25 && bmi < 29.9 && (
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
+            <Typography
+              variant="subtitle1"
+              style={{ fontWeight: "bold", color: "blue" }}
+            >
               Your body mass index is: {bmi.toFixed()}
             </Typography>
 
-            <Typography variant="subtitle1">
+            <Typography
+              variant="subtitle1"
+              style={{ fontWeight: "bold", color: "blue" }}
+            >
               and your body seems to be overweight.
             </Typography>
           </Grid>
         )}
         {bmi > 30 && bmi < 24.9 && (
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
+            <Typography
+              variant="subtitle1"
+              style={{ fontWeight: "bold", color: "orange" }}
+            >
               Your body mass index is: {bmi.toFixed()}
             </Typography>
-            <Typography> and your body seems to be obese.</Typography>
+            <Typography style={{ fontWeight: "bold", color: "orange" }}>
+              {" "}
+              and your body seems to be obese.
+            </Typography>
           </Grid>
         )}
         {bmi > 35 && (
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
+            <Typography
+              variant="subtitle1"
+              style={{ fontWeight: "bold", color: "red" }}
+            >
               Your body mass index is: {bmi.toFixed()}
             </Typography>
-            <Typography> and your body seems to be extremely obese.</Typography>
+            <Typography style={{ fontWeight: "bold", color: "red" }}>
+              {" "}
+              and your body seems to be extremely obese. U should see the
+              dietician as fast as possible.
+            </Typography>
           </Grid>
         )}
       </Grid>

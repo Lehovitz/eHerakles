@@ -165,10 +165,10 @@ const BMRCalculator = () => {
         </Grid>
         {bmr > 0.0 && (
           <Grid item xs={12}>
-            <Typography>
+            <Typography style={{ fontWeight: "bold" }}>
               Your Basal Metabolic Rate is: {bmr.toFixed()} kcal
             </Typography>
-            <Typography>
+            <Typography style={{ fontWeight: "bold" }}>
               Including your activity your daily consumption should be:
               {bmrExt.toFixed()}
               kcal

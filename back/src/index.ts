@@ -58,7 +58,7 @@ export const testDatabase = {
 const realDatabase = {
     type: "postgres",
     host: "localhost",
-    port: 5433,
+    port: 5432,
     username: "postgres",
     password: "pass",
     database: "eHerakles",
@@ -87,7 +87,7 @@ export const server = (options: any, port: number) =>
             // const moderatorRepository = getManager().getRepository(Moderator);
             // const moderator = new Moderator();
             // moderator.isAdmin = true;
-            // moderator.modMail = "mod@xd.pl";
+            // moderator.modMail = "moderator@gmail.com";
             // moderator.modPass = await bcrypt.hash("pass", bcrypt.genSaltSync(10));
             // const location = new Location();
             // location.city = "aa";
