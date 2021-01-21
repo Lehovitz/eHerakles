@@ -1,0 +1,40 @@
+.actionsContainer {
+  display: flex;
+  margin-left: auto;
+}
+
+div .drawer {
+  width: 250px;
+  padding: 24px 8px;
+}
+
+.drawerContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  height: 100%;
+}
+
+div .drawerButton {
+  width: 100%;
+}
+
+div .navBarAction {
+  display: flex;
+  color: white;
+  text-decoration: none !important;
+}
+
+div .drawerAction {
+  color: black;
+  text-decoration: none !important;
+  width: 100%;
+}
+
+div .drawerLogout {
+  margin-top: auto;
+}
+
+.menuButton {
+  width: 56px;
+}
